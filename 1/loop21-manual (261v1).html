@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop 2.1 — User Manual</title>
+<style>
+  :root {
+    --bg:        #e8eef4;
+    --panel:     #e8eef4;
+    --panel2:    #edf1f5;
+    --panel3:    #dce4ec;
+    --border:    #9ab0c4;
+    --border2:   #b0c4d4;
+    --fg:        #000000;
+    --fg-dim:    #507090;
+    --accent:    #6030c0;
+    --working:   #1060b0;
+    --alu:       #b06000;
+    --memory:    #006830;
+    --big:       #006888;
+    --bus-a:     #6030c0;
+    --bus-b:     #c838c8;
+    --bus-c:     #20c8a0;
+    --bus-d:     #e07020;
+    --bus-e:     #e02040;
+    --bus-f:     #2050c0;
+    --bus-g:     #8020c0;
+    --bus-h:     #c87800;
+    --bus-i:     #60c020;
+    --font:      'Courier New', 'Consolas', monospace;
+    --max-w:     820px;
+    --callout-tip-bg:   #e8f4ec;
+    --callout-warn-bg:  #fef8e0;
+    --callout-key-bg:   #eef0f8;
+    --code-bg:          #dce4ec;
+  }
+
+  /* ── Winamp skin ── */
+  body.skin-winamp {
+    --bg: #1e1e1e; --panel: #252525; --panel2: #202020; --panel3: #1c1c1c;
+    --border: #1e4c28; --border2: #163c20;
+    --fg: #33ff44; --fg-dim: #33ff44;
+    --accent: #33ff44; --working: #44aaff; --alu: #ffaa00; --memory: #33ff44; --big: #00ddff;
+    --bus-a: #a060ff; --bus-b: #d050f0; --bus-c: #20c8a0; --bus-d: #e07020; --bus-e: #e02040;
+    --callout-tip-bg: #0c1e10; --callout-warn-bg: #1e1000; --callout-key-bg: #0a1020;
+    --code-bg: #0a1a0c;
+  }
+  /* ── Sunrise skin ── */
+  body.skin-sunrise {
+    --bg: #fff8ec; --panel: #ffffff; --panel2: #fffcf5; --panel3: #fff4e0;
+    --border: #e8b030; --border2: #d8a020;
+    --fg: #000000; --fg-dim: #705030;
+    --accent: #5828b0; --working: #0060c0; --alu: #c06000; --memory: #007030; --big: #007898;
+    --bus-a: #5828b0; --bus-b: #c838b8; --bus-c: #0c8868; --bus-d: #c86010; --bus-e: #c01828;
+    --callout-tip-bg: #e8f8ec; --callout-warn-bg: #fff4dc; --callout-key-bg: #f0eeff;
+    --code-bg: #fff0cc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    background: var(--panel);
+    border-bottom: 2px solid var(--border);
+    padding: 28px 48px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .logo { font-family: var(--font); letter-spacing: 6px; font-size: 20px; font-weight: bold; color: var(--fg); }
+  .logo-sub { font-family: var(--font); font-size: 10px; letter-spacing: 3px; color: var(--fg-dim); margin-top: 4px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .doc-title { text-align: right; }
+  .doc-title .title-main { font-family: var(--font); font-size: 11px; letter-spacing: 3px; color: var(--fg-dim); text-transform: uppercase; }
+  .doc-title .build-tag  { font-family: var(--font); font-size: 10px; letter-spacing: 1px; color: var(--fg-dim); margin-top: 3px; }
+
+  /* ── Skin selector ── */
+  .skin-group { display: flex; align-items: center; gap: 5px; }
+  .skin-btn {
+    font-family: var(--font); font-size: 10px; letter-spacing: 1px;
+    padding: 3px 9px; background: transparent; border: 1px solid var(--border2);
+    color: var(--fg-dim); cursor: pointer; text-transform: uppercase;
+    transition: border-color 0.1s, color 0.1s, background 0.1s;
+  }
+  .skin-btn:hover  { border-color: var(--fg); color: var(--fg); }
+  .skin-btn.active { border-color: var(--fg); color: var(--fg); background: var(--panel2); }
+
+  /* ── Two-column layout: sidebar TOC + content ── */
+  .body-wrap {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* ── Sidebar TOC ── */
+  .toc-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    padding: 32px 0 32px 32px;
+    border-right: 1px solid var(--border2);
+    font-family: var(--font);
+  }
+  .toc-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 16px; }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 2px; }
+  .toc-list a {
+    font-size: 11px; letter-spacing: 0.5px; color: var(--fg-dim); text-decoration: none;
+    display: block; padding: 3px 6px; border-left: 2px solid transparent;
+    transition: color 0.1s, border-color 0.1s;
+  }
+  .toc-list a:hover { color: var(--fg); border-left-color: var(--border); }
+  .toc-list a.active { color: var(--fg); border-left-color: var(--accent); }
+  .toc-list .toc-sub a { font-size: 10px; padding-left: 14px; color: var(--fg-dim); opacity: 0.75; }
+  .toc-list .toc-sub a:hover { opacity: 1; }
+
+  /* ── Main content ── */
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 48px 64px 96px 48px;
+    max-width: var(--max-w);
+  }
+
+  /* ── AI note banner ── */
+  .ai-note {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    border-left: 4px solid var(--fg-dim);
+    padding: 20px 24px;
+    margin-bottom: 48px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .ai-note-label {
+    font-family: var(--font); font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--fg-dim); margin-bottom: 10px;
+  }
+  .ai-note .sig { margin-top: 16px; font-style: italic; color: var(--fg-dim); font-size: 15px; }
+
+  /* ── Sections ── */
+  .chapter { margin-bottom: 64px; scroll-margin-top: 100px; }
+  .chapter-number {
+    font-family: var(--font); font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--fg-dim); margin-bottom: 6px;
+  }
+  .chapter-title {
+    font-family: var(--font); font-size: 22px; font-weight: bold; letter-spacing: 2px;
+    color: var(--fg); margin-bottom: 6px; border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+  }
+  .section { margin: 32px 0; scroll-margin-top: 100px; }
+  .section-title {
+    font-family: var(--font); font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--fg-dim); border-bottom: 1px solid var(--border2);
+    padding-bottom: 6px; margin-bottom: 16px;
+  }
+  h4 {
+    font-size: 16px; font-weight: 600; margin: 20px 0 8px;
+  }
+
+  /* ── Prose ── */
+  p { margin-bottom: 14px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  a { color: inherit; }
+  a:hover { text-decoration: underline; }
+
+  ul, ol { margin: 0 0 14px 24px; }
+  li { margin-bottom: 6px; }
+
+  /* ── Callouts ── */
+  .callout {
+    border-left: 4px solid var(--border);
+    padding: 12px 16px;
+    background: var(--panel);
+    margin: 20px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .callout.tip  { background: var(--callout-tip-bg);  border-left-color: var(--memory); }
+  .callout.warn { background: var(--callout-warn-bg); border-left-color: var(--alu); }
+  .callout.key  { background: var(--callout-key-bg);  border-left-color: var(--working); }
+  .callout.phi  { background: var(--panel); border-left-color: var(--accent); font-style: italic; }
+  .callout-label {
+    font-family: var(--font); font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--fg-dim); margin-bottom: 6px;
+  }
+  .callout.tip  .callout-label { color: var(--memory); }
+  .callout.warn .callout-label { color: var(--alu); }
+  .callout.key  .callout-label { color: var(--working); }
+  .callout.phi  .callout-label { color: var(--accent); }
+
+  /* ── Code / keyboard ── */
+  kbd {
+    display: inline-block; background: var(--panel2); border: 1px solid var(--border);
+    border-bottom-width: 2px; padding: 1px 6px; font-family: var(--font);
+    font-size: 13px; border-radius: 2px; white-space: nowrap;
+  }
+  code {
+    background: var(--code-bg); padding: 1px 5px; font-family: var(--font);
+    font-size: 14px; color: var(--alu); border-radius: 2px;
+  }
+  pre {
+    background: var(--code-bg); padding: 14px 16px; font-family: var(--font);
+    font-size: 13px; line-height: 1.6; overflow-x: auto; margin: 16px 0;
+    border-left: 3px solid var(--border2);
+  }
+
+  /* ── Tables ── */
+  .ref-table {
+    width: 100%; border-collapse: collapse; font-size: 15px;
+    margin: 16px 0; line-height: 1.5;
+  }
+  .ref-table th {
+    font-family: var(--font); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--fg-dim); text-align: left; padding: 7px 10px;
+    border-bottom: 2px solid var(--border); background: var(--panel);
+  }
+  .ref-table td {
+    padding: 7px 10px; border-bottom: 1px solid var(--border2); vertical-align: top;
+  }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table td:first-child { font-family: var(--font); font-size: 13px; color: var(--fg-dim); white-space: nowrap; }
+
+  /* ── Bus color strips ── */
+  .bus-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+    background: var(--panel); border: 1px solid var(--border2); margin-bottom: 6px;
+  }
+  .bus-label { font-family: var(--font); font-size: 11px; font-weight: bold; min-width: 26px; }
+  .bus-strip { height: 6px; flex: 1; border-radius: 2px; opacity: 0.45; }
+  .bus-desc { font-size: 15px; color: var(--fg); flex: 3; }
+  .bus-a .bus-label, .bus-a .bus-strip { color: var(--bus-a); background: var(--bus-a); }
+  .bus-b .bus-label, .bus-b .bus-strip { color: var(--bus-b); background: var(--bus-b); }
+  .bus-c .bus-label, .bus-c .bus-strip { color: var(--bus-c); background: var(--bus-c); }
+  .bus-d .bus-label, .bus-d .bus-strip { color: var(--bus-d); background: var(--bus-d); }
+  .bus-e .bus-label, .bus-e .bus-strip { color: var(--bus-e); background: var(--bus-e); }
+
+  /* ── Numbered steps ── */
+  .steps { counter-reset: step; list-style: none; margin: 0 0 14px; }
+  .steps li {
+    counter-increment: step; display: flex; gap: 16px;
+    margin-bottom: 14px; align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step); display: flex; align-items: center; justify-content: center;
+    min-width: 26px; height: 26px; background: var(--fg); color: var(--bg);
+    font-family: var(--font); font-size: 11px; font-weight: bold;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .steps li .step-body { flex: 1; min-width: 0; font-size: 16px; line-height: 1.65; overflow-wrap: break-word; }
+  .steps li .step-note { flex: 1; min-width: 0; font-size: 14px; color: var(--fg-dim); margin-top: 4px; line-height: 1.5; overflow-wrap: break-word; }
+
+  /* ── Component cards ── */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel); border: 1px solid var(--border2);
+    border-left: 4px solid var(--accent); padding: 14px 16px;
+  }
+  .card.working { border-left-color: var(--working); }
+  .card.alu     { border-left-color: var(--alu); }
+  .card.memory  { border-left-color: var(--memory); }
+  .card.big     { border-left-color: var(--big); }
+  .card-name { font-family: var(--font); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 6px; }
+  .card-name.working { color: var(--working); }
+  .card-name.alu     { color: var(--alu); }
+  .card-name.memory  { color: var(--memory); }
+  .card-name.big     { color: var(--big); }
+  .card-spec { font-size: 13px; color: var(--fg-dim); margin-bottom: 8px; line-height: 1.5; }
+  .card p { font-size: 15px; line-height: 1.6; margin-bottom: 0; }
+
+  /* ── HR ── */
+  hr { border: none; border-top: 1px solid var(--border2); margin: 40px 0; }
+
+  /* ── Footer ── */
+  .page-footer {
+    max-width: 1200px; margin: 0 auto; padding: 20px 64px 48px 320px;
+    font-family: var(--font); font-size: 10px; letter-spacing: 1px; color: var(--fg-dim);
+    border-top: 1px solid var(--border2); display: flex; justify-content: space-between;
+  }
+
+  /* ── Aside / philosophy quote ── */
+  .aside {
+    font-size: 15px; font-style: italic; color: var(--fg-dim);
+    border-top: 1px solid var(--border2); border-bottom: 1px solid var(--border2);
+    padding: 14px 0; margin: 20px 0; line-height: 1.65;
+  }
+
+  /* ── Flag display ── */
+  .flag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .flag-chip {
+    font-family: var(--font); font-size: 11px; letter-spacing: 1px;
+    padding: 3px 8px; background: var(--panel2); border: 1px solid var(--border2);
+    color: var(--fg-dim);
+  }
+  .flag-chip.alu    { border-color: var(--alu);    color: var(--alu); }
+  .flag-chip.cmp    { border-color: var(--working); color: var(--working); }
+  .flag-chip.pm     { border-color: var(--big);    color: var(--big); }
+
+  /* ── Op table ─ ALU operations displayed cleanly ── */
+  .op-grid { display: grid; grid-template-columns: 80px 1fr; gap: 0; border: 1px solid var(--border2); margin: 16px 0; }
+  .op-grid .op-name { font-family: var(--font); font-size: 13px; padding: 8px 10px; background: var(--panel); border-bottom: 1px solid var(--border2); color: var(--alu); }
+  .op-grid .op-desc { font-size: 15px; padding: 8px 10px; border-bottom: 1px solid var(--border2); border-left: 1px solid var(--border2); }
+  .op-grid .op-name:last-of-type, .op-grid .op-desc:last-of-type { border-bottom: none; }
+</style>
+</head>
+<body class="skin-og">
+
+<!-- ══ HEADER ══ -->
+<div class="page-header">
+  <div>
+    <div class="logo">LOOP 2.1</div>
+    <div class="logo-sub">Manual Flow Computer</div>
+  </div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title">
+      <div class="title-main">User Manual</div>
+      <div class="build-tag">Current as of v.261 · March 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BODY WRAP ══ -->
+<div class="body-wrap">
+
+<!-- ══ TOC SIDEBAR ══ -->
+<nav class="toc-sidebar" id="toc">
+  <div class="toc-title">Contents</div>
+  <ul class="toc-list">
+    <li><a href="#ch-note">A Note on AI</a></li>
+    <li><a href="#ch-intro">1 · Introduction</a>
+      <ul class="toc-sub"><li><a href="#s-two-paths">Two Ways In</a></li></ul>
+    </li>
+    <li><a href="#ch-data">2 · Data Format</a></li>
+    <li><a href="#ch-loops">3 · The Four Loops</a>
+      <ul class="toc-sub"><li><a href="#s-rgw">R/G/W Head</a></li><li><a href="#s-gate">The Gate</a></li></ul>
+    </li>
+    <li><a href="#ch-controls">4 · Controls</a>
+      <ul class="toc-sub"><li><a href="#s-clock">Clock & Speed</a></li><li><a href="#s-opcount">Op Count</a></li></ul>
+    </li>
+    <li><a href="#ch-inject">5 · Loading Data</a>
+      <ul class="toc-sub"><li><a href="#s-switches">Switches</a></li><li><a href="#s-rng">RNG</a></li></ul>
+    </li>
+    <li><a href="#ch-buses">6 · The Buses</a>
+      <ul class="toc-sub"><li><a href="#s-bus-abcd">Buses A–D</a></li><li><a href="#s-bus-e">Bus E</a></li><li><a href="#s-bus-fg">Chain Buses F &amp; G</a></li><li><a href="#s-bus-hi">Net Buses H &amp; I</a></li></ul>
+    </li>
+    <li><a href="#ch-alu">7 · The ALU</a>
+      <ul class="toc-sub"><li><a href="#s-registers">Registers</a></li><li><a href="#s-ops">Operations</a></li><li><a href="#s-flags">Flags</a></li><li><a href="#s-comparator">Comparator</a></li></ul>
+    </li>
+    <li><a href="#ch-memory">8 · Memory Slots</a></li>
+    <li><a href="#ch-scratch">9 · Working Scratch Registers</a></li>
+    <li><a href="#ch-counters">10 · Counters</a></li>
+    <li><a href="#ch-pm">11 · Pattern Matcher</a>
+      <ul class="toc-sub"><li><a href="#s-cascade">Cascade Mode</a></li><li><a href="#s-rewrite">Rewrite Mode</a></li></ul>
+    </li>
+    <li><a href="#ch-tg">12 · Threshold Gate</a>
+      <ul class="toc-sub"><li><a href="#s-tg-clamp">Clamp Mode</a></li><li><a href="#s-tg-cascade">TG Cascade</a></li></ul>
+    </li>
+    <li><a href="#ch-p2p">13 · P2P Connections</a>
+      <ul class="toc-sub"><li><a href="#s-p2p-setup">Setup</a></li><li><a href="#s-p2p-routing">Routing Data</a></li></ul>
+    </li>
+    <li><a href="#ch-network">14 · The Challenge Network (CBX)</a>
+      <ul class="toc-sub">
+        <li><a href="#s-cbx-probe">Chain Probe</a></li>
+        <li><a href="#s-cbx-availability">Availability</a></li>
+        <li><a href="#s-cbx-protocol">The Protocol Layer</a></li>
+        <li><a href="#s-cbx-addressing">Addressing</a></li>
+        <li><a href="#s-cbx-inspect">Inspecting CBX Traffic</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-networking">15 · Networking — Chain &amp; Net</a>
+      <ul class="toc-sub">
+        <li><a href="#s-net-chain">The Chain</a></li>
+        <li><a href="#s-net-scan">Scanning</a></li>
+        <li><a href="#s-net-create">Creating a Net</a></li>
+        <li><a href="#s-net-join">Joining a Net</a></li>
+        <li><a href="#s-net-hub">Hub &amp; Election</a></li>
+        <li><a href="#s-net-chat">Chat</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-log">16 · Session Log</a></li>
+    <li><a href="#ch-challenges">17 · Challenges</a>
+      <ul class="toc-sub">
+        <li><a href="#s-add">Add X Numbers</a></li>
+        <li><a href="#s-multiply">Multiply</a></li>
+        <li><a href="#s-transform">Transform Nth</a></li>
+        <li><a href="#s-filter">Filter</a></li>
+        <li><a href="#s-sort">Sort Values</a></li>
+        <li><a href="#s-findmax">Find the Maximum</a></li>
+        <li><a href="#s-xor">XOR Checksum</a></li>
+        <li><a href="#s-count">Count Matches</a></li>
+        <li><a href="#s-accum">Accumulate to Threshold</a></li>
+        <li><a href="#s-chainsum">Chain Sum</a></li>
+        <li><a href="#s-custom-challenges">Custom Challenges</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-files">18 · Files — .L21 &amp; .l21x</a>
+      <ul class="toc-sub">
+        <li><a href="#s-files-panel">Files Panel</a></li>
+        <li><a href="#s-files-save">Saving</a></li>
+        <li><a href="#s-files-load">Loading</a></li>
+        <li><a href="#s-files-formats">File Formats</a></li>
+        <li><a href="#s-files-archive">Archive Export &amp; Import</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-netmon">19 · Network Monitor</a>
+      <ul class="toc-sub">
+        <li><a href="#s-netmon-stream">Packet Stream</a></li>
+        <li><a href="#s-netmon-inject">Capture &amp; Inject</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-tutorial">20 · Tutorial</a></li>
+    <li><a href="#ch-troubleshoot">21 · Troubleshooting</a></li>
+    <li><a href="#ch-reference">22 · Quick Reference</a></li>
+    <li><a href="#ch-playstyle">23 · Play Style</a></li>
+    <li><a href="#ch-philosophy">24 · Philosophy</a></li>
+  </ul>
+</nav>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main class="content">
+
+<!-- ── AI NOTE ── -->
+<div class="ai-note" id="ch-note">
+  <div class="ai-note-label">A Note on the Use of AI</div>
+  <p>Both this manual and the Loop 2.1 simulator were developed with the assistance of Claude, an AI made by Anthropic. I want to be straightforward about that.</p>
+  <p>Loop 2.1 is a working prototype. The simulator runs in a web browser off of a single HTML file, the architecture is sound and transparent, and the machine does what the manual says it does. But the code was not written by a professional human software engineer and this manual was not written by a professional technical writer. They were produced collaboratively, with myself directing and designing everything and Claude the AI doing the coding. While I do have some experience with coding and software development, my current skillset is not sharp enough to write this myself and my time and free capital are somewhat limited, so I decided to take advantage of Claude and try out vibe coding for myself. It's all that I have the bandwidth for right now.</p>
+  <p>If the project proves itself and enough people find it interesting and worthy of attention, then I will figure out a path to hire a human developer to re-write the engine from the ground up in a way that maximizes security, scalability, and maintainability. And I will also hire a professional writer to write a new manual, as I believe it's important that AI not eat up human-lead content creation work. This is a prototype right now. The ideas are real and the machine works. The human developed product, later if, if there is one, should be better in every measurable way.</p>
+  <p>I think there is something worth saying about the difference between AI as a replacement for human work and AI as a way to reach a threshold you couldn't otherwise reach alone. I am not trying to avoid paying a skilled person for skilled work. I am trying to find out whether this idea is worth paying for. This prototype is how I find that out.</p>
+  <div class="sig">— Shea Gunther, Maine · March 2026</div>
+</div>
+
+<!-- ══ CHAPTER 1: INTRODUCTION ══ -->
+<div class="chapter" id="ch-intro">
+  <div class="chapter-number">Chapter 1</div>
+  <div class="chapter-title">Introduction</div>
+
+  <div class="section" id="s-two-paths">
+    <div class="section-title">Two Ways In</div>
+
+    <p>Before you read further, consider putting this manual down.</p>
+
+    <p>Loop 2.1 is a machine you can largely figure out by operating it. The interface is dense but not arbitrary — every control does what it looks like it does, every component behaves consistently, and the feedback is immediate. An operator willing to spend time pressing buttons, injecting values, and watching what happens will develop a genuine working model of the machine without consulting documentation at all. The early confusion is real. So is the moment when something resolves. That moment tends to land harder when it was earned without a map.</p>
+
+    <p>So here is an honest invitation: open the simulator, hit <strong>▶ START</strong>, and see how far you get on your own. Return to this manual the way you'd return to a reference book — when you have a specific question that exploration hasn't answered. You may find you need it less than you expected, and what you do need it for will be clearer once you've already spent time with the machine.</p>
+
+    <div class="callout tip">
+      <div class="callout-label">The Other Path</div>
+      If you'd rather orient yourself before touching the machine — or if you've already tried it and want to understand what you saw — this manual is here for exactly that. Both approaches are legitimate. There is no shame in reading the documentation first and no particular virtue in refusing to. The machine rewards curiosity regardless of how it arrives.
+    </div>
+
+    <p>A few things genuinely require documentation and cannot be fully intuited from the interface: the Chain/Net networking system, the CBX packet format and chain challenge protocol, the session log file structure, and the P2P signaling exchange. These are covered in full in later chapters. Everything else — the loops, the buses, the ALU, the pattern matcher, the threshold gates, the challenge system — can be found by exploration. The manual will still be here when you want it.</p>
+  </div>
+
+  <p>Loop 2.1 is a manual flow computer. Unlike every computer you have likely used before, it has no stored program. There is no code running in the background, no scheduler, nothing waiting to execute. Nothing happens automatically. Instead, you — the operator — are the program. Every movement of data, every calculation, every routing decision is made by you, in real time, as the machine runs.</p>
+
+  <p>This is not a limitation. It is the point.</p>
+
+  <p>Modern computers hide everything from you. Data moves through layers of abstraction so deep that even professional engineers rarely understand what is happening at the hardware level. Loop 2.1 inverts this entirely. Every bit is visible. Every operation is observable. Every decision is yours.</p>
+
+  <div class="callout phi">
+    <div class="callout-label">Core Tenet</div>
+    <strong>"The Operator Is the Program."</strong> Computation is not something that happens to you. It is something you do.
+  </div>
+
+  <div class="section">
+    <div class="section-title">What You Need to Know</div>
+    <p>This manual assumes you are comfortable with binary representation — that a sequence of 1s and 0s can represent a number, and that 16 bits can hold a value from 0 to 65,535. You do not need programming experience. You do not need to understand CPU architecture. If you can read a binary number and you are curious, you are ready.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Core Idea: Data as a Physical Thing</div>
+    <p>In Loop 2.1, data behaves like something physical. It has a <strong>location</strong> — it sits inside one of four circular tracks called loops. It has <strong>velocity</strong> — it moves around the track one bit per clock tick. And it has a <strong>trajectory</strong> — you can watch it travel, decide where to send it, and route it wherever it needs to go.</p>
+    <p>Think of each loop as a circular conveyor belt. Bits travel around the belt continuously. At one point on each belt — the Read/Write head — you can read what passes by, pull data off, or add new data. Everything else just keeps circulating until you act on it.</p>
+    <p>Speed is adjustable. At 24 Hz — the recommended working speed — individual words are visible as they move. At 144 Hz, the machine runs fast enough for extended computations. Start at 24 Hz and adjust as needed.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">A Recommended Starting Speed</div>
+    <div class="callout tip">
+      <div class="callout-label">Tip</div>
+      Set your speed to <strong>24 Hz</strong> when learning. It's fast enough to feel responsive, slow enough to follow what's happening. Drop it lower if you want to watch individual bits move; increase it once you're comfortable.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">What Learning This Feels Like</div>
+    <p>The first session with Loop 2.1 is frequently disorienting. There is a lot on the screen. The relationships between the components are not immediately obvious. You will set something up and the result will not be what you expected, and for a moment it will be unclear whether the machine is wrong or you are. The machine is not wrong. This is not a criticism — it is a preparation.</p>
+    <p>What tends to happen, if you stay with it, is a specific kind of click. Something you have been trying to understand — why the bus needs time, or what the gate is actually doing, or why the value you injected hasn't arrived yet — suddenly resolves. And the feeling that follows is not just understanding. It is a second, stranger feeling: how was this ever unclear? The thing that was opaque reveals itself as not just understandable but <em>inevitable</em>, and your brain immediately treats it as something you must have always known. That is what a mental model snapping into place feels like from the inside. It is slightly embarrassing and entirely worth it.</p>
+    <p>The other thing that happens, over time, is fluency. Not the click of understanding — something slower and more physical than that. Operators who have run many sessions describe something like what musicians describe learning an instrument: at a certain point you stop thinking about the individual mechanics and start feeling the whole machine as a flowing thing. You develop an intuition for timing. You know, without counting, roughly where a value is in the loop — how many ticks until it comes around again. You feel the cost of a bus transfer the way a bass player feels the beat, not as a calculation but as a sense. The machine becomes something you play.</p>
+    <p>This matters because it means the learning does not plateau. The challenges scale. The elegance ceiling keeps rising. An operator who has run a hundred sessions still finds new problems and still finds better solutions to old ones. The early disorientation is real, the click is real, the fluency is real, and the reward that comes with all three is real. None of it is given to you. That is precisely what makes it worth having.</p>
+    <div class="callout phi">
+      <div class="callout-label">On the cost of failure</div>
+      The machine is unforgiving. One gate left open when it should be closed, one bus not turned on, one value routed to the wrong loop — and the computation fails. You will fail this way many times before you stop failing this way. The important thing is that the cost of failure here is zero. Nothing breaks. Nothing is lost. The machine shows you exactly what happened and you try again. The difficulty is real. The stakes are not. That combination is rarer than it sounds.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 2: DATA FORMAT ══ -->
+<div class="chapter" id="ch-data">
+  <div class="chapter-number">Chapter 2</div>
+  <div class="chapter-title">Data Format — The 17-Bit Word</div>
+
+  <p>Loop 2.1 uses 17-bit data words. Each word consists of:</p>
+  <ul>
+    <li><strong>1 marker bit</strong> — always 1 when a word is present, 0 for empty space</li>
+    <li><strong>16 data bits</strong> — the actual value, capable of holding 0 through 65,535</li>
+  </ul>
+
+  <pre>[ M | b15 b14 b13 b12 · b11 b10 b9 b8 b7 b6 b5 b4 b3 b2 b1 b0 ]</pre>
+
+  <p>The marker bit is essential to the loop architecture. Because data circulates continuously with empty gaps between words, the machine needs a way to distinguish "this is a word" from "this is empty space." The marker bit serves that purpose — it is the leading edge of every word.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Important</div>
+    The marker bit is not part of the value. A word with marker=1 and all data bits=0 holds the value zero — it is a valid word containing zero, not an empty slot.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Reading the Head Display</div>
+    <p>At the bottom of each loop panel, the HEAD display shows the 17-bit pattern currently at the Read head. The leftmost box is the marker bit, followed by b15 through b0. Below the bit pattern you will see the decimal and hexadecimal value of the word currently passing.</p>
+    <p>The top four bits (b15–b12) are visually grouped separately. In most contexts they are ordinary data bits. In Memory's address-read mode, they encode a destination slot address.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Bus Width and Transfer Time</div>
+    <p>Buses are 24-slot pipelines — slightly wider than a word to allow clean separation between consecutive words. A complete word transfer takes BUS_N + BPW = 24 + 17 = <strong>41 ticks</strong> from the moment the first bit (the marker) enters the bus to the moment the last data bit lands in the destination.</p>
+  </div>
+</div>
+
+
+<!-- ══ CHAPTER 3: THE FOUR LOOPS ══ -->
+<div class="chapter" id="ch-loops">
+  <div class="chapter-number">Chapter 3</div>
+  <div class="chapter-title">The Four Loops</div>
+
+  <p>Loop 2.1 has four circular storage tracks. Each is independent and runs at the same clock rate. Data circulates continuously — one bit per tick — around each loop until the operator intercepts it.</p>
+
+  <div class="card-grid">
+    <div class="card working">
+      <div class="card-name working">◈ Working Loop</div>
+      <div class="card-spec">12 words · 204 bits</div>
+      <p>Primary workspace. New values enter here via the inject channel. Staging area for values in transit. Has two working scratch registers for temporary holding without crossing a bus.</p>
+    </div>
+    <div class="card alu">
+      <div class="card-name alu">◈ ALU Loop</div>
+      <div class="card-spec">16 words · 272 bits</div>
+      <p>Connected to the Arithmetic Logic Unit. Route values here, capture them into registers A–D, and the Answer register updates automatically based on your current operation selection.</p>
+    </div>
+    <div class="card memory">
+      <div class="card-name memory">◈ Memory Loop</div>
+      <div class="card-spec">16 words · 272 bits + 16 addressed slots</div>
+      <p>Bulk storage loop with 16 fixed addressed slots (0–15). Route values here to store them by address. Read slots back individually, in batch, or with auto-increment. Good for persisting intermediate results.</p>
+    </div>
+    <div class="card big">
+      <div class="card-name big">◈ Big Loop</div>
+      <div class="card-spec">32 words · 544 bits</div>
+      <p>Largest loop. Home of both Pattern Matchers. Suited for datasets you want to filter, scan, or pass through the PM. Data circulates while the PM watches for matching values.</p>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <div class="callout-label">Key Concept</div>
+    <strong>Data has position.</strong> A value injected into the Working loop will take up to 204 ticks to rotate back around to the read head. At 24 Hz, that's about 8.5 seconds. Plan ahead: send values early and let them circulate to where you need them.
+  </div>
+
+  <div class="section" id="s-rgw">
+    <div class="section-title">The Read/Gate/Write Head</div>
+    <p>Each loop has a three-position head at a fixed location on the track. Data flows left to right past these three positions on every tick:</p>
+    <table class="ref-table">
+      <tr><th>Position</th><th>Symbol</th><th>Function</th></tr>
+      <tr><td>Read (R)</td><td><code>R·</code></td><td>Where buses sample bits. Bus source sampling happens at the R dot before the loop rotates.</td></tr>
+      <tr><td>Gate (G)</td><td><code>G·</code></td><td>When the gate is CLOSED, any bit at this position is zeroed on that tick. When OPEN, data passes through freely.</td></tr>
+      <tr><td>Write (W)</td><td><code>W·</code></td><td>Where bus deliveries, ALU writebacks, inject channel output, and scratch register playbacks all land. Data enters the loop here.</td></tr>
+    </table>
+    <p>The R dot is at bit position 2 in the loop's bit array. The G dot is at position 1. The W dot is at position 0. This means that a bit written at the W dot will reach the G dot on the next tick, and the R dot on the tick after that — a natural two-tick pipeline.</p>
+  </div>
+
+  <div class="section" id="s-gate">
+    <div class="section-title">The Gate</div>
+    <p>Press <kbd>CLOSE GATE</kbd> on any loop to close that loop's gate. While closed, any bit that reaches the G dot is destroyed on that tick. This is how you clear data from a loop: close the gate and let the loop rotate. After one full rotation, all bits have passed the gate and been zeroed.</p>
+    <div class="callout warn">
+      <div class="callout-label">Warning</div>
+      Closing a gate does not stop circulation. Data injected from outside lands at the W dot, which is past the gate, and is not affected. But any data already circulating in the loop will be destroyed as it passes the G dot. Do not close the gate while something you need is in transit.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pause and Step</div>
+    <p>The <kbd>⏸</kbd> button on each loop freezes that loop in place. Other loops continue running. The <kbd>STEP</kbd> button on each loop advances only that loop by one position. The global <kbd>STEP</kbd> button in the control bar advances the entire machine by one tick.</p>
+    <p>Pausing a loop while a bus is delivering into it stops the delivery gracefully — the bus sees a zero bit from the halted loop. Data already in transit completes delivery into the paused loop's W dot on each tick, which means words may stack up at the write position while the loop is frozen.</p>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 4: CONTROLS ══ -->
+<div class="chapter" id="ch-controls">
+  <div class="chapter-number">Chapter 4</div>
+  <div class="chapter-title">The Control Bar</div>
+
+  <p>The control bar runs across the top of the machine, below the header. It contains the master clock controls, speed adjustment, Op Count, and status indicators.</p>
+
+  <div class="section" id="s-clock">
+    <div class="section-title">Start, Stop, and Step</div>
+    <table class="ref-table">
+      <tr><th>Control</th><th>Function</th></tr>
+      <tr><td><kbd>START / STOP</kbd></td><td>Starts or halts the master clock. All loops run when the clock is running.</td></tr>
+      <tr><td><kbd>STEP</kbd></td><td>Advances the entire machine by exactly one tick. Useful for debugging.</td></tr>
+    </table>
+  </div>
+
+  <div class="section" id="s-speed">
+    <div class="section-title">Speed Control</div>
+    <p>Two controls set the clock speed and stay in sync with each other:</p>
+    <ul>
+      <li><strong>Slider</strong> — 1 to 144 Hz in 1 Hz integer steps. Drag for quick coarse adjustment.</li>
+      <li><strong>Number input</strong> — 0.1 to 144 Hz, accepts any decimal. Type <code>0.5</code>, <code>24</code>, <code>12.5</code>, or any other value. Moving the slider syncs the number; changing the number snaps the slider to the nearest integer.</li>
+    </ul>
+    <p>The Hz display to the right of the controls shows the current speed. The <strong>Clock %</strong> display in the header shows how accurately the machine is hitting that target — green means ≥95% accurate, amber means ≥75%, red means below. At 24 Hz you should see solid green on any modern machine.</p>
+  </div>
+
+  <div class="section" id="s-opcount">
+    <div class="section-title">Op Count</div>
+    <p>Op Count is a halt-on-match system. Set a target value in the Op Count input, then link it to one or more loop counters using the <kbd>W</kbd>, <kbd>A</kbd>, <kbd>M</kbd>, <kbd>B</kbd>, and <kbd>G</kbd> buttons. When any linked counter reaches the target, that loop halts automatically. The linked button turns red to show the halt state.</p>
+    <div class="callout warn">
+      <div class="callout-label">Common Mistake</div>
+      Op Count only fires if the linked counter is actually incrementing. Counters only increment when you have configured triggers for them in the Counter Triggers panel. If the counter never increments, Op Count never fires.
+    </div>
+    <p>To release a halted loop: press <kbd>RESET</kbd> on that loop's counter. This resets the counter to zero and releases the halt. The loop begins circulating again immediately.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Operator Handle and Session Name</div>
+    <p>Two text fields in the header identify your session. The <strong>Operator Handle</strong> is your name or alias — it appears in the session log file. The <strong>Session Name</strong> labels the specific computation. Both are optional but useful when reviewing log files later.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Skins</div>
+    <p>Three visual skins are available: <strong>OG</strong> (default cool-grey industrial), <strong>Winamp</strong> (dark mode, lime green, 1990s bevel aesthetic), and <strong>Sunrise</strong> (warm amber and terracotta). Switching skins is instant and affects the full interface. Your choice persists across sessions.</p>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 5: LOADING DATA ══ -->
+<div class="chapter" id="ch-inject">
+  <div class="chapter-number">Chapter 5</div>
+  <div class="chapter-title">Loading Data — The Inject Channel</div>
+
+  <p>The inject channel is the primary way to load values into the machine. It runs as a horizontal strip above the loops and connects to the Working loop's write head.</p>
+
+  <div class="section" id="s-switches">
+    <div class="section-title">The Operator Switches</div>
+    <p>Sixteen toggle switches represent the 16 data bits. The switches are grouped visually: four switches on the left for bits b15–b12 (the address bits), then a small gap, then twelve switches for bits b11–b0. Flip a switch up for 1, down for 0. The display below shows the current value in decimal and hexadecimal as you set the switches.</p>
+    <p><strong>Drag to set:</strong> Click on any switch and hold the mouse button down. As you drag across other switches they will all flip to match the initial direction of your first click — ON if you started on an OFF switch, OFF if you started on an ON switch. This lets you sweep across the full row to set all bits at once, or drag precisely to set a specific range.</p>
+    <p>Press <kbd>CLEAR INPUT</kbd> to set all switches to zero.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sending a Value</div>
+    <p>Press <kbd>▼ SEND</kbd>. The machine prepends the marker bit and loads the 17-bit word into the inject channel. The full word enters the Working loop over the next 17 ticks.</p>
+    <div class="callout key">
+      <div class="callout-label">Important</div>
+      You cannot inject a second value while the channel still has bits in flight — the INJECT LED will be lit. Wait until the channel clears before pressing SEND again. Watching the inject strip on the main display lets you see when the channel is clear.
+    </div>
+  </div>
+
+  <div class="section" id="s-rng">
+    <div class="section-title">The RNG</div>
+    <p>The RNG button generates a random value within a range you specify and injects it directly into the Working loop. Set <strong>Min</strong> and <strong>Max</strong> to constrain the range — both default to the full 0–65,535 range. If Min exceeds Max after clamping, the range is invalid and the RNG will not fire.</p>
+    <p>The RNG is a linear feedback shift register (LFSR) seeded from <code>Math.random()</code>. Over large samples it produces balanced distributions, but like any PRNG it can show local clustering. The Filter challenge uses this property deliberately — testing whether a sample's parity distribution is as balanced as expected.</p>
+  </div>
+</div>
+
+
+<!-- ══ CHAPTER 6: BUSES ══ -->
+<div class="chapter" id="ch-buses">
+  <div class="chapter-number">Chapter 6</div>
+  <div class="chapter-title">Moving Data — The Buses</div>
+
+  <p>Buses move data between loops and other components. Each bus is a 24-slot pipeline — a complete word takes 41 ticks to travel across and land in the destination. Set source and destination first, then turn the bus on.</p>
+
+  <div class="section" id="s-bus-abcd">
+    <div class="section-title">Buses A Through D — All the Same Type</div>
+    <p>Buses A, B, C, and D are all the same kind of bus. Any of them can move data between any two loops. The differences are in what additional sources and destinations they can reach:</p>
+
+    <div class="bus-row bus-a">
+      <div class="bus-label">A</div>
+      <div class="bus-strip"></div>
+      <div class="bus-desc">Any loop as source or destination. Also accepts PM1 output as a source, and handles counter read/write (any counter as source or destination).</div>
+    </div>
+    <div class="bus-row bus-b">
+      <div class="bus-label">B</div>
+      <div class="bus-strip"></div>
+      <div class="bus-desc">Same as A. Full counter access — read any counter as a word, or write a word value into any counter. The dedicated counter bus.</div>
+    </div>
+    <div class="bus-row bus-c">
+      <div class="bus-label">C</div>
+      <div class="bus-strip"></div>
+      <div class="bus-desc">Same as A and B. Run simultaneously with any other bus for parallel transfers between loops.</div>
+    </div>
+    <div class="bus-row bus-d">
+      <div class="bus-label">D</div>
+      <div class="bus-strip"></div>
+      <div class="bus-desc">Same as A, B, and C. With all four active: Working → ALU → Memory → Big → Working forms a continuous mega-loop pipeline.</div>
+    </div>
+
+    <p>Running multiple buses simultaneously is normal and expected. Use two buses to move two values in parallel. Use three or four to create complex multi-loop pipelines. Each bus operates independently — turning one on or off does not affect the others.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">Common Mistake</div>
+      Setting source and destination is not enough. You must also press <kbd>TURN BUS X ON</kbd>. The bus does nothing until explicitly activated. Turn it off when the transfer is complete — if you leave it on, data keeps flowing from source to destination continuously, which may overwrite values you want to keep.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Transfer Example: Working → ALU</div>
+    <ol class="steps">
+      <li><div class="step-body">In Bus A Config (sidebar), set Source to <strong>Working</strong> and Destination to <strong>ALU</strong>.</div></li>
+      <li><div class="step-body">Press <kbd>TURN BUS A ON</kbd>.</div><div class="step-note">The purple Bus A strip lights up. Bits begin exiting the Working loop's R dot and traveling across the strip.</div></li>
+      <li><div class="step-body">Wait 41 ticks. The full word arrives at the ALU loop's W dot.</div><div class="step-note">If you have the Capture Route set, the ALU will begin capturing the word automatically as it arrives.</div></li>
+      <li><div class="step-body">Press <kbd>TURN BUS A OFF</kbd> once the transfer is complete — or leave it on if more words are following.</div></li>
+    </ol>
+  </div>
+
+  <div class="section" id="s-bus-e">
+    <div class="section-title">Bus E — External (Different from A–D)</div>
+    <div class="bus-row bus-e">
+      <div class="bus-label">E</div>
+      <div class="bus-strip"></div>
+      <div class="bus-desc"><strong>External bus.</strong> Two-way: outbound (crimson, loop → external) and inbound (green, external → loop) channels run independently on the same strip.</div>
+    </div>
+    <p>Bus E is fundamentally different from A–D. It connects the machine to an external endpoint — either the Challenge Module or a network peer (future feature). The outbound channel carries data from a loop out to the endpoint; the inbound channel carries data from the endpoint into a loop. Both run simultaneously and independently.</p>
+    <p>Configure three things in the Bus E Config panel:</p>
+    <ul>
+      <li><strong>External Endpoint</strong> — Challenge or Network</li>
+      <li><strong>Outbound Source</strong> — which loop feeds the outbound channel</li>
+      <li><strong>Inbound Destination</strong> — which loop receives incoming data</li>
+    </ul>
+    <p>When you start a Challenge, Bus E enables automatically and the inbound queue is loaded with the challenge values. You do not need to enable it manually for challenges.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Counter Values as Data</div>
+    <p>Counter values are first-class data. Any bus can route a counter value into a loop as a word, or write a word value back into a counter. This lets you capture "how many words have I processed so far" as a number you can use in arithmetic — add it to something, compare it, store it in memory.</p>
+    <p>Use the <kbd>→A</kbd>, <kbd>→B</kbd>, <kbd>→C</kbd>, <kbd>→D</kbd> buttons on each counter strip to eject the counter's current value onto the corresponding bus. The <kbd>COPY / EJECT</kbd> toggle on each counter controls whether the counter resets to zero after sending (EJECT) or preserves its value (COPY).</p>
+  </div>
+
+  <div class="section" id="s-bus-fg">
+    <div class="section-title">Buses F and G — P2P Left and Right</div>
+    <div class="bus-row bus-f"><div class="bus-label">F</div><div class="bus-strip"></div><div class="bus-desc"><strong>P2P Left.</strong> Outbound sends words from a source loop to the direct left neighbor. Inbound delivers words from the left neighbor into a destination loop.</div></div>
+    <div class="bus-row bus-g"><div class="bus-label">G</div><div class="bus-strip"></div><div class="bus-desc"><strong>P2P Right.</strong> Same as Bus F, for the directly connected right neighbor.</div></div>
+    <p>Buses F and G each have their own sidebar panel in order between Bus E and Bus H — same layout as all other buses: source selector, destination selector, on/off toggle.</p>
+    <div class="callout tip"><div class="callout-label">Relay pattern</div>A machine connected on both sides can relay data: words arrive on Bus F, circulate through loops, exit on Bus G. This forms a data pipeline across multiple machines with no special configuration.</div>
+  </div>
+
+  <div class="section" id="s-bus-hi">
+    <div class="section-title">Buses H and I — Routed Net Buses</div>
+    <div class="bus-row" style="border-left:3px solid var(--bus-net0-color,#c87800);"><div class="bus-label" style="color:var(--bus-net0-color,#c87800);">H</div><div class="bus-strip"></div><div class="bus-desc"><strong>Net0.</strong> Routes words to any reachable machine by machine ID — direct neighbors or any machine further along the chain.</div></div>
+    <div class="bus-row" style="border-left:3px solid var(--bus-net1-color,#60c020);"><div class="bus-label" style="color:var(--bus-net1-color,#60c020);">I</div><div class="bus-strip"></div><div class="bus-desc"><strong>Net1.</strong> Same as Bus H, independently addressable. Can point to a different machine than H, or the same one.</div></div>
+    <p>Unlike F and G, Buses H and I route through the chain toward any connected machine by ID. To use: run PING NETWORK, open the Bus H (or Bus I) sidebar panel, select a peer target, set source and destination loops, turn the bus on. Words route automatically through intermediate machines without involving their loops.</p>
+    <div class="callout tip"><div class="callout-label">Router pattern</div>With H and I independently addressable, an operator can act as a network router: receive on H from machine A, process through a loop, forward on I to machine C. Every routing decision is the operator's. Every word is visible.</div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 7: THE ALU ══ -->
+<div class="chapter" id="ch-alu">
+  <div class="chapter-number">Chapter 7</div>
+  <div class="chapter-title">The ALU — Arithmetic and Logic</div>
+
+  <p>The ALU performs all calculations. It operates on operands drawn from four persistent registers and maintains a live Answer that updates whenever the register contents or operation selection changes. All registers hold their values until you explicitly overwrite or clear them.</p>
+
+  <div class="section" id="s-registers">
+    <div class="section-title">The Four Registers</div>
+    <p>Registers <strong>A, B, C, and D</strong> each hold a single 16-bit value. To load a register:</p>
+    <ol class="steps">
+      <li><div class="step-body">Set the <strong>Capture Route</strong> selector (<code>HEAD →</code>) to the desired register letter.</div></li>
+      <li><div class="step-body">Route a value into the ALU loop via a bus.</div></li>
+      <li><div class="step-body">Wait for the word's marker bit to arrive at the ALU loop's R head. Capture begins automatically and completes after 17 ticks.</div></li>
+    </ol>
+    <p>The Capture Route selector does not advance automatically unless <strong>ADVANCE</strong> mode is on. In <strong>HOLD</strong> mode, it stays on the current register after every SEND TO LOOP — useful for accumulator patterns where you're repeatedly overwriting one register with a running total.</p>
+    <p>Press <kbd>SEND TO LOOP</kbd> next to any register to inject that register's value back into the ALU loop. This starts a 17-tick writeback pipeline. The value then circulates in the ALU loop and can be recaptured into any register, or routed to another loop via a bus.</p>
+  </div>
+
+  <div class="section" id="s-ops">
+    <div class="section-title">Operand Selection</div>
+    <p>The <strong>Op A ←</strong> and <strong>Op B ←</strong> selectors choose which registers feed the two operand slots. You are not locked to A→Op A and B→Op B. You can compute A+C, D−B, or any combination — without moving data between registers first. This is a significant flexibility: keep a constant in one register and cycle other values through a second register to add, subtract, or compare against the constant repeatedly.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Operations</div>
+    <div class="op-grid">
+      <div class="op-name">ADD</div><div class="op-desc">Op A + Op B. Sets carry if result overflows 16 bits (exceeds 65,535).</div>
+      <div class="op-name">SUB</div><div class="op-desc">Op A − Op B. Sets carry on borrow (when Op B > Op A).</div>
+      <div class="op-name">AND</div><div class="op-desc">Op A AND Op B, bitwise. 1 only where both operands have 1.</div>
+      <div class="op-name">OR</div><div class="op-desc">Op A OR Op B, bitwise. 1 where either operand has 1.</div>
+      <div class="op-name">XOR</div><div class="op-desc">Op A XOR Op B, bitwise. 1 where operands differ.</div>
+      <div class="op-name">NOT</div><div class="op-desc">Bitwise complement of Op A. Every 1 becomes 0, every 0 becomes 1. Op B unused.</div>
+      <div class="op-name">SHL</div><div class="op-desc">Shift Op A left one bit (effectively ×2). Top bit goes to carry; zero enters at b0.</div>
+      <div class="op-name">SHR</div><div class="op-desc">Shift Op A right one bit (effectively ÷2, integer). b0 goes to carry; zero enters at top.</div>
+      <div class="op-name">NEG</div><div class="op-desc">Arithmetic negation of Op A (0 − Op A, two's complement). Useful for subtraction from a constant.</div>
+      <div class="op-name">INC</div><div class="op-desc">Op A + 1.</div>
+      <div class="op-name">DEC</div><div class="op-desc">Op A − 1. Carry set if Op A was 0 (underflow to 65,535).</div>
+    </div>
+    <p><strong>Note on MUL and DIV:</strong> These are not single operations. Multiplication is accomplished through repeated addition (or the more efficient SHL-and-add binary method). Division is accomplished through repeated subtraction. The Multiply challenge is specifically designed around this — computing 47 × 312 through repeated addition is a meaningful workout.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">12-Bit Compatibility Mode</div>
+    <p>The <kbd>MODE: 16-BIT</kbd> toggle switches to 12-bit mode. In 12-bit mode, the top four bits (b15–b12) of both operands are masked to zero before computing, and results have zero in the top four positions. The top four bit-dots on register displays dim visually when 12-bit mode is active. Use this when interoperating with systems or data that uses 12-bit values.</p>
+  </div>
+
+  <div class="section" id="s-flags">
+    <div class="section-title">ALU Flags</div>
+    <p>Five flags update continuously alongside the Answer:</p>
+    <div class="flag-row">
+      <span class="flag-chip alu">ZRO</span>
+      <span class="flag-chip alu">CRY</span>
+      <span class="flag-chip alu">OVF</span>
+      <span class="flag-chip alu">SGN</span>
+      <span class="flag-chip alu">PAR</span>
+    </div>
+    <table class="ref-table">
+      <tr><th>Flag</th><th>Meaning</th></tr>
+      <tr><td>ZRO</td><td>Result is exactly zero.</td></tr>
+      <tr><td>CRY</td><td>Carry out (ADD/INC), borrow (SUB/DEC), or shifted-out bit (SHL/SHR).</td></tr>
+      <tr><td>OVF</td><td>Signed overflow: result crossed the signed integer boundary.</td></tr>
+      <tr><td>SGN</td><td>Top bit of result is set — value is negative in two's complement interpretation.</td></tr>
+      <tr><td>PAR</td><td>Even parity: the number of set bits in the result is even.</td></tr>
+    </table>
+    <div class="callout phi">
+      <div class="callout-label">Philosophy</div>
+      Flags inform you, the operator. They do not trigger any automatic action. You read them and decide what to do next. This is intentional — the machine does not branch on conditions. You do.
+    </div>
+  </div>
+
+  <div class="section" id="s-comparator">
+    <div class="section-title">The Comparator</div>
+    <p>The Comparator runs continuously alongside the Answer, comparing Op A and Op B. Six flags update live:</p>
+    <div class="flag-row">
+      <span class="flag-chip cmp">GT</span>
+      <span class="flag-chip cmp">LT</span>
+      <span class="flag-chip cmp">EQ</span>
+      <span class="flag-chip cmp">GTE</span>
+      <span class="flag-chip cmp">LTE</span>
+      <span class="flag-chip cmp">NEQ</span>
+    </div>
+    <p>The six comparator flags are also available as a packed 16-bit word that can be written into the ALU loop via <kbd>SEND TO LOOP</kbd> in the Comparator section. Bit positions: GT→b5, LT→b4, EQ→b3, GTE→b2, LTE→b1, NEQ→b0. This lets you store a comparison result as data and route it wherever you need it.</p>
+  </div>
+</div>
+
+
+<!-- ══ CHAPTER 8: MEMORY SLOTS ══ -->
+<div class="chapter" id="ch-memory">
+  <div class="chapter-number">Chapter 8</div>
+  <div class="chapter-title">Memory Slots</div>
+
+  <p>Loop 2.1 provides 16 addressed memory slots — fixed storage locations numbered 0 through 15 that hold 17-bit words independently of loop circulation. Unlike the loops, memory slots do not circulate. A value written to slot 7 stays in slot 7 until explicitly overwritten or cleared.</p>
+
+  <div class="section">
+    <div class="section-title">Writing to Slots</div>
+    <p>Press <kbd>ENABLE WRITE TO SLOTS</kbd>. While active, every complete word that passes the Memory loop's R head is captured into the currently addressed slot. The slot number is shown in the address display and set via four toggle switches (b3–b0) on the address selector row.</p>
+    <p>The toggle switches support the same drag-to-set behavior as the main input switches — click and drag across them to set a range of bits at once.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Auto-Increment</div>
+    <p>Press <kbd>TURN AUTO-INC ON</kbd> to have the address pointer automatically advance to the next slot after each capture. Starting from slot 0 (or whatever address you set), successive words landing at the Memory head are stored into slots 0, 1, 2, 3 … in sequence. After slot 15, the address wraps to 0.</p>
+    <p>This makes loading a dataset straightforward: set the start address, enable Write and Auto-Inc, route your values into the Memory loop, and they distribute themselves into consecutive slots.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Reading Slots</div>
+    <p>Press <kbd>SEND TO LOOP</kbd> next to any slot to inject that slot's value into the Memory loop head. Enable <kbd>TURN DESTRUCT ON</kbd> to clear the slot after sending.</p>
+    <p>Press <kbd>BATCH WRITE ALL</kbd> to output all 16 slots sequentially into the Memory loop in slot order (0 through 15). Each slot is sent in turn; you do not need to press anything for each individual slot.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Address-Read Mode</div>
+    <p>When <kbd>ADDR-READ: ON</kbd> is active alongside ENABLE WRITE TO SLOTS, the destination slot is decoded from the arriving word's top four bits (b15–b12), overriding the manual address selector and auto-increment.</p>
+    <p>Example: a word arrives with value <code>0010 000000110010</code>. Top four bits = 0010 = 2. The word is written to slot 2. The full 16-bit value is stored intact.</p>
+    <p>This lets you encode destination addresses directly into data words before routing them to memory — useful for building lookup tables or routing values to specific slots without manually changing the address.</p>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 9: WORKING SCRATCH ══ -->
+<div class="chapter" id="ch-scratch">
+  <div class="chapter-number">Chapter 9</div>
+  <div class="chapter-title">Working Scratch Registers</div>
+
+  <p>Four capture-next holding registers are attached directly to the Working loop. Unlike the memory slots, they require no bus routing — values captured from or sent to the Working loop stay local to it. They are useful for holding intermediate values without the 41-tick round-trip of a bus transfer.</p>
+
+  <div class="section">
+    <div class="section-title">Capturing</div>
+    <p>Press <kbd>ENABLE CAPTURE</kbd> in the Working Scratch panel. The button lights up and shows which slot is targeted next: <em>"CAPTURE ON — next word → slot 0."</em></p>
+    <p>The next complete word that passes the Working loop's R head is captured into slot 0. Capture then automatically switches to slot 1. After slot 1 is filled, it returns to slot 0. You can load both slots by simply leaving capture on and letting two words circulate past the head.</p>
+    <p>A small indicator dot appears next to the "◈ Working" label in the loop header when capture is active, so you can see its state without opening the sidebar.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sending Back</div>
+    <p>Press <kbd>→W</kbd> next to a slot to inject that slot's value into the Working loop's write head. This starts a 17-tick writeback pipeline identical to the ALU's SEND TO LOOP. The value circulates in the Working loop and can be routed anywhere from there.</p>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Use Case</div>
+    You've routed 5 values into Working and want to compare each one against a threshold before deciding what to do. Capture the threshold into scratch slot 0. As each value circulates past, load it into an ALU register, load scratch slot 0 into another register, and read the comparator flags. No bus crossing, no waiting for values to come back from the ALU loop — the threshold is right there.
+  </div>
+</div>
+
+<!-- ══ CHAPTER 10: COUNTERS ══ -->
+<div class="chapter" id="ch-counters">
+  <div class="chapter-number">Chapter 10</div>
+  <div class="chapter-title">Counters and Triggers</div>
+
+  <p>Loop 2.1 has five counters: one for each loop (Working, ALU, Memory, Big) and one global counter that tracks the total across all loops. All start at 0.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Critical</div>
+    Counters are not automatic. By default, every trigger is off and no counter ever increments. You must activate triggers in the Counter Triggers panel for each counter you want to use.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Triggers</div>
+    <p>Each loop counter can be configured to increment on one or more events:</p>
+    <table class="ref-table">
+      <tr><th>Trigger</th><th>Fires when</th></tr>
+      <tr><td>Word Written</td><td>A marker bit arrives at the loop's W dot — start of a word entering the loop.</td></tr>
+      <tr><td>Word Read</td><td>The final bit of a word passes the R dot — one complete pass-through.</td></tr>
+      <tr><td>Bits Written</td><td>Any bit written that is part of a word. Fires 17× per word.</td></tr>
+      <tr><td>Bits Read</td><td>Any bit sampled that is part of a passing word. Fires 17× per word.</td></tr>
+      <tr><td>Full Cycle</td><td>The loop completes one full rotation.</td></tr>
+      <tr><td>ALU: Reg Sent</td><td>A register's SEND TO LOOP is pressed.</td></tr>
+      <tr><td>ALU: Answer Sent</td><td>The Answer's SEND TO LOOP is pressed.</td></tr>
+      <tr><td>ALU: Cmp Sent</td><td>The Comparator's SEND TO LOOP is pressed.</td></tr>
+      <tr><td>Memory: Write to Slot</td><td>A word is captured into a memory slot.</td></tr>
+      <tr><td>Memory: Read from Slot</td><td>A slot's SEND TO LOOP is pressed.</td></tr>
+      <tr><td>Big: PM Match</td><td>PM1 detects a match.</td></tr>
+      <tr><td>Big: PM Rewrite</td><td>PM1 rewrites a matched word.</td></tr>
+      <tr><td>Big: PM Eject</td><td>PM1 ejects a matched word (destructive mode).</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Global Counter</div>
+    <p>The global counter increments once for every increment of any loop counter. It is a running total of all counter fire events across all four loops. Use it when you want a single number that reflects total activity across the whole machine.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Counter Controls</div>
+    <table class="ref-table">
+      <tr><th>Control</th><th>Function</th></tr>
+      <tr><td>→A / →B / →C / →D</td><td>Serializes the counter's current value as a 17-bit word onto the specified bus.</td></tr>
+      <tr><td>COPY / EJECT</td><td>EJECT resets the counter to zero after sending. COPY preserves it.</td></tr>
+      <tr><td>RESET</td><td>Sets the counter to zero immediately. Also releases any Op Count halt on that loop.</td></tr>
+    </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Tip — Counting Words Processed</div>
+    Enable "Word Read" trigger on the Working counter. Route values through Working. When done, eject the counter onto Bus B to send the count to any loop as data. You can then capture it into an ALU register and use it in arithmetic — multiply by a unit value, compare against a target, store in memory.
+  </div>
+</div>
+
+<!-- ══ CHAPTER 11: PATTERN MATCHER ══ -->
+<div class="chapter" id="ch-pm">
+  <div class="chapter-number">Chapter 11</div>
+  <div class="chapter-title">The Pattern Matcher</div>
+
+  <p>Two Pattern Matchers (PM1, PM2) are attached to the Big Loop. Both sit on the bottom track of the loop, positioned so PM1 is encountered first, then PM2. Every word circulating in the Big Loop passes both inspection points on every rotation.</p>
+
+  <div class="section">
+    <div class="section-title">How Matching Works</div>
+    <p>Each PM uses two 16-bit registers:</p>
+    <ul>
+      <li><strong>Mask</strong> — bit=1 means "check this bit position"; bit=0 means "ignore this position"</li>
+      <li><strong>Pattern</strong> — the value to compare against, for the bit positions selected by the mask</li>
+    </ul>
+    <p>Match condition: <code>(data AND mask) == (pattern AND mask)</code></p>
+    <p>A mask of all zeros disables the PM — there is nothing to check. At least one mask bit must be set for the PM to activate.</p>
+    <div class="callout tip">
+      <div class="callout-label">Example — Match Even Numbers</div>
+      Mask = <code>0000000000000001</code> (check b0 only). Pattern = <code>0000000000000000</code> (b0 must be 0). Any value where b0=0 is even, so this matches all even numbers.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">On a Match</div>
+    <p>When a match occurs:</p>
+    <ol>
+      <li>The MATCH flag lights and the match counter increments.</li>
+      <li>If REWRITE is ARMED, the matched word is modified in-place before any other action.</li>
+      <li>The word is loaded into the PM output bridge.</li>
+      <li>If <strong>EJECT: COPY</strong> — the word stays in the Big loop and continues circulating. A copy sits in the bridge.</li>
+      <li>If <strong>EJECT: DESTRUCTIVE</strong> — the word is zeroed out and removed from the Big loop. Only the ejected copy survives in the bridge.</li>
+    </ol>
+    <p>Set Bus A source to <strong>PM</strong> to route matched words out of the bridge. Bus A will pick up the word from the bridge and deliver it to whatever destination you have set.</p>
+    <div class="callout warn">
+      <div class="callout-label">Bridge Note</div>
+      The PM bridge holds only one word at a time. If a second match fires before the first is consumed by Bus A, the bridge is overwritten. At high clock speeds with frequent matches, use Bus A continuously to drain the bridge.
+    </div>
+
+    <div class="section-title" style="margin-top:20px;">Match Count &mdash; Sending the Counter to a Bus</div>
+    <p>Each PM keeps a running match count &mdash; the total number of matches since the PM was enabled. The buttons labeled <strong>&rarr;A</strong>, <strong>&rarr;B</strong>, <strong>&rarr;C</strong>, and <strong>&rarr;D</strong> next to the match count display serialize that count as a 17-bit word and inject it onto the corresponding bus. Use this to treat the match count as an operand &mdash; load it into the ALU, compare it against a target value, store it in memory, or send it to another machine over a Net bus.</p>
+  </div>
+
+  <div class="section" id="s-cascade">
+    <div class="section-title">PM2 — Cascade Mode</div>
+    <p>PM2 operates independently with its own mask, pattern, rewrite, and eject settings. It can be set to one of two modes:</p>
+    <ul>
+      <li><strong>Independent</strong> (default) — PM2 inspects the full loop, including words that PM1 matched or ejected. Both PMs see everything.</li>
+      <li><strong>Cascade</strong> — PM2 only sees words that PM1 passed. If PM1 ejected a word destructively, PM2 never sees it. PM1's matches flow into PM2's inspection queue.</li>
+    </ul>
+    <p>Cascade mode is powerful for two-stage filtering: PM1 handles a first condition (e.g., even numbers), PM2 handles a second condition on what remains (e.g., greater than 100). The result is values that satisfy both conditions in a single pass through the Big loop.</p>
+    <p>PM2 has its own output bridge and its own match counter, independent of PM1.</p>
+  </div>
+
+  <div class="section" id="s-rewrite">
+    <div class="section-title">Rewrite Mode</div>
+    <p>When <kbd>REWRITE: ARMED</kbd>, every matched word has specified bits modified before ejection or copying. Configure two additional registers:</p>
+    <ul>
+      <li><strong>Rewrite Mask</strong> — selects which bit positions to change</li>
+      <li><strong>Rewrite Value</strong> — specifies the new values for those positions</li>
+    </ul>
+    <p>Example: matched words have their top bit zeroed. Set Rewrite Mask = <code>1000000000000000</code> (change b15), Rewrite Value = <code>0000000000000000</code> (set b15 to 0). The word is modified in-place in the Big loop before being loaded into the bridge.</p>
+    <p>With EJECT: COPY, the rewritten value stays in the loop. This lets you transform a dataset in-place over multiple rotations without moving values out of the loop.</p>
+  </div>
+</div>
+
+
+<!-- ══ CHAPTER 12: THRESHOLD GATE ══ -->
+<div class="chapter" id="ch-tg">
+  <div class="chapter-number">Chapter 12</div>
+  <div class="chapter-title">The Threshold Gate</div>
+
+  <p>Two Threshold Gates (TG1 and TG2) operate on the Big Loop alongside the Pattern Matchers. Where the Pattern Matcher compares bit patterns, the Threshold Gate compares numeric magnitude — ejecting words whose value crosses a configurable threshold.</p>
+
+  <div class="section">
+    <div class="section-title">Basic Operation</div>
+    <p>Each Threshold Gate has a numeric threshold value (0–65,535) and a comparison mode:</p>
+    <table class="ref-table">
+      <tr><th>Mode</th><th>Condition</th></tr>
+      <tr><td>≥ threshold</td><td>Eject values greater than or equal to the threshold</td></tr>
+      <tr><td>≤ threshold</td><td>Eject values less than or equal to the threshold</td></tr>
+      <tr><td>= threshold</td><td>Eject only exact matches</td></tr>
+    </table>
+    <p>Set the threshold value using the levers in the TG panel or by typing directly into the value field. Enable TG1 and words matching the condition are ejected from the Big Loop. Route TG1's output to another loop via any bus.</p>
+    <div class="callout key">
+      <div class="callout-label">TG vs PM</div>
+      The Pattern Matcher is ideal for bitmask conditions — even/odd, top bit set, divisible by powers of two. The Threshold Gate is ideal for range conditions — greater than 1000, less than 500, between two values. Use them together to build compound conditions.
+    </div>
+  </div>
+
+  <div class="section" id="s-tg-clamp">
+    <div class="section-title">Clamp Mode</div>
+    <p>When <kbd>CLAMP: ON</kbd> is enabled on a Threshold Gate, matching words are not ejected — they are rewritten in-place to the configured clamp value. This creates a ceiling or floor clamp on the data circulating in the Big Loop.</p>
+    <p>Example: TG1 with mode ≥ and threshold 1000, clamp value 1000. Any value above 1000 becomes exactly 1000. All values below 1000 are untouched. The Big Loop now contains values clipped to a ceiling of 1000.</p>
+    <p>Reverse: mode ≤, threshold 100, clamp 100. Values below 100 become 100 — a floor clamp.</p>
+    <p>Clamp mode processes words silently in-place. No eject, no bus transfer required. The modification happens in the loop as the word passes the gate position.</p>
+  </div>
+
+  <div class="section" id="s-tg-cascade">
+    <div class="section-title">TG Cascade and Pipeline</div>
+    <p>TG2 can receive TG1's ejected output directly via cascade mode. A word ejected by TG1 feeds into TG2's inspection path. This creates a two-gate pipeline: a value must pass TG1's condition before TG2 evaluates it.</p>
+    <p>Combined with the Pattern Matcher cascade, the Big Loop can run a four-stage conditional pipeline — PM1 → PM2 → TG1 → TG2 — entirely without operator routing between stages. Each stage filters or transforms the output of the previous one. Route the final TG2 output to its destination and all four stages operate in a single pass.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Match Count — Sending the Counter to a Bus</div>
+    <p>Like the Pattern Matcher, each Threshold Gate keeps a running match count. The <strong>&rarr;A</strong>, <strong>&rarr;B</strong>, <strong>&rarr;C</strong>, and <strong>&rarr;D</strong> buttons next to the count display send the current count value onto the corresponding bus as a 17-bit word. Use this to track how many values crossed the threshold during a session, compare against a target, or pass the count to another machine.</p>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 13: P2P CONNECTIONS ══ -->
+<div class="chapter" id="ch-p2p">
+  <div class="chapter-number">Chapter 13</div>
+  <div class="chapter-title">P2P Connections &mdash; Chain Left &amp; Chain Right — Buses F and G</div>
+
+  <p>Two machines can connect directly via WebRTC without any server infrastructure. Once connected, words flow between machines over Buses F and G exactly as they flow between loops internally. Each connection also includes a text chat channel.</p>
+
+  <div class="callout key">
+    <div class="callout-label">No Server Required</div>
+    Loop 2.1 P2P connections are fully peer-to-peer. The SDP exchange (the offer/answer handshake) happens out-of-band — copy and paste the offer text through any channel (email, chat, anything). After the handshake, the connection is direct between the two browsers and requires no ongoing infrastructure.
+  </div>
+
+  <div class="section" id="s-p2p-setup">
+    <div class="section-title">Setup</div>
+    <ol class="steps">
+      <li><div class="step-body">Open the <strong>P2P Connection</strong> section in the right sidebar. Your machine ID is shown at the top — a short random identifier that persists across sessions in this browser.</div></li>
+      <li><div class="step-body">On the initiating machine: click <kbd>CREATE OFFER</kbd> under <strong>PL LEFT</strong> (Bus F). A WebRTC SDP offer appears in the text area. Copy it and send it to the other operator.</div></li>
+      <li><div class="step-body">On the second machine: paste the offer into the remote text area and click <kbd>ACCEPT</kbd>. An answer is generated. Copy it and send it back.</div></li>
+      <li><div class="step-body">On the initiating machine: paste the answer and click <kbd>ACCEPT</kbd>. Both machines show <strong>CONNECTED</strong> and the Bus F strip activates. The latency display shows round-trip time in milliseconds.</div></li>
+      <li><div class="step-body">Repeat the process for <strong>PR RIGHT</strong> (Bus G) to connect to a machine on the other side, forming a chain.</div></li>
+    </ol>
+  </div>
+
+  <div class="section" id="s-p2p-routing">
+    <div class="section-title">Routing Data Over P2P</div>
+    <p>Once connected, Buses F (Chain Left) and G (Chain Right) behave like any other bus. Each has its own sidebar panel — open <strong>Bus F</strong> or <strong>Bus G</strong> in the right sidebar to configure source and destination:</p>
+    <ul>
+      <li><strong>Outbound source</strong> — which loop to read words from and transmit to the neighbor</li>
+      <li><strong>Inbound destination</strong> — which loop to deliver received words into</li>
+    </ul>
+    <p>Words exit from the source loop on the sending machine and arrive in the destination loop on the receiving machine. The latency is the WebRTC round-trip time — typically under 5ms on a local network, 20–150ms over the internet.</p>
+    <p>A machine connected on both sides (Bus F left, Bus G right) can relay words from one neighbor to another. Values enter from the left, circulate through any of the four loops, and can be routed out to the right. This forms a data pipeline across multiple physical machines.</p>
+    <p>For connections to non-adjacent machines, use Buses H and I. See Chapter 6 for details.</p>
+    <div class="callout tip">
+      <div class="callout-label">P2P Buffer</div>
+      Incoming P2P words are queued in a buffer before entering the destination loop. The buffer count is shown in the P2P Connection panel. At high clock speeds or low latency the buffer usually drains immediately. If values are arriving faster than the destination loop can absorb them, the buffer count climbs — reduce the sender's clock speed or route the destination loop to a faster throughput path.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 14: CHALLENGE NETWORK ══ -->
+<div class="chapter" id="ch-network">
+  <div class="chapter-number">Chapter 14</div>
+  <div class="chapter-title">The Challenge Network (CBX)</div>
+
+  <p>The Challenge Network is a coordination layer built on top of P2P connections. It allows Challenge Boxes on different machines to run multi-computer challenges together. The originating machine's Challenge Box acts as host and verifier. All inter-machine coordination happens automatically over the existing WebRTC connections — operators interact only with their local Challenge Box and their loops.</p>
+
+  <p>The Challenge Network panel sits below the Challenges panel in the right sidebar.</p>
+
+  <div class="section" id="s-cbx-probe">
+    <div class="section-title">Network Probe</div>
+    <p>Before starting a multi-computer challenge, run a network probe to discover the chain topology. Click <kbd>⬡ PING NETWORK</kbd> in the Challenge Network panel. A probe travels out both connected sides, counting hops, detecting ring topology, and returning. The result shows:</p>
+    <ul>
+      <li>How many machines are to the left and right</li>
+      <li>Total machine count (including this machine)</li>
+      <li>Whether the network is a linear chain or a ring</li>
+    </ul>
+    <p>Run the probe before starting any chain challenge. The challenge system uses the topology to assign positions and determine the starter machine.</p>
+  </div>
+
+  <div class="section" id="s-cbx-availability">
+    <div class="section-title">Availability — How Invitations Work</div>
+    <p>All machines always accept challenge invitations unless they are currently running a local challenge (<code>CHALL.active</code>). There is no opt-in or opt-out setting. When a CHAIN_INVITE arrives:</p>
+    <ul class="steps">
+      <li><div class="step-body"><strong>Machine is idle:</strong> invitation is auto-accepted immediately. The Challenges panel expands and shows the chain active display with your assignment.</div></li>
+      <li><div class="step-body"><strong>Machine is busy</strong> (running a local challenge): the invite is skipped. A skip notice goes back to the origin and the invitation is forwarded to the next machine in the chain. The challenge continues past the busy machine without any action from its operator.</div></li>
+    </ul>
+    <div class="callout tip">
+      <div class="callout-label">No action required to participate</div>
+      You do not need to configure anything to be included in chain challenges. If your machine is idle when an invitation arrives, you are automatically included. If you want to sit out, start any local challenge before the invitation reaches you — your machine will skip itself automatically.
+    </div>
+  </div>
+
+  <div class="section" id="s-cbx-protocol">
+    <div class="section-title">How CBX Works — The Protocol Layer</div>
+    <p>CBX packets travel over the same WebRTC data channels that carry ordinary P2P word traffic. Every incoming P2P message is inspected before touching any loop data path. If the first element of the message carries the type identifier <code>cbxType</code>, the message is a CBX packet and is routed to the CBX handler invisibly. If not, it is ordinary loop data and is processed normally. The two streams share the same wire and never interfere.</p>
+
+    <p>CBX messages are structured JSON objects with a <code>cbxType</code> field that identifies their purpose. The full set of message types covers the complete lifecycle of a chain challenge:</p>
+
+    <table class="ref-table">
+      <tr><th>Message type</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td><em>Under review for removal.</em> When on, this machine returns a terminal response to discovery probes, making machines beyond it invisible to any challenger in that direction. One machine's choice cuts the chain for everyone behind it. If you want to decline challenges, use OPEN and decline each invitation individually.</td><td>Outward along chain</td><td>Lightweight hop-counting probe for topology discovery</td></tr>
+      <tr><td>cbx_probe_return</td><td>Back toward origin</td><td>Probe returning with hop count and ring-detection flag</td></tr>
+      <tr><td>cbx_chain_invite</td><td>Origin → neighbors</td><td>Challenge invitation — operator sees Accept / Decline</td></tr>
+      <tr><td>cbx_chain_invite_ack</td><td>Neighbor → origin</td><td>Acceptance or decline of the invitation</td></tr>
+      <tr><td>cbx_chain_assign</td><td>Origin → each machine</td><td>Role assignment: position, value, direction, par values</td></tr>
+      <tr><td>cbx_chain_assign_ack</td><td>Each machine → origin</td><td>Ready confirmation — origin waits for all before GO</td></tr>
+      <tr><td>cbx_chain_go</td><td>Origin → all</td><td>Challenge starts — synchronized across all machines</td></tr>
+      <tr><td>cbx_chain_sum_submit</td><td>Participant → origin</td><td>Local sum submission for verification</td></tr>
+      <tr><td>cbx_chain_sum_ok</td><td>Origin → participant</td><td>Submission verified — position confirmed correct</td></tr>
+      <tr><td>cbx_chain_sum_fail</td><td>Origin → all</td><td>Wrong sum — full abort with failing position identified</td></tr>
+      <tr><td>cbx_chain_complete</td><td>Origin → all</td><td>All verified — challenge succeeded with final sum</td></tr>
+      <tr><td>cbx_chain_abort</td><td>Origin → all</td><td>Challenge cancelled — all machines release resources</td></tr>
+    </table>
+
+    <p>The chain sum forwarding mechanism — passing the running total from one machine to the next — uses a slightly different path. Rather than JSON, this uses a two-word marker sequence directly in the raw P2P word channel: the reserved marker word <code>0xCB00</code> followed immediately by the sum value. The receiving machine's CBX layer intercepts the marker before it reaches any loop, treats the following word as the incoming sum, and stages the operator's assigned value for release. The marker word <code>0xCB00</code> never reaches any loop — it is consumed entirely by the CBX layer.</p>
+
+    <div class="callout key">
+      <div class="callout-label">Why a Separate Path for Sum Forwarding</div>
+      CBX control messages (invitations, assignments, verification) travel as JSON over the data channel. But the running sum needs to arrive in a way that the operator can observe at the read head — it is real data entering the machine, not just a protocol event. The two-word marker approach lets the sum travel alongside ordinary word traffic while still being identifiable and interceptable by the CBX layer before it touches the loops.
+    </div>
+  </div>
+
+  <div class="section" id="s-cbx-addressing">
+    <div class="section-title">Addressing — Position Numbers</div>
+    <p>When a chain challenge is active, every machine has a signed position number relative to the origin. The origin is always position <strong>0</strong>. Machines to the right are positive: +1, +2, +3. Machines to the left are negative: −1, −2, −3. In a seven-machine linear chain, positions run from −3 through +3 with the origin at center, or from 0 through +6 if the origin is at the left end.</p>
+
+    <p>The origin picks the starting machine automatically — the terminus furthest from the origin on whichever side is longer, or the right side terminus by default. The starter's incoming sum is defined as 0. Every ASSIGN message encodes each machine's position, the starter's identity, and which side to expect the incoming sum from, so no machine needs to know anything about the full chain beyond its immediate neighbors.</p>
+  </div>
+
+  <div class="section" id="s-cbx-bush">
+    <div class="section-title">Buses H and I — Routed Net Buses</div>
+    <p>Buses H and I are fully operator-controlled routed buses. Unlike F and G, which connect only to direct P2P neighbors, H and I can send words to any reachable machine in the connected topology. Open the Bus H or Bus I panel in the sidebar, select a peer target, set source and destination loops, and turn the bus on. See Chapter 6 for full operating instructions.</p>
+    <p>An operator with H pointed at one remote machine and I at another can act as a network router — receiving data on H, processing through loops, forwarding on I. Every routing decision is the operator's. Every word that transits this machine is visible.</p>
+  </div>
+
+  <div class="section" id="s-cbx-inspect">
+    <div class="section-title">Inspecting CBX Traffic — Three Levels of Access</div>
+
+    <p>The Challenge Network is designed with three levels of operator engagement. Most operators never go past the first. The machine supports all three.</p>
+
+    <h4>Passive — The Default Experience</h4>
+    <p>The operator never touches Bus H. The Challenge Network panel shows their role, the progress display shows each machine verifying, and values arrive via the inject mechanism when released. The CBX protocol runs entirely in the background. From this operator's perspective, the challenge just works.</p>
+
+    <h4>Curious — Reading the Protocol</h4>
+    <p>Use the Network Monitor (Chapter 19) to watch CBX traffic in real time. Every INVITE, ASSIGN, GO, SUBMIT, SUM_OK, SUM_FAIL, ABORT, and COMPLETE message is captured as it passes through the machine, with full field display. This is the intended way to observe the protocol.</p>
+    <p>For a more direct experience: the running sum travels over the P2P wire as a raw 17-bit word. At the read head of the Bus F or G destination loop, you can watch that value arrive like any other data word. The challenge ID appears in every CBX message — once you have seen it in the monitor, you will recognize it in the raw stream.</p>
+
+    <h4>Hacker — Modifying the Protocol</h4>
+    <p>The Network Monitor staging area lets you capture any CBX packet, edit its fields, and inject the modified version back into the local handler. A modified SUBMIT packet is evaluated against the origin's known correct sum. A modified ASSIGN packet updates this machine's assigned value. Injection goes through the same handler as a real incoming packet — effects are immediate.</p>
+    <p>This is not an exploit — it is an intended capability. The machine is transparent by design. The Challenge Box exists as a convenience, not as an authority. The protocol is the authority, and the protocol is visible.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">On Transparency</div>
+      The CBX layer could have been completely hidden — a background service the operator never sees. It was not hidden deliberately. Transparency is a design principle, not a default that gets overridden when things get complicated. The harder it is to make something visible, the more important it usually is to do so.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 15: NETWORKING ══ -->
+<div class="chapter" id="ch-networking">
+  <div class="chapter-number">Chapter 15</div>
+  <div class="chapter-title">Networking — Chain and Net</div>
+  <p class="chapter-intro">Loop 2.1 uses two distinct networking concepts. The <strong>Chain</strong> is the physical topology formed by your P2P connections &mdash; a linear sequence of machines, or a ring if the ends connect. The <strong>Net</strong> is a user-created virtual network that rides on top of the Chain, giving a group of machines a shared identity, a membership list, coordinated routing, and a unified chat system.</p>
+
+  <p>You need at least one active P2P connection (Chapter 13) before anything in this chapter applies.</p>
+
+  <div class="section" id="s-net-chain">
+    <div class="section-title">The Chain</div>
+    <p>The Chain is the physical foundation. It exists the moment you make a P2P connection &mdash; you are now in a Chain with your neighbor. Every machine you can reach by hopping left or right along P2P connections is part of your Chain. Chains can be linear (two open ends) or looped (the rightmost machine connects back to the leftmost).</p>
+    <p>Machines in the Chain can forward messages transparently for each other. A machine two hops to the right is reachable via the machine directly to your right, which relays the message without any operator intervention. This relay behavior is automatic and invisible &mdash; intermediate operators do not need to do anything, and their loops are entirely unaffected.</p>
+    <div class="callout callout-tip">
+      <div class="callout-label">Chain vs Net</div>
+      The Chain is discovered, not created. You are in a Chain by virtue of having P2P connections. A Net is created intentionally by a hub operator who invites specific machines to join a named group.
+    </div>
+  </div>
+
+  <div class="section" id="s-net-scan">
+    <div class="section-title">Scanning the Chain</div>
+    <p>The Networking section is in the right sidebar, above P2P Connection. Open it and click <strong>&#x2B21; SCAN CHAIN</strong>. A probe travels in both directions, collecting machine IDs, handles, and Net membership information, then returns. After a few seconds the topology display updates:</p>
+    <div class="code-block" style="background:var(--code-bg);font-family:var(--font);font-size:13px;padding:12px 16px;margin:12px 0;line-height:1.8;">
+      1 left &middot; 1 right &middot; 3 total &mdash; three machines in a linear chain, you in the middle<br>
+      2 left &middot; 2 right &middot; 5 total &mdash; five machines, you near the center<br>
+      1 left &middot; 1 right &middot; 3 total (ring) &mdash; three machines in a ring
+    </div>
+    <p>The scan also discovers any named Nets that already exist on the Chain. Discovered Nets appear in the Available Nets subsection, where you can request to join them.</p>
+    <p>A scan runs automatically when a new P2P connection opens. Re-run it manually after the topology changes or new machines join.</p>
+    <p>Once the scan completes, the Create Net subsection shows a list of all detected machines with their handles and positions. These are your invite candidates.</p>
+  </div>
+
+  <div class="section" id="s-net-create">
+    <div class="section-title">Creating a Net</div>
+    <p>Open the Create Net subsection in Networking. You will see a name field and a list of detected machines.</p>
+    <ol style="margin: 10px 0 14px 24px; font-size:16px; line-height:1.9;">
+      <li>Type a name in the net name field (up to 24 characters).</li>
+      <li>Check the boxes next to the machines you want to invite. You do not have to invite everyone on the Chain.</li>
+      <li>Click <strong>&#x2B21; CREATE NET</strong>. Invitations are sent to each selected machine.</li>
+      <li>Wait for responses. Each invited machine sees an invitation panel. As they accept or decline, your status updates. Once all responses are in, the Net is live and the routing table is distributed to all members.</li>
+    </ol>
+    <p>After creation, the Net appears in your My Nets subsection with a <strong>HUB</strong> badge. The member list shows handles, positions, and roles. As hub, you also handle any join requests that arrive later from machines not in the original invite.</p>
+    <div class="callout callout-tip">
+      <div class="callout-label">One hub per machine</div>
+      Each machine can be the hub of at most one Net at a time. You can be a member of additional Nets simultaneously, but you can only manage one as hub.
+    </div>
+  </div>
+
+  <div class="section" id="s-net-join">
+    <div class="section-title">Joining a Net</div>
+    <p><strong>Accepting an invitation:</strong> When another machine invites you, an invitation panel appears in your Networking section showing the Net name and the hub&rsquo;s handle. Click ACCEPT to join or DECLINE to refuse.</p>
+    <p><strong>Requesting to join:</strong> If a scan discovers a Net you are not in, it appears in Available Nets with a REQUEST TO JOIN button. The hub reviews requests in their Join Requests subsection and approves or denies each one.</p>
+    <p>Once you join, the Net appears in My Nets with a MEMBER badge. The routing table is distributed by the hub, so messages can reach any member regardless of how many hops they are from you.</p>
+    <p>To leave a Net you are a member of: My Nets &rarr; LEAVE NET. If you are the hub: My Nets &rarr; DISSOLVE NET &mdash; this ends the Net for all members.</p>
+  </div>
+
+  <div class="section" id="s-net-hub">
+    <div class="section-title">Hub Responsibilities &amp; Election</div>
+    <p>The hub manages membership, distributes the routing table, sends heartbeat signals, and handles join requests. These functions are automatic &mdash; the hub operator does not need to do anything manually once the Net is running.</p>
+    <p><strong>Join requests</strong> appear in the hub&rsquo;s Join Requests subsection (hidden when empty). Each shows the machine&rsquo;s handle and position. Click APPROVE or DENY. Approved machines immediately receive the routing table.</p>
+    <p><strong>Hub election:</strong> If the hub becomes unreachable &mdash; three missed heartbeats, approximately 15 seconds &mdash; remaining members elect a new hub automatically. The rule is simple: lowest machine ID wins. The winner broadcasts a claim, all machines acknowledge, and the new hub begins sending heartbeats. From a member&rsquo;s perspective the election is mostly invisible, with a brief routing gap of a few seconds.</p>
+    <p>If the original hub returns after an election, it rejoins as a plain member. It does not reclaim the hub role automatically.</p>
+  </div>
+
+  <div class="section" id="s-net-chat">
+    <div class="section-title">Chat</div>
+    <p>The Chat section (in the sidebar below Networking) is a unified messaging panel. It shows every machine you can communicate with &mdash; direct P2P neighbors and Net members &mdash; in a single dropdown. Each machine appears once regardless of how many ways you are connected to it.</p>
+    <p>Select a machine from the dropdown to load your conversation history with it. Type a message and press SEND or hit Enter. The chat system routes messages by the best available path: direct for P2P neighbors, relayed through the Chain for Net members who are not direct neighbors. You do not need to think about which path is used.</p>
+    <p>Handles in the dropdown reflect the operator&rsquo;s current session handle. If a machine connects before setting a handle, its machine ID shows as a placeholder and updates automatically when the handle is set.</p>
+    <p>A machine can belong to multiple Nets simultaneously but can only be the hub of one. Each Net maintains independent membership lists and routing tables. Chat deduplicates &mdash; if a machine is reachable through two Nets, it appears once in the dropdown with the conversation history unified.</p>
+    <div class="callout callout-warn">
+      <div class="callout-label">Session-only</div>
+      Nets do not persist after a page refresh. After refreshing: all P2P connections must be re-established, all Net memberships end, all chat history clears. Your machine ID persists in local storage. To reform a Net, run the P2P handshake, re-scan the Chain, then recreate or rejoin the Net.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Quick Reference</div>
+    <table class="ref-table" style="width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;">
+      <tr style="border-bottom:2px solid var(--border);">
+        <th style="text-align:left;padding:6px 10px;font-family:var(--font);font-size:11px;letter-spacing:1px;color:var(--fg-dim);">Action</th>
+        <th style="text-align:left;padding:6px 10px;font-family:var(--font);font-size:11px;letter-spacing:1px;color:var(--fg-dim);">Where</th>
+        <th style="text-align:left;padding:6px 10px;font-family:var(--font);font-size:11px;letter-spacing:1px;color:var(--fg-dim);">Notes</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <td style="padding:6px 10px;">Scan the Chain</td>
+        <td style="padding:6px 10px;font-family:var(--font);font-size:13px;">Networking &rarr; &#x2B21; SCAN CHAIN</td>
+        <td style="padding:6px 10px;font-size:13px;color:var(--fg-dim);">Auto-runs on new P2P connection. Re-run after topology changes.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <td style="padding:6px 10px;">Create a Net</td>
+        <td style="padding:6px 10px;font-family:var(--font);font-size:13px;">Networking &rarr; Create Net</td>
+        <td style="padding:6px 10px;font-size:13px;color:var(--fg-dim);">One hub per machine. Scan first to populate the invite list.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <td style="padding:6px 10px;">Accept invitation</td>
+        <td style="padding:6px 10px;font-family:var(--font);font-size:13px;">Networking &rarr; invitation panel</td>
+        <td style="padding:6px 10px;font-size:13px;color:var(--fg-dim);">Appears automatically when invited.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <td style="padding:6px 10px;">Request to join</td>
+        <td style="padding:6px 10px;font-family:var(--font);font-size:13px;">Networking &rarr; Available Nets</td>
+        <td style="padding:6px 10px;font-size:13px;color:var(--fg-dim);">Hub approves or denies.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border2);">
+        <td style="padding:6px 10px;">Leave / dissolve a Net</td>
+        <td style="padding:6px 10px;font-family:var(--font);font-size:13px;">Networking &rarr; My Nets</td>
+        <td style="padding:6px 10px;font-size:13px;color:var(--fg-dim);">LEAVE for members. DISSOLVE for hub (ends Net for all).</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;">Chat with a peer</td>
+        <td style="padding:6px 10px;font-family:var(--font);font-size:13px;">Chat &rarr; dropdown &rarr; Send</td>
+        <td style="padding:6px 10px;font-size:13px;color:var(--fg-dim);">Neighbors and Net members, deduplicated. History per contact.</td>
+      </tr>
+    </table>
+  </div>
+</div><!-- /ch-networking -->
+
+<!-- ══ CHAPTER 16: SESSION LOG ══ -->
+<div class="chapter" id="ch-log">
+  <div class="chapter-number">Chapter 16</div>
+  <div class="chapter-title">The Session Log — .loop Files</div>
+
+  <p>Loop 2.1 records computation sessions to a structured <code>.loop</code> file. Every operator action and machine event is captured in a dual-format line: machine-parseable code on the left of <code>||</code>, human-readable description on the right. This format is both software-parseable and readable by a human looking at the raw file.</p>
+
+  <div class="section">
+    <div class="section-title">Starting a Log</div>
+    <ol class="steps">
+      <li><div class="step-body">Enter your Operator Handle in the header field (optional but recommended).</div></li>
+      <li><div class="step-body">Enter a Session Name if desired — labels the computation for later reference.</div></li>
+      <li><div class="step-body">Press <kbd>BEGIN SESSION LOG</kbd>.</div><div class="step-note">Everything from this point is recorded: every tick, every bus transfer, every ALU operation, every operator action.</div></li>
+      <li><div class="step-body">Operate the machine normally.</div></li>
+      <li><div class="step-body">When done, write any notes in the Operator Notes field, then press <kbd>END SESSION LOG</kbd> and download the <code>.loop</code> file.</div></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-title">File Format</div>
+    <table class="ref-table">
+      <tr><th>Section</th><th>Contents</th></tr>
+      <tr><td>SPEC</td><td>Machine configuration at session start: loop sizes, word format, clock speed, operator handle, session name.</td></tr>
+      <tr><td>INIT</td><td>Full machine state snapshot at session start — all loop contents, all register values, all counter states.</td></tr>
+      <tr><td>OPS</td><td>Tick-by-tick operation log. T##### lines mark clock ticks. Operator actions (S##### lines) appear between tick lines. Both machine code and prose description on each line.</td></tr>
+      <tr><td>NOTES</td><td>Free-text operator notes written before ending the session.</td></tr>
+      <tr><td>FINAL</td><td>Complete machine state snapshot at session end, plus performance statistics.</td></tr>
+      <tr><td>FORMAT REF</td><td>Embedded format reference — the file explains its own format.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Session Statistics</div>
+    <p>The FINAL section includes a statistics package: operator actions, words transferred, ALU ops executed, injects, bus activations, gate toggles, PM matches, step-backs, actions per tick, and words per tick. These numbers are useful for comparing different approaches to the same computation — a more elegant solution will show fewer operator actions and fewer total ticks.</p>
+  </div>
+
+  <div class="callout phi">
+    <div class="callout-label">Design Note</div>
+    The distinction the format makes explicit — between automatic machine actions (<code>BUS.A.XFER</code>, <code>ALU.EXEC</code>) and operator decisions (marked <code>OP.</code>) — is not incidental. It is one of the core principles of Loop 2.1 made visible in the record. When you read a <code>.loop</code> file, you can see exactly where the human intervened and where the machine acted on its own.
+  </div>
+</div>
+
+<!-- ══ CHAPTER 16: CHALLENGES ══ -->
+<div class="chapter" id="ch-challenges">
+  <div class="chapter-number">Chapter 17</div>
+  <div class="chapter-title">Challenges</div>
+
+  <p>The Challenges panel (top of the right sidebar) provides structured computational tasks. The module sends values to the machine via Bus E inbound, you perform a computation, and you send the answer back via Bus E outbound. The module catches it, checks it, and scores your run.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Setup</div>
+    Open the Bus E Config panel. Set <strong>Inbound Destination</strong> to whichever loop you want values arriving in (Working is typical). Set <strong>Outbound Source</strong> to whichever loop your answers will come from. Bus E enables automatically when you start a challenge — you don't need to turn it on manually.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Scoring</div>
+    <p>Scores are based on <strong>efficiency relative to par</strong> — not absolute time. Par is the theoretical minimum ticks and operator actions for an optimal operator solving the exact instance you were given. A hard challenge scored at par earns the same 1000 points as an easy one scored at par.</p>
+
+    <p><strong>Scoring Mode</strong> — two modes are available, selectable before a challenge starts. Switching mid-challenge is locked.</p>
+    <table class="ref-table">
+      <tr><th>Mode</th><th>Formula</th><th>When to use</th></tr>
+      <tr><td>Efficiency (default)</td><td>ticks × 55% + ops × 45%</td><td>Pure computation quality — how close to par on ticks and actions</td></tr>
+      <tr><td>Speed</td><td>ticks × 35% + ops × 30% + wall-clock × 35%</td><td>Real-time performance — rewards operators who work fast under pressure</td></tr>
+    </table>
+    <pre>tickEfficiency = min(1.0,  parTicks / actualTicks)
+opEfficiency   = min(1.0,  parOps   / actualOps)
+efficiency     = tickEfficiency × 0.55 + opEfficiency × 0.45   [Efficiency mode]
+score          = max(50, floor(efficiency × 1000))</pre>
+    <p>The score display shows a breakdown: <code>742 (78%t · 91%op)</code>. Speed mode adds a time component: <code>742 (78%t · 91%op · 85%tm)</code>. History entries are tagged <code>[E]</code> or <code>[S]</code> to indicate which mode was used.</p>
+    <p>A <kbd>▶ Show values</kbd> toggle appears after a challenge starts. Click it to reveal the actual values that were sent. This is a spoiler — use it if you're stuck or want to verify your captures.</p>
+  </div>
+
+  <div class="section" id="s-add">
+    <div class="section-title">Add X Numbers</div>
+    <p>N values arrive via Bus E inbound. Add them all and return the sum via Bus E outbound.</p>
+    <p>Select the count (2 through 32). Values are generated to sum within 16 bits — no overflow. Route them to the ALU loop, capture successively into registers, accumulate using repeated ADD with SEND TO LOOP and recapture. When your final sum is in a register, SEND TO LOOP and route it back out through Working via Bus E.</p>
+    <p><strong>Par formula:</strong> parTicks = 77N + 5 · parOps = 3N + 4</p>
+  </div>
+
+  <div class="section" id="s-multiply">
+    <div class="section-title">Multiply Two Numbers</div>
+    <p>Two values arrive. Multiply them and return the product.</p>
+    <p>The operator controls the maximum value of A (2–64). B is calculated so A × B fits within 16 bits. Repeated addition is the canonical approach: load A into a register, add A to a running total B−1 times. The binary method (SHL + ADD) is more efficient if you know it.</p>
+    <p><strong>Par formula (repeated addition):</strong> parTicks = 36 × (min(a,b) − 1) + 82 · parOps = 3 × min(a,b) + 5</p>
+  </div>
+
+  <div class="section" id="s-transform">
+    <div class="section-title">Transform Every Nth Value</div>
+    <p>A stream of values arrives. Apply a given operation to every Nth value, then return only the transformed values via Bus E outbound.</p>
+    <p>Choose the stride (which Nth — 2nd, 3rd, 4th, 5th, 6th, or 8th) and the total stream length. The operation is chosen randomly at start: INC, DEC, SHL (double), SHR (halve), or NOT. You do not know which operation until the challenge begins.</p>
+    <p>Let the full stream circulate through the Working loop while counting. When you reach position N, capture that value, apply the operation in the ALU, and send it back out Bus E. Continue for each Nth position. You only return the transformed values — not the full stream.</p>
+    <p><strong>Par formula:</strong> parTicks = 41 × totalCount + 123 × transformCount · parOps = totalCount + 4 × transformCount</p>
+  </div>
+
+  <div class="section" id="s-filter">
+    <div class="section-title">Filter: Pass Back Matching Values</div>
+    <p>A stream of values arrives. Identify those matching the stated condition and return only the matching values via Bus E outbound.</p>
+    <p>Choose the stream length (8 to 32). The condition is chosen randomly at start from: even, odd, divisible by 3, divisible by 4, ≥ threshold, &lt; threshold, top bit set, even AND ≥ 128. The stream is constructed so 25–33% of values match.</p>
+    <p>The Pattern Matcher on the Big Loop is the natural tool for this challenge: route the incoming stream into the Big loop, configure PM1 to match the stated condition with EJECT: DESTRUCTIVE, set Bus A source to PM, and matches flow directly back to Working and out Bus E. No manual inspection required for most conditions.</p>
+    <p><strong>Par formula:</strong> parTicks = 41 × totalCount + 18 × matchCount · parOps = totalCount + matchCount</p>
+  </div>
+
+  <div class="section" id="s-sort">
+    <div class="section-title">Sort Values (Low → High)</div>
+    <p>A set of values arrives. Sort them from lowest to highest and return all values in sorted order via Bus E outbound.</p>
+    <p>Choose the count (4 to 16). Route all values into the Big Loop first. Then repeatedly scan: find the minimum, eject it via a Threshold Gate or by manual comparison through the ALU, and send it out. Each scan extracts one value in sorted order. The Big Loop's 32-word capacity holds the full working set while you extract values one at a time.</p>
+    <p>The Threshold Gate with ≤ mode and a decreasing threshold can automate much of the extraction pass: set the threshold to the current known minimum, and the TG ejects it automatically.</p>
+  </div>
+
+  <div class="section" id="s-findmax">
+    <div class="section-title">Find the Maximum</div>
+    <p>A stream of values arrives. Find the single largest value and return it via Bus E outbound.</p>
+    <p>Route values to the ALU loop in pairs. Load each pair into registers A and B, compute MAX (or compare and swap), and keep the larger. Route the running maximum back into the ALU loop and compare it against the next incoming value. After all values have been compared, the value in register A (or C after final MAX) is the maximum. Send it out.</p>
+  </div>
+
+  <div class="section" id="s-xor">
+    <div class="section-title">XOR Checksum</div>
+    <p>A set of values arrives. XOR all of them together and return the single result via Bus E outbound.</p>
+    <p>Route all values to the ALU. Load the first into register A, the second into register B, XOR them. Route the result back to ALU as the new A. Continue until all values have been XORed into the accumulator. XOR is commutative and associative — order does not matter. The final result is the checksum.</p>
+  </div>
+
+  <div class="section" id="s-count">
+    <div class="section-title">Count Matches</div>
+    <p>A stream of values arrives. Count how many match the condition revealed at start. Return the count — a single number — via Bus E outbound.</p>
+    <p>The condition is revealed when the challenge starts. Use the Pattern Matcher: configure PM1 to match the condition, enable the PM1 match counter, route the stream through the Big Loop. When all values have passed, eject the PM1 match count onto a bus and route it back out through Bus E. One value returned: the count of matches.</p>
+  </div>
+
+  <div class="section" id="s-accum">
+    <div class="section-title">Accumulate to Threshold</div>
+    <p>Values arrive continuously via Bus E. Keep a running sum. A threshold value is revealed at challenge start. Return the running sum the moment it meets or exceeds the threshold — do not wait for all values to arrive.</p>
+    <p>Route incoming values to the ALU, accumulate a running total. On each addition, compare the total against the threshold (loaded into register B). When the comparator shows GTE (≥), your total has crossed the threshold. Route the current running total out via Bus E immediately. You return exactly one value.</p>
+  </div>
+
+  <div class="section" id="s-chainsum">
+    <div class="section-title">Chain Sum (Network)</div>
+    <p>A multi-computer challenge requiring active P2P connections and Challenge Network availability. Each machine in the chain receives a unique assigned value. The chain collectively computes the sum of all values, with each machine adding its value to the running total and passing it onward. The originating Challenge Box verifies each submission and reports the final result.</p>
+
+    <div class="callout key">
+      <div class="callout-label">Prerequisites</div>
+      P2P connections must be established (Chapter 13). Run PING NETWORK in the Challenges panel to confirm chain topology before starting. All available machines in the chain will be invited automatically — busy machines are skipped and the chain continues past them.
+    </div>
+
+    <p><strong>Origin machine flow:</strong></p>
+    <ol class="steps">
+      <li><div class="step-body">Select <strong>⬡ Chain Sum (Network)</strong> and click <kbd>▶ NEW CHALLENGE</kbd>. Invitations go out to all connected neighbors.</div></li>
+      <li><div class="step-body">Wait for all participants to accept. Once accepted, each machine receives an assigned value and learns its role — starter, middle, or terminal — and which direction to expect the incoming sum from.</div></li>
+      <li><div class="step-body">Watch the chain progress display (one cell per machine) fill green as each submission is verified. When all are green, route your own assigned value through the ALU, add it to the incoming partial sums, and route the final total out via Bus E.</div></li>
+    </ol>
+
+    <p><strong>Participating machine flow:</strong></p>
+    <ol class="steps">
+      <li><div class="step-body">Accept the invitation in the Challenge Network panel. Your role, direction, and assigned value are shown.</div></li>
+      <li><div class="step-body">If you are the <strong>starter</strong>: your RELEASE button is available immediately. Click it to inject your assigned value into Working. Your incoming sum is 0, so your local sum equals your assigned value. Route it to Bus E.</div></li>
+      <li><div class="step-body">If you are <strong>not the starter</strong>: wait. Your RELEASE button is greyed out until the running sum arrives from your designated neighbor. When it arrives, your assigned value is staged and the RELEASE button activates. Click it — but not before: pressing early locks you out for 3 seconds.</div><div class="step-note">The lockout is intentional. Releasing before the incoming sum arrives means you have nothing to add to.</div></li>
+      <li><div class="step-body">Add your assigned value to the incoming running sum in the ALU. Route the result to Bus E outbound. Your Challenge Box submits it to the origin for verification and automatically forwards the updated running sum to your next neighbor.</div></li>
+    </ol>
+
+    <div class="callout warn">
+      <div class="callout-label">Chain Failure</div>
+      Any wrong submission aborts the entire challenge immediately. The origin identifies the failing position. Every operator in the chain is accountable for their arithmetic. There is no partial credit and no recovery — only a restart.
+    </div>
+  </div>
+
+  <div class="section" id="s-custom-challenges">
+    <div class="section-title">Custom Challenges</div>
+    <p>Operators can define and register their own local challenge types using the Custom Challenges panel at the bottom of the Challenges section. A custom challenge is a JavaScript definition object pasted into the input field and registered with the REGISTER button. Once registered, the challenge appears in the type selector alongside the built-in challenges.</p>
+
+    <p>Custom challenges use the same scoring, Bus E delivery, and evaluation infrastructure as built-in challenges. The definition specifies how values are generated, what the correct answer is, how par is calculated, and optionally, how the spoiler and history entry are formatted.</p>
+
+    <div class="callout key">
+      <div class="callout-label">Definition Schema</div>
+      <pre>{ id, name, description, generate(params), par(result, params), params[] }</pre>
+      <p><strong>generate(params)</strong> returns <code>{ values, expected|expectedValues, answerCount, label }</code>. Called once when the challenge starts.</p>
+      <p><strong>par(result, params)</strong> returns <code>{ ticks, ops }</code>. Defines the expert score target.</p>
+      <p><strong>params[]</strong> defines configurable UI controls shown in the challenge panel (number input, select, or toggle).</p>
+    </div>
+
+    <p>Before registration, the definition is run through a validator that checks field presence, ID format and uniqueness, function types, five dry runs of <code>generate()</code> (with a 50ms timeout each), a par check, and params shape validation. Errors are reported with the specific check that failed.</p>
+
+    <p>The built-in challenges — Add, Multiply, Transform Nth, Filter, Sort, Find Max, XOR Checksum, Count Matches, Accumulate, Chain Sum — are themselves implemented as registered definitions with the <code>builtin: true</code> flag. They appear in the list but cannot be removed or overwritten. The VIEW button on each built-in definition populates the input field with the definition's params schema, which you can use as a starting point for a custom variant.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">ID uniqueness</div>
+      Custom challenge IDs must be unique and cannot match built-in IDs. Use lowercase letters, digits, and underscores only. If you want to build a variant of a built-in, copy its params from VIEW, change the id, and modify the generate() logic.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 18: FILES ══ -->
+<div class="chapter" id="ch-files">
+  <div class="chapter-number">Chapter 18</div>
+  <div class="chapter-title">Files — .L21 &amp; .l21x</div>
+
+  <p>The Files panel (right sidebar, directly below Memory Slots) gives operators a way to snapshot their memory slots, restore them, and share them with other operators. Two file formats are used: <strong>.L21</strong> for individual binary snapshots and <strong>.l21x</strong> for human-readable folder archives.</p>
+
+  <div class="section" id="s-files-panel">
+    <div class="section-title">Files Panel</div>
+    <p>The panel shows the operator's <code>/local</code> folder — up to 8 named files. Files are stored in the browser's localStorage and persist across sessions on the same browser. They are not automatically backed up to the real computer; use the archive export for that.</p>
+
+    <p>The file list is sortable by <strong>Name</strong> or <strong>Saved</strong> (timestamp). Click a column header to sort ascending; click again to reverse. Each file shows its name, the number of populated slots when it was saved, and the save timestamp.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">Browser storage</div>
+      Files live in your browser's localStorage. Clearing browser data removes them. Use <kbd>EXPORT ARCHIVE</kbd> to save a <code>.l21x</code> backup to your real computer before clearing.
+    </div>
+  </div>
+
+  <div class="section" id="s-files-save">
+    <div class="section-title">Saving a File</div>
+    <p>Saving a file requires the movement of real bits through the machine. The process:</p>
+
+    <ol class="steps">
+      <li><div class="step-body">Press <kbd>NEW FILE</kbd>. Enter a name (1–16 characters: A–Z, 0–9, hyphen, underscore). Press <kbd>SAVE</kbd>.</div></li>
+      <li><div class="step-body">The system arms the File Save destination and shows: <em>"Ready — send Batch Write All to FILE SAVE on Bus A, B, C, or D."</em></div></li>
+      <li><div class="step-body">Configure any of Buses A–D with FILE SAVE as the destination (if not already set).</div></li>
+      <li><div class="step-body">Press <kbd>BATCH WRITE ALL</kbd> in the Memory panel. All 16 slots stream out in order — null slots are written as zero words.</div></li>
+      <li><div class="step-body">The file is saved when all 16 words land. Status confirms: <em>"Saved: FILENAME.L21 (N populated slots)."</em></div></li>
+    </ol>
+
+    <p>A <kbd>CANCEL SAVE</kbd> button is available at any point after arming. File Save only accepts data while a save is armed — data sent to the File Save destination at any other time is silently discarded.</p>
+
+    <div class="callout key">
+      <div class="callout-label">Batch Write All — changed behavior</div>
+      Batch Write All now always writes all 16 slots in order, filling null (empty) slots with zero words rather than skipping them. This preserves slot position information in the binary file: slot 7's value is always the 8th word in the stream, whether or not earlier slots are populated.
+    </div>
+
+    <p>If you enter a name that already exists, an overwrite confirmation appears inline below the name input. Cancel returns focus to the name field so you can choose a different name. If the folder is full (8 files), save fails with an error — delete a file first.</p>
+
+    <p>If a Batch Write All sends fewer words than expected (operator interrupted the transfer), a <kbd>SAVE PARTIAL</kbd> button appears showing the count received vs. expected. You can save the partial snapshot or cancel.</p>
+  </div>
+
+  <div class="section" id="s-files-load">
+    <div class="section-title">Loading a File</div>
+    <p>Loading streams the file's 16 words through the Memory loop's writeback pipeline, identically to a batch write received from another machine. The words land in slots exactly as they left — slot 7's value goes back into slot 7.</p>
+
+    <p><strong>Setup before loading:</strong></p>
+    <ul class="steps">
+      <li><div class="step-body">Memory loop must be <strong>running</strong>. The writeback pipeline requires clock ticks to drain — loading while stopped has no effect.</div></li>
+      <li><div class="step-body"><kbd>WRITE TO SLOTS: ON</kbd> — words passing the write head must be captured.</div></li>
+      <li><div class="step-body"><kbd>AUTO-INCREMENT: ON</kbd>, starting at slot 0 — each successive word fills the next slot in order.</div></li>
+    </ul>
+
+    <p>Select a file from the list and press <kbd>LOAD SELECTED FILE</kbd>. The system verifies the memory loop is running before proceeding. The load streams at one word per writeback cycle — visible on the Memory loop. If you pause the loop mid-transfer, the stream pauses too. No bits are lost; the transfer resumes when the loop runs again.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">Operator responsibility</div>
+      The system checks that the loop is running, but does not check Write to Slots or Auto-Increment state. Misconfigured settings mean the words stream through the loop without landing. Check your setup before pressing Load.
+    </div>
+  </div>
+
+  <div class="section" id="s-files-formats">
+    <div class="section-title">The .L21 Binary Format</div>
+    <p>A <code>.L21</code> file is exactly 34 bytes — 16 slots × 17 bits per slot packed contiguously, big-endian. Each slot's 17 bits are: 1 marker bit (1 = populated, 0 = empty/zero) followed by 16 data bits MSB first. The format is identical to the bit stream produced by Batch Write All.</p>
+
+    <p>Zero and null are indistinguishable in the binary file. A slot that was empty and a slot holding the value 0 produce the same zero word. On load, both appear as empty (null). This is the honest output of the machine.</p>
+  </div>
+
+  <div class="section" id="s-files-archive">
+    <div class="section-title">Archive Export and Import — .l21x</div>
+    <p>Press <kbd>EXPORT ARCHIVE</kbd> to download your entire <code>/local</code> folder as a single <code>.l21x</code> text file. This file is human-readable in any text editor and can be created by hand on a real computer to prepare data for import into L21.</p>
+
+    <p>The format looks like this:</p>
+    <pre>; L21 FOLDER ARCHIVE
+; EXPORTED: 2026-03-25 15:42:07
+; FILES: 2
+
+FILE: WORKING-STATE
+; SAVED: 2026-03-25 14:11:03
+; SLOTS: 9
+00: A3F2
+01: 0000
+02: 0000
+03: 1234
+...
+15: FF00
+
+FILE: SUM-TEST-01
+; SAVED: 2026-03-25 09:44:22
+; SLOTS: 4
+00: 000A
+...</pre>
+
+    <p>Slot values are 4-digit uppercase hex (0000–FFFF). All 16 slots are always written, including zeros. Lines beginning with <code>;</code> are comments and are ignored by the loader. A file created by hand on a real computer can be imported directly into L21 with <kbd>IMPORT ARCHIVE</kbd>.</p>
+
+    <p>Import merges the archive's files into your <code>/local</code> folder. If a name already exists, you are asked whether to overwrite or skip. If the folder would exceed 8 files, you can choose which files to bring in.</p>
+
+    <div class="callout tip">
+      <div class="callout-label">Workshop use</div>
+      An instructor can hand-craft a <code>.l21x</code> file with specific values pre-loaded into specific slots and distribute it to all students. Everyone starts from the same memory state without any machine operation required to set it up.
+    </div>
+  </div>
+
+  <div class="section" id="s-files-ftp">
+    <div class="section-title">Sending Files to Another Machine</div>
+    <p>A file in /local can be transferred directly to another operator's /local folder over the network — no bus routing, no .l21x archive required.</p>
+    <ol class="steps">
+      <li><div class="step-body">Select a file in the /local list. Press <kbd>SEND TO PEER</kbd>.</div></li>
+      <li><div class="step-body">Pick a recipient from the peer selector (run PING NETWORK first if empty) and press <kbd>CONFIRM SEND</kbd>.</div></li>
+    </ol>
+    <p>The recipient sees an <strong>INCOMING FILE</strong> panel with ACCEPT and DECLINE buttons. Accept saves the file to /local immediately and returns an acceptance to the sender. Decline notifies the sender. If the recipient's folder is full, they choose an existing file to replace before accepting. Nothing is overwritten without their confirmation.</p>
+    <p>FTP packets (FTP OFFER, FTP ACCEPT, FTP DECLINE) are visible in the Network Monitor and can be captured and injected like any other packet.</p>
+    <div class="callout tip"><div class="callout-label">File Notifications</div>Enable FILE OFFER, FILE RECEIVED, and FILE DECLINED in the Notifications panel to be alerted to incoming transfers and outcomes.</div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 19: NETWORK MONITOR ══ -->
+<div class="chapter" id="ch-netmon">
+  <div class="chapter-number">Chapter 19</div>
+  <div class="chapter-title">Network Monitor</div>
+
+  <p>The Network Monitor panel gives operators visibility into the packets flowing through their machine. It captures a rolling buffer of interesting network packets — challenge coordination messages, chain sum values, and chat — and lets operators inspect them, modify them, and inject them back into the network.</p>
+
+  <p>The monitor is off by default. Enable it with the <kbd>MONITOR: ON</kbd> toggle. Clear the buffer with <kbd>CLEAR</kbd>. Closing the panel does not stop capture — toggle the monitor off explicitly when you're done.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">What the monitor is for</div>
+    The Network Monitor extends the machine's transparency principle to the network layer. It is a learning tool and an inspection tool — not a security feature. Use it to understand how the CBX protocol works, to diagnose chain challenge failures, or to experiment with packet injection in a controlled way.
+  </div>
+
+  <div class="section" id="s-netmon-stream">
+    <div class="section-title">The Packet Stream</div>
+    <p>The stream shows the last 20 packets, newest on top. Each entry shows:</p>
+    <ul class="steps">
+      <li><div class="step-body"><strong>← / →</strong> — direction. ← arrived at this machine; → sent from this machine.</div></li>
+      <li><div class="step-body"><strong>Type label</strong> — a short name for the packet type (INVITE, ASSIGN, GO, SUBMIT, SUM_OK, SUM_FAIL, ABORT, COMPLETE, SUM_WORD, CHAT).</div></li>
+      <li><div class="step-body"><strong>Summary</strong> — the most meaningful fields in compact form. For a SUBMIT: the position and submitted sum. For a SUM_WORD: the value in decimal and hex.</div></li>
+      <li><div class="step-body"><strong>Timestamp</strong> — when the packet was captured (HH:MM:SS).</div></li>
+    </ul>
+
+    <p><strong>Captured packet types:</strong></p>
+    <table class="ref-table">
+      <tr><th>Type</th><th>Direction</th><th>What it carries</th></tr>
+      <tr><td>INVITE</td><td>In &amp; Out</td><td>Chain challenge invitation: challenge ID, machine count</td></tr>
+      <tr><td>INV_ACK</td><td>In &amp; Out</td><td>Accept or skip notice from invited machine</td></tr>
+      <tr><td>ASSIGN</td><td>In &amp; Out</td><td>Position, assigned value, starter flag, sum routing direction</td></tr>
+      <tr><td>ASGN_ACK</td><td>In &amp; Out</td><td>Assignment acknowledged</td></tr>
+      <tr><td>GO</td><td>In &amp; Out</td><td>Challenge start signal</td></tr>
+      <tr><td>SUBMIT</td><td>In &amp; Out</td><td>Local running sum submitted to origin for verification</td></tr>
+      <tr><td>SUM_OK</td><td>In &amp; Out</td><td>Submission verified at origin</td></tr>
+      <tr><td>SUM_FAIL</td><td>In &amp; Out</td><td>Wrong sum detected — position, submitted value, expected value</td></tr>
+      <tr><td>ABORT</td><td>In &amp; Out</td><td>Challenge cancelled</td></tr>
+      <tr><td>COMPLETE</td><td>In &amp; Out</td><td>All submissions verified — final sum</td></tr>
+      <tr><td>SUM_WORD</td><td>In &amp; Out</td><td>The raw 17-bit running sum value passing between machines</td></tr>
+      <tr><td>CHAT</td><td>In &amp; Out</td><td>Network chat messages delivered to this machine</td></tr>
+      <tr><td>FTP OFFER</td><td>In &amp; Out</td><td>File transfer offer: filename, destination, .L21 data (summarized as byte count)</td></tr>
+      <tr><td>FTP ACCEPT</td><td>In &amp; Out</td><td>Recipient accepted the offer and saved the file</td></tr>
+      <tr><td>FTP DECLINE</td><td>In &amp; Out</td><td>Recipient declined the offer</td></tr>
+    </table>
+
+    <p>Not captured: heartbeat, ping/pong, topology scan, hub election, route table, member list, identity, and raw P2P loop words. These are either too noisy or carry no operator-relevant data.</p>
+
+    <p>Click any entry to expand it in the detail view below the stream. The detail view shows the full meaningful fields of the packet.</p>
+  </div>
+
+  <div class="section" id="s-netmon-inject">
+    <div class="section-title">Capture and Inject</div>
+    <p>With a packet expanded in the detail view, press <kbd>CAPTURE</kbd> to copy it to the staging area. The staging area shows the packet's fields, with editable inputs for the values that can meaningfully be changed. Non-editable fields (position numbers, challenge IDs, routing directions) are shown for reference but cannot be modified.</p>
+
+    <p><strong>Editable fields by packet type:</strong></p>
+    <table class="ref-table">
+      <tr><th>Type</th><th>Editable</th></tr>
+      <tr><td>SUM_WORD</td><td>The 16-bit sum value</td></tr>
+      <tr><td>SUBMIT</td><td>The localSum value</td></tr>
+      <tr><td>ASSIGN</td><td>The myAssignedValue</td></tr>
+      <tr><td>CHAT</td><td>The message text</td></tr>
+      <tr><td>FTP OFFER</td><td>The fileName and destId fields</td></tr>
+    </table>
+
+    <p>Press <kbd>INJECT</kbd> to send the (possibly modified) packet into your machine's processing pipeline as if it had arrived from the network. The injected packet goes through the same handler as a real incoming packet. Press <kbd>DISCARD</kbd> to cancel without injecting.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">What injection does</div>
+      Injecting a modified SUBMIT packet routes it through the origin's verification logic — the origin will either verify it or flag a chain failure. Injecting a modified SUM_WORD delivers it to the local CBX chain word detector as if it arrived from a neighbor. The effects are real and immediate. Use injection in test sessions to understand how verification works.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 20: TUTORIAL (was 18) ══ -->
+<div class="chapter" id="ch-tutorial">
+  <div class="chapter-number">Chapter 20</div>
+  <div class="chapter-title">Tutorial — Adding Two Numbers</div>
+
+  <p>This walkthrough computes 42 + 25 = 67. At 24 Hz it takes a few seconds; at lower speeds you can watch every bit travel. Before starting, confirm a clean state: all loops circulating, no buses on, no gates closed, counters at zero.</p>
+
+  <div class="section">
+    <div class="section-title">Walkthrough</div>
+    <ol class="steps">
+      <li>
+        <div class="step-body">Press <kbd>START</kbd>. Set speed to 24 Hz. The clock LED pulses. All four loops begin circulating.</div>
+      </li>
+      <li>
+        <div class="step-body">Set the input switches to <strong>42</strong> (binary: <code>0000000000101010</code>). Press <kbd>▼ SEND</kbd>.</div>
+        <div class="step-note">The INJECT LED lights. Watch the bits travel right along the inject strip, then enter the Working loop.</div>
+      </li>
+      <li>
+        <div class="step-body">In Bus A Config (sidebar): Source = <strong>Working</strong>, Destination = <strong>ALU</strong>. Press <kbd>TURN BUS A ON</kbd>.</div>
+        <div class="step-note">The purple Bus A strip lights. 42 begins its 41-tick journey across.</div>
+      </li>
+      <li>
+        <div class="step-body">Set the <strong>Capture Route</strong> (HEAD →) selector to <strong>A</strong>. Wait for 42 to arrive at the ALU loop head.</div>
+        <div class="step-note">After 17 ticks of capture, Register A shows 42.</div>
+      </li>
+      <li>
+        <div class="step-body">Set switches to <strong>25</strong> (<code>0000000000011001</code>). Press <kbd>▼ SEND</kbd>.</div>
+        <div class="step-note">Bus A is still on. 25 follows 42 across automatically.</div>
+      </li>
+      <li>
+        <div class="step-body">Set Capture Route to <strong>B</strong>. Wait for 25 to arrive and capture. Register B shows 25. Turn Bus A off.</div>
+      </li>
+      <li>
+        <div class="step-body">Confirm Op A ← <strong>A</strong> and Op B ← <strong>B</strong>. Select <strong>ADD</strong>.</div>
+        <div class="step-note">Answer shows 67. Flags: ZRO=false, CRY=false, SGN=false. Comparator: GT (42>25).</div>
+      </li>
+      <li>
+        <div class="step-body">Press <kbd>SEND TO LOOP</kbd> in the Answer section. Set Bus A: Source = <strong>ALU</strong>, Destination = <strong>Working</strong>. Press <kbd>TURN BUS A ON</kbd>.</div>
+        <div class="step-note">67 travels back to Working. Operation complete.</div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="callout phi">
+    <div class="callout-label">What Just Happened</div>
+    You conducted a computation. Not ran one. Not watched one. Every bit that moved, every value that transferred, every operation that produced a result — all of it happened because you directed it. The machine did exactly what you told it, nothing more, nothing less.
+  </div>
+</div>
+
+<!-- ══ CHAPTER 15: TROUBLESHOOTING ══ -->
+<div class="chapter" id="ch-troubleshoot">
+  <div class="chapter-number">Chapter 23</div>
+  <div class="chapter-title">Troubleshooting</div>
+
+  <table class="ref-table">
+    <tr><th>Symptom</th><th>Likely cause and fix</th></tr>
+    <tr><td>Nothing is moving</td><td>Clock is stopped. Press START, or use the global STEP button.</td></tr>
+    <tr><td>A loop is frozen</td><td>Loop is paused (⏸ is lit), or halted by Op Count (button turns red). RESET the linked counter to release.</td></tr>
+    <tr><td>Counter not incrementing</td><td>No triggers active. Open Counter Triggers and enable at least one trigger for that loop.</td></tr>
+    <tr><td>Op Count never fires</td><td>Counter has no active triggers — it never reaches the target. Check Counter Triggers.</td></tr>
+    <tr><td>Bus on but nothing arrives</td><td>Source loop may be halted; or source = destination (invalid). Gate may be destroying data in the destination loop — check gate state.</td></tr>
+    <tr><td>PM not firing</td><td>Mask register is all zeros. Set at least one mask bit.</td></tr>
+    <tr><td>PM matches but output not arriving</td><td>Bus A source is not set to PM. Set Source to PM in Bus A Config.</td></tr>
+    <tr><td>Inject says channel busy</td><td>Previous word is still in flight — INJECT LED is lit. Wait for it to clear.</td></tr>
+    <tr><td>ALU register not loading</td><td>Capture route (HEAD →) may not be set to that register; or the word passed before you set it. Wait for it to circulate back around (up to 272 ticks at ALU loop full rotation).</td></tr>
+    <tr><td>Memory slot not writing</td><td>ENABLE WRITE TO SLOTS must be active before words arrive at the head.</td></tr>
+    <tr><td>Wrong values in memory slots</td><td>ADDR-READ mode may be ON, routing words to addresses encoded in their top four bits. Check the ADDR-READ button state.</td></tr>
+    <tr><td>Working scratch not capturing</td><td>ENABLE CAPTURE must be active. Check the indicator dot next to the Working loop name.</td></tr>
+    <tr><td>Challenge answer marked wrong</td><td>Return values must match the expected values exactly. Use the "Show values" toggle to confirm what was sent. For multi-answer challenges (Transform, Filter), answers must arrive in the correct order.</td></tr>
+    <tr><td>Machine appears to freeze after a challenge</td><td>Turn Bus E off and back on, or abort the challenge. The inbound queue may have stale bits. If the machine remains unresponsive, reload the page.</td></tr>
+      <tr><td>Threshold Gate not ejecting</td><td>TG must be enabled. Confirm the threshold value and comparison mode match your data. Values must be circulating in the Big Loop — TG only operates there, not in Working or ALU.</td></tr>
+      <tr><td>TG clamp not rewriting</td><td>Clamp mode must be ON and a clamp value set. The clamp value input appears only after CLAMP ON is toggled.</td></tr>
+      <tr><td>P2P connection not establishing</td><td>Both sides must complete the offer/answer exchange. The answer goes back to the initiating machine. Confirm both ACCEPT buttons have been clicked and both show CONNECTED.</td></tr>
+      <tr><td>P2P words not arriving</td><td>Inbound destination must be set in Bus F or Bus G panel, not just P2P Connection. Both source and destination must be configured and the bus turned on.</td></tr>
+      <tr><td>PING NETWORK shows wrong count</td><td>Run the probe again after all P2P connections are open. Probes time out after 8 seconds. Machines with SOFT DECLINE are invisible to probes.</td></tr>
+      <tr><td>Chain Sum invitation not appearing</td><td>Chain Sum invitations are auto-accepted when the machine is idle. If you were running a local challenge when the invite arrived, your machine skipped itself. Finish your current challenge and ask the origin to restart.</td></tr>
+      <tr><td>Chain Sum RELEASE button locked</td><td>Early RELEASE locks you out for 3 seconds. The button only activates after the running sum from your neighbor has arrived.</td></tr>
+      <tr><td>Chain Sum fails on submission</td><td>You must submit (your assigned value + incoming running sum). The starter's incoming sum is 0. All other machines add their value to what arrived from their neighbor.</td></tr>
+  </table>
+</div>
+
+<!-- ══ CHAPTER 16: QUICK REFERENCE ══ -->
+<div class="chapter" id="ch-reference">
+  <div class="chapter-number">Chapter 22</div>
+  <div class="chapter-title">Quick Reference</div>
+
+  <div class="section">
+    <div class="section-title">Loop Capacities</div>
+    <table class="ref-table">
+      <tr><th>Loop</th><th>Words</th><th>Bits</th><th>Full rotation at 24 Hz</th></tr>
+      <tr><td>Working</td><td>12</td><td>204</td><td>~8.5 seconds</td></tr>
+      <tr><td>ALU</td><td>16</td><td>272</td><td>~11.3 seconds</td></tr>
+      <tr><td>Memory</td><td>16 (+ 16 slots)</td><td>272</td><td>~11.3 seconds</td></tr>
+      <tr><td>Big</td><td>32</td><td>544</td><td>~22.7 seconds</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Bus Latency</div>
+    <p>Every bus transfer costs <strong>41 ticks</strong> (24 pipeline slots + 17 write ticks). At 24 Hz, that's about 1.7 seconds per word transferred. Plan for this when timing operations.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">ALU Operations</div>
+    <table class="ref-table">
+      <tr><th>Op</th><th>Description</th></tr>
+      <tr><td>ADD</td><td>Op A + Op B</td></tr>
+      <tr><td>SUB</td><td>Op A − Op B</td></tr>
+      <tr><td>AND / OR / XOR</td><td>Bitwise logic</td></tr>
+      <tr><td>NOT</td><td>Bitwise complement of Op A</td></tr>
+      <tr><td>SHL / SHR</td><td>Shift left/right one bit (×2 / ÷2)</td></tr>
+      <tr><td>NEG</td><td>0 − Op A (two's complement)</td></tr>
+      <tr><td>INC / DEC</td><td>Op A ± 1</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Bus Summary</div>
+    <table class="ref-table">
+      <tr><th>Bus</th><th>Color</th><th>Additional Sources / Destinations</th></tr>
+      <tr><td>A</td><td>Purple</td><td>PM1 output as source; counters as source and destination</td></tr>
+      <tr><td>B</td><td>Violet</td><td>All counters as source and destination (dedicated counter bus)</td></tr>
+      <tr><td>C</td><td>Teal</td><td>Loops only — identical capability to A and B</td></tr>
+      <tr><td>D</td><td>Amber</td><td>Loops only — identical capability to A, B, and C</td></tr>
+      <tr><td>E</td><td>Crimson</td><td>External (two-way): Challenge Module interface</td></tr>
+      <tr><td><span style="color:#2050c0;">F</span></td><td>Blue</td><td>Chain Left — outbound to left P2P neighbor, inbound from left neighbor</td></tr>
+      <tr><td><span style="color:#8020c0;">G</span></td><td>Violet</td><td>Chain Right — outbound to right P2P neighbor, inbound from right neighbor</td></tr>
+      <tr><td><span style="color:#c87800;">H</span></td><td>Amber</td><td>Net0 &mdash; routed bus to any machine in the connected topology by machine ID. Set peer target in the Bus H sidebar panel.</td></tr>
+      <tr><td><span style="color:#60c020;">I</span></td><td>Lime</td><td>Net1 &mdash; same as H, independently addressable. H and I can point to different machines simultaneously.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Key Controls</div>
+    <table class="ref-table">
+      <tr><th>Control</th><th>Function</th></tr>
+      <tr><td><kbd>START / STOP</kbd></td><td>Start or halt the master clock.</td></tr>
+      <tr><td><kbd>STEP</kbd></td><td>Single-step entire machine one tick.</td></tr>
+      <tr><td>Speed slider + number</td><td>Slider: 1–144 Hz integer steps. Number input: 0.1–144 Hz, any decimal. Recommended: 24 Hz. Both controls stay in sync.</td></tr>
+      <tr><td><kbd>CLOSE/OPEN GATE</kbd></td><td>Toggle gate for that loop. Closed gate destroys data at G dot every tick.</td></tr>
+      <tr><td><kbd>⏸</kbd></td><td>Freeze individual loop. Other loops keep running.</td></tr>
+      <tr><td>Loop <kbd>STEP</kbd></td><td>Advance one loop one tick while paused.</td></tr>
+      <tr><td><kbd>SEND TO LOOP</kbd></td><td>Inject a register, Answer, or Comparator word into the ALU loop.</td></tr>
+      <tr>
+          <td><kbd>AUTO-SEND</kbd> (ALU)</td>
+          <td>When enabled, the ALU automatically writes its result to the loop on the next tick whenever the result changes. Eliminates manual SEND TO LOOP for continuous computation.</td>
+        </tr>
+      <tr><td><kbd>CLEAR</kbd> / <kbd>CLEAR ALL</kbd></td><td>Clear one or all ALU registers and the Answer.</td></tr>
+      <tr><td><kbd>▼ SEND</kbd></td><td>Inject current switch value into the Working loop.</td></tr>
+      <tr><td>Input switches</td><td>16 toggles for b15–b0. Click to flip; click-drag to sweep-set a range.</td></tr>
+      <tr><td><kbd>RNG</kbd></td><td>Generate and inject a random value in the configured range.</td></tr>
+      <tr><td><kbd>ENABLE WRITE TO SLOTS</kbd></td><td>Capture incoming words into memory slots.</td></tr>
+      <tr><td><kbd>BATCH WRITE ALL</kbd></td><td>Output all 16 memory slots sequentially.</td></tr>
+      <tr><td><kbd>ENABLE CAPTURE</kbd></td><td>Working scratch: capture next word from Working R head.</td></tr>
+      <tr><td><kbd>→W</kbd></td><td>Working scratch: send slot value back into Working loop.</td></tr>
+      <tr><td><kbd>BEGIN / END SESSION LOG</kbd></td><td>Start or stop recording the .loop file.</td></tr>
+      <tr><td>→A / →B / →C / →D</td><td>Eject a counter value onto the specified bus.</td></tr>
+      <tr><td>TG threshold + mode</td><td>Threshold Gate: set numeric threshold and comparison mode (≥, ≤, =).</td></tr>
+      <tr><td><kbd>CLAMP: ON/OFF</kbd></td><td>Threshold Gate clamp mode: rewrite matching words in-place instead of ejecting.</td></tr>
+      <tr><td><kbd>CREATE OFFER / ACCEPT</kbd></td><td>P2P connection setup. Offer on initiating machine, paste and Accept on both sides.</td></tr>
+      <tr><td><kbd>⬡ PING NETWORK</kbd></td><td>Challenge Network probe: discover chain topology, node count, ring detection.</td></tr>
+      <tr><td><kbd>OPEN/CLOSED FOR CHALLENGES</kbd></td><td>Challenge Network availability: set to OPEN to receive challenge invitations.</td></tr>
+      <tr><td><kbd>SOFT DECLINE: ON/OFF</kbd></td><td>When ON: machine is invisible to challenge network and never relays discovery.</td></tr>
+      <tr><td>Scoring Mode</td><td>Efficiency (ticks + ops) or Speed (ticks + ops + wall-clock). Set before starting challenge.</td></tr>
+      <tr><td><kbd>RELEASE VALUE</kbd></td><td>Chain Sum: inject your assigned value into Working when the incoming sum has arrived.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══ CHAPTER 17: PLAY STYLE ══ -->
+<div class="chapter" id="ch-playstyle">
+  <div class="chapter-number">Chapter 23</div>
+  <div class="chapter-title">Play Style</div>
+
+  <p>There is more than one way to operate Loop 2.1, and this is by design. The machine provides hardware — loops, buses, an ALU, memory slots, a comparator — but it does not require you to use any of it in any particular way. The operator is the program, and that means the operator also gets to choose what kind of program they want to be.</p>
+
+  <p>Consider sorting eight values. One approach: load them into memory, transfer four at a time to the ALU loop, use the comparator to identify which is larger, swap accordingly, repeat until the set is ordered. This is methodical, structured work. The machine is doing the comparing — you are orchestrating the hardware.</p>
+
+  <p>Another approach: load the eight values into memory and look at them. Read the numbers off the display, decide by eye that 431 and 12 should be swapped, execute the swap directly, and continue until the values are in the order you want. The machine is doing nothing but holding and moving data. You are doing all the reasoning yourself.</p>
+
+  <p>Both are valid. Both are real uses of this machine. The first takes longer on the clock. The second may take longer in your head. Neither is cheating.</p>
+
+  <div class="section">
+    <div class="section-title">The Three Styles</div>
+
+    <p>Three broad styles emerge from how operators tend to approach problems:</p>
+
+    <h4>Formal</h4>
+    <p>The operator relies primarily on the machine's computational hardware — the ALU, the comparator, the pattern matcher, the threshold gates — to do the logical work. The operator's role is to configure the hardware correctly, route data to the right places at the right times, and read results back out. Computation happens inside the machine. The operator is the conductor.</p>
+
+    <h4>Manual</h4>
+    <p>The operator uses the machine as storage and display infrastructure while doing the actual reasoning themselves. Values circulate in the loops, appear at the read head, and the operator decides what to do with them based on direct inspection. Computation happens inside the operator's head. The machine is the medium.</p>
+
+    <h4>Craftsman</h4>
+    <p>Most operators land here in practice: a fluid mix of both. Use the ALU when it saves time. Do the comparison yourself when the values are simple enough that routing them through hardware would be slower. Switch modes mid-session as the problem demands. This is the most natural way to work, and arguably the most interesting — it requires knowing when to trust the hardware and when to trust yourself.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Why It Matters for Scoring</div>
+
+    <p>Loop 2.1's challenge system scores on time — specifically, on how many clock ticks a completed session takes compared to par. This creates an obvious tension: a Manual-style operator sorting eight values by eye might complete the task in far fewer ticks than one who sets up a full comparator-and-swap pipeline. The Manual operator wins the clock, but may have used barely any of the machine.</p>
+
+    <p>Neither outcome is wrong. But they are different things, and comparing them directly is not quite fair. A Formal operator working through a methodical hardware sort has demonstrated something the Manual operator's session did not: the ability to orchestrate the machine's components toward a goal. The Manual operator has demonstrated something else: the ability to use the machine efficiently as a medium for their own cognition. Both skills are worth having.</p>
+
+    <p>For this reason, leaderboards and comparisons are most meaningful when play style is declared. A Formal time and a Manual time for the same challenge measure different things.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Declaring Your Style</div>
+
+    <p>Style declaration is operator-initiated. There is no automatic detection, no enforcement, and no penalty for mixing styles or not declaring at all. The machine does not know what you intended — it only knows what you did.</p>
+
+    <p>When recording a session, the most straightforward approach is to note your style in the session name or in a log comment at the start. Something as simple as "8-value sort — formal" is enough. If you are submitting a session to a leaderboard, declaring style allows your result to be placed in the right context.</p>
+
+    <div class="callout tip">
+      <div class="callout-label">Tip</div>
+      A playback file makes style fairly legible on its own — a Formal session will show heavy bus activity, ALU register loads, and comparator operations. A Manual session will show memory reads, direct swaps, and minimal bus use. But declaring it explicitly is good practice regardless, and makes the record more useful to anyone reading it later.
+    </div>
+
+    <p>There is no shame in any style, including styles that blend or defy these categories. The only obligation is honesty about what you did, so that your result can be understood in the right light.</p>
+  </div>
+
+  <div class="callout phi">
+    <div class="callout-label">On the spirit of the thing</div>
+    The machine was built to be operated, not to be gamed. A Manual sort that completes in half the ticks of a Formal sort is not a better session — it is a different session. The question worth asking is not "how fast did I finish?" but "did I understand what I was doing, and was I honest about it?"
+  </div>
+</div>
+
+<!-- ══ CHAPTER 18: PHILOSOPHY ══ -->
+<div class="chapter" id="ch-philosophy">
+  <div class="chapter-number">Chapter 24</div>
+  <div class="chapter-title">The Philosophy of Loop 2.1</div>
+
+  <p>Every decision in Loop 2.1's design was made in service of one goal: transparency. The machine does nothing you do not direct it to do. This is deliberately observable, and deliberately human-scaled.</p>
+
+  <p>The counters do not increment automatically — you decide what counts. The flags the comparator sets do not trigger any branching — they inform you, and you decide what to do. The pattern matcher does not automatically route its output — you still control where Bus A goes. The loops do not halt unless you configure them to halt. Every automatic behaviour in the system is the result of an explicit operator decision made in advance.</p>
+
+  <p>This is not nostalgia for old computers. Old computers were also black boxes — they just ran slower and had fewer layers of abstraction. Loop 2.1 is a different set of values applied to computing: understanding over efficiency, agency over convenience, craft over automation.</p>
+
+  <div class="aside">Modern computers hide everything from you. Data moves through layers of abstraction so deep that even professional engineers rarely understand what is happening at the hardware level. Loop 2.1 inverts this entirely.</div>
+
+  <p>These eight tenets define what Loop 2.1 is and what it is not:</p>
+  <ol>
+    <li><strong>The Operator Is the Program.</strong> No stored program exists. The human makes all routing, operational, and control-flow decisions in real time. The operator participates throughout execution — not just at setup.</li>
+    <li><strong>Explicit State — No Black Boxes.</strong> All data is visible at all times. All operations are observable. Nothing happens invisibly. Every effect has a traceable cause.</li>
+    <li><strong>Data as Physical Entity.</strong> Data has position, velocity, and trajectory. It moves at observable speeds, one bit per tick. It is conserved — it does not appear or disappear. Moving data costs time, and that cost is always visible.</li>
+    <li><strong>Circular Storage.</strong> Memory is circular, not indexed. Data flows past read points continuously. There is no absolute start or end — only circulation. This demands cyclical thinking rather than linear thinking.</li>
+    <li><strong>Manual Flow.</strong> The operator routes all data and triggers all operations. Flags inform the operator; they do not control execution. No automatic branching occurs.</li>
+    <li><strong>Bus as Programmable Structure.</strong> Buses connect components explicitly. Routing is configurable by the operator. Data paths are part of the computation, not infrastructure beneath it.</li>
+    <li><strong>Computation as Craft.</strong> Quality over speed. Understanding over efficiency. The operator is an artisan, not a user. Progress is measured by elegance — minimal waste, clear workflow, beautiful choreography.</li>
+    <li><strong>Operator-Scale Timing.</strong> The clock runs at human-observable speeds by default. Time is a resource for learning and for craft. Extensibility grows horizontally — more modules, not faster execution.</li>
+  </ol>
+
+  <div class="callout phi">
+    <div class="callout-label">The Point</div>
+    Computers don't have to be black boxes. Transparency is possible. Humans can stay in control.
+  </div>
+</div>
+
+<hr>
+<p style="font-size:15px;color:var(--fg-dim);margin-bottom:48px;">Questions, bug reports, and feedback are welcome. Send them to <a href="/cdn-cgi/l/email-protection#c4b7aca1a5a3b1aab0aca1b684a3a9a5ada8eaa7aba9">Shea Gunther</a>.</p>
+
+</main>
+</div><!-- /body-wrap -->
+
+<div class="page-footer">
+  <span>Loop 2.1 · loop2.computer</span>
+  <span>"The Operator Is the Program"</span>
+  <span>Designed by <a href="/cdn-cgi/l/email-protection#74071c111513011a001c1106341319151d185a171b19">Shea Gunther</a> · Code &amp; writing by Claude AI · March 2026</span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function setSkin(id) {
+  document.body.className = 'skin-' + id;
+  try { localStorage.setItem('loop2-manual-skin', id); } catch(e) {}
+  document.querySelectorAll('.skin-btn').forEach(b => b.classList.toggle('active', b.getAttribute('onclick') === "setSkin('" + id + "')"));
+}
+document.addEventListener('DOMContentLoaded', () => {
+  let saved = 'og';
+  try { saved = localStorage.getItem('loop2-manual-skin') || 'og'; } catch(e) {}
+  setSkin(saved);
+
+  // Active TOC tracking
+  const chapters = document.querySelectorAll('.chapter, .section[id]');
+  const tocLinks = document.querySelectorAll('.toc-list a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        const id = entry.target.id;
+             tocLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector('.toc-list a[href="#' + id + '"]');
+        if(active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '-80px 0px -60% 0px' });
+  chapters.forEach(c => observer.observe(c));
+});
+</script>
+</body>
+</html>
