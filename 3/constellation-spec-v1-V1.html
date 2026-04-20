@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constellation Spec — Butcher Constellation</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#dce4ec;--panel2:#edf1f5;--panel3:#d4dce6;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#1e3a6e;--accent2:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--signal:#c01848;--filter:#006888;--workflow:#2868b0;--present:#7040a0;--good-bg:#eaf5ec;--warn-bg:#fef8e0;--key-bg:#eef0f8;--note-bg:#f0f0f8;--font:'Courier New',Consolas,monospace;--max-w:960px;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--accent2:#44aaff;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--signal:#ff4488;--filter:#00ddff;--workflow:#44aaff;--present:#cc88ff;--good-bg:#0c1e10;--warn-bg:#1e1000;--key-bg:#0a1020;--note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#1e3a6e;--accent2:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--signal:#b01040;--filter:#007898;--workflow:#1858a0;--present:#6030a0;--good-bg:#e8f8ec;--warn-bg:#fff4dc;--key-bg:#f0eeff;--note-bg:#fef8f0;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.72;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:20px 44px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:18px;font-weight:bold;} .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:3px;}
+  .header-right{display:flex;align-items:center;gap:14px;} .doc-title{text-align:right;} .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;} .doc-title .build-tag{font-family:var(--font);font-size:10px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;} .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 8px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;} .skin-btn:hover{border-color:var(--fg);color:var(--fg);} .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .content{max-width:var(--max-w);margin:0 auto;padding:40px 48px 90px;}
+  .chapter{margin-bottom:48px;} .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:5px;} .chapter-title{font-family:var(--font);font-size:20px;font-weight:bold;letter-spacing:1px;border-bottom:2px solid var(--border);padding-bottom:9px;margin-bottom:16px;}
+  .section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:5px;margin:24px 0 12px;}
+  p{margin-bottom:12px;}strong{font-weight:600;}em{font-style:italic;}
+  code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:12px;color:var(--compute);}
+  pre{background:var(--code-bg);padding:14px 18px;font-family:var(--font);font-size:13px;line-height:1.6;overflow-x:auto;margin:14px 0;border:1px solid var(--border2);white-space:pre;tab-size:2;}
+  .callout{border-left:4px solid var(--border);padding:10px 15px;background:var(--panel2);margin:14px 0;font-size:15px;line-height:1.65;}
+  .callout.tip{background:var(--good-bg);border-left-color:var(--vault);} .callout.warn{background:var(--warn-bg);border-left-color:var(--compute);} .callout.key{background:var(--key-bg);border-left-color:var(--working);} .callout.note{background:var(--note-bg);border-left-color:var(--accent2);}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:5px;} .callout.tip .callout-label{color:var(--vault);} .callout.warn .callout-label{color:var(--compute);} .callout.key .callout-label{color:var(--working);} .callout.note .callout-label{color:var(--accent2);}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:18px 22px;margin-bottom:36px;} .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:9px;}
+  .ref-table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0;line-height:1.5;} .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:6px 10px;border-bottom:2px solid var(--border);background:var(--panel);} .ref-table td{padding:6px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .routing-table{width:100%;border-collapse:collapse;font-size:12px;margin:14px 0;line-height:1.4;} .routing-table th{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:4px 6px;border-bottom:2px solid var(--border);background:var(--panel);} .routing-table td{padding:4px 6px;border-bottom:1px solid var(--border2);vertical-align:top;font-size:12px;} .routing-table .entry-num{font-family:var(--font);font-size:11px;color:var(--fg-dim);white-space:nowrap;} .routing-table code{font-size:11px;}
+  .step-table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;line-height:1.5;} .step-table th{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:5px 8px;border-bottom:2px solid var(--border);background:var(--panel);} .step-table td{padding:5px 8px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .pipeline-label{font-family:var(--font);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--workflow);margin:20px 0 8px;padding:6px 10px;background:var(--panel);border-left:4px solid var(--workflow);}
+  .loop-type{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:1px 5px;display:inline-block;}
+  .lt-working{color:var(--working);} .lt-filter{color:var(--filter);} .lt-compute{color:var(--compute);} .lt-vault{color:var(--vault);} .lt-signal{color:var(--signal);} .lt-workflow{color:var(--workflow);} .lt-presentation{color:var(--present);}
+  hr{border:none;border-top:1px solid var(--border2);margin:32px 0;}
+  .page-footer{max-width:var(--max-w);margin:0 auto;padding:16px 48px 40px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  @media(max-width:700px){.content{padding:26px 20px 56px;}.page-header{padding:16px 20px;}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div><div class="logo">BUTCHER CONSTELLATION</div><div class="logo-sub">Constellation Spec</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title"><div class="title-main">Constellation Spec</div><div class="build-tag">v1 · 6 April 2026</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="abstract-box">
+  <div class="abstract-label">About This Document</div>
+  <p style="margin-bottom:8px;">The Butcher Constellation Spec — master reference for Phase 1 implementation. Declares the system's identity, topology, configuration, pipelines, and policies. This document is authoritative for what the system is. It references — but does not duplicate — the routing tables (how packets flow), the Packet Contract Registry (what packets carry), and record schemas (what records look like). Each document is authoritative for its own concern. Fix by Design applied to the document architecture itself: duplication drift is prevented by not duplicating.</p>
+  <p style="margin-bottom:8px;">12 sections. Sections 1–3: system architecture (identity, topology, buses). Sections 4–9: system configuration (pipelines, clock, capabilities, auth, data gates, PII policy). Section 10: deferred decision resolutions. Section 11: document authority map and Phase 1 loading protocol. Section 12: compact routing summary.</p>
+  <p style="margin-bottom:0;"><strong>Sources:</strong> TDD-001 v6. Routing Tables §1–§6 (post-renumbering). Pipeline Specs — workflow:orderLifecycle v2, workflow:notifications v2. Clock Schedule Table v2. Capability Injection Table v1. Data Gate Policies V2. Auth Gate Role Matrix V2. PII Field Declarations v1 V2 (policy layer). Problem Description v4. CS Structure Proposal v1 V2.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: SYSTEM IDENTITY                                -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 1</div>
+  <div class="chapter-title">System Identity</div>
+
+  <p>The Butcher Constellation is the order management system for Deer Hill Butchers, a seasonal wild game processing operation in Windham, Maine. Rick Holte (owner, primary operator) and Christine Holte (co-operator, packaging and customer communications) process approximately 100 animals per season — primarily deer brought in by local hunters during the October-through-January hunting season.</p>
+
+  <p>The system manages the complete order lifecycle: intake (customer self-service or Rick at the counter), deposit collection, cut selection, pricing, hanging weight recording, stage tracking through nine processing stages, balance collection at pickup, storage fee charging for uncollected orders, no-show abandonment, customer notifications, daily condition scanning, reporting, and configuration management.</p>
+
+  <p>The architecture is a Loop MMT constellation: 16 typed loops on four scoped buses, event-driven, closure-enforced capability boundaries. All data flows as typed packets on buses. No loop can acquire capabilities not declared in its factory signature. The closure wall is the security model. The bus assignment table is the routing authority. The routing tables declare every legal data path. The Packet Contract Registry declares every field in every packet.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: TOPOLOGY                                       -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 2</div>
+  <div class="chapter-title">Topology</div>
+
+  <p>16 loops across all 7 Standard types. Each row declares the loop's name, type, bus connections (subscribe/publish), and one-line responsibility.</p>
+
+  <table class="ref-table">
+    <thead><tr><th>Loop</th><th>Type</th><th>Subscribe</th><th>Publish</th><th>Responsibility</th></tr></thead>
+    <tbody>
+      <tr><td><code>working:orderIntake</code></td><td><span class="loop-type lt-working">Working</span></td><td>—</td><td>DATA</td><td>External input gate. Receives customer form submissions and Clock triggers via HTTP. Structural validation. Emits onto DATA.</td></tr>
+      <tr><td><code>working:paymentWebhook</code></td><td><span class="loop-type lt-working">Working</span></td><td>—</td><td>DATA</td><td>Stripe webhook gate. Signature verification, deduplication, payload normalization. Emits PAYMENT_EVENT onto DATA.</td></tr>
+      <tr><td><code>filter:orderValidation</code></td><td><span class="loop-type lt-filter">Filter</span></td><td>DATA</td><td>DATA</td><td>Structural pattern-matching pre-gate. Field type checks, format patterns, required fields. Passes VALIDATED or emits REJECTED. No VAULT access — business validation is in compute:pricing.</td></tr>
+      <tr><td><code>compute:pricing</code></td><td><span class="loop-type lt-compute">Compute</span></td><td>DATA</td><td>DATA</td><td>Unified business validation and pricing. Pulls config from vault:config, validates animal type and cut selections against config, snapshots pricing. Emits ORDER_PRICED or PRICING_REJECTED.</td></tr>
+      <tr><td><code>compute:dailyScan</code></td><td><span class="loop-type lt-compute">Compute</span></td><td>DATA, VAULT</td><td>DATA, VAULT</td><td>Daily condition checker. Pulls orders and config, checks overdue conditions in priority order (terminal before recurring), emits trigger packets. Writes campaign dedup flags to vault:config.</td></tr>
+      <tr><td><code>compute:reports</code></td><td><span class="loop-type lt-compute">Compute</span></td><td>DATA, VAULT</td><td>DATA, VAULT</td><td>Snapshot assembly and on-demand reports. Pulls from vault:orders, vault:customers, vault:config. Writes snapshots to vault:snapshots.</td></tr>
+      <tr><td><code>vault:orders</code></td><td><span class="loop-type lt-vault">Vault</span></td><td>DATA, VAULT</td><td>VAULT</td><td>Order record persistence. Authoritative for order state. Emits ORDER_CREATED, ORDER_UPDATED, and failure events onto DATA.</td></tr>
+      <tr><td><code>vault:customers</code></td><td><span class="loop-type lt-vault">Vault</span></td><td>DATA, VAULT</td><td>VAULT</td><td>Customer record persistence. Authoritative for customer identity and contact info. Emits CUSTOMER_CREATED, CUSTOMER_UPDATED onto DATA.</td></tr>
+      <tr><td><code>vault:config</code></td><td><span class="loop-type lt-vault">Vault</span></td><td>DATA, VAULT</td><td>VAULT</td><td>Configuration persistence. Pricing tables, templates, deadlines, campaign definitions. Emits CONFIG_UPDATED onto DATA.</td></tr>
+      <tr><td><code>vault:snapshots</code></td><td><span class="loop-type lt-vault">Vault</span></td><td>DATA, VAULT</td><td>VAULT</td><td>Append-only audit and snapshot persistence. Stores WRITE_AUDIT records and daily/seasonal snapshots. Emits SNAPSHOT_STORED onto DATA (fix by design — notification from confirmed write).</td></tr>
+      <tr><td><code>signal:payments</code></td><td><span class="loop-type lt-signal">Signal</span></td><td>DATA</td><td>SIGNAL</td><td>Stripe integration. Processes CHARGE_* commands via Dependency Gate (stub-replaceable Stripe API wrapper). Emits charged/failed results onto DATA. Dependency Gate provides circuit breaker and service degradation detection.</td></tr>
+      <tr><td><code>signal:notifications</code></td><td><span class="loop-type lt-signal">Signal</span></td><td>DATA</td><td>SIGNAL</td><td>Twilio/email integration. Processes SEND_NOTIFICATION commands via Dependency Gate (stub-replaceable messaging API wrapper). Emits NOTIFICATION_DELIVERED or NOTIFICATION_FAILED onto DATA.</td></tr>
+      <tr><td><code>workflow:orderLifecycle</code></td><td><span class="loop-type lt-workflow">Workflow</span></td><td>DATA, VAULT, SIGNAL</td><td>DATA</td><td>Order state machine owner. 8 pipelines covering intake through close/abandonment. Coordinates multi-step operations: fetch → validate → write → confirm → emit → audit.</td></tr>
+      <tr><td><code>workflow:notifications</code></td><td><span class="loop-type lt-workflow">Workflow</span></td><td>DATA, VAULT, SIGNAL</td><td>DATA</td><td>Customer notification owner. 6 pipelines covering auto-notifications, manual messaging, marketing, reminders, delivery retry, and delivery confirmation.</td></tr>
+      <tr><td><code>presentation:dashboard</code></td><td><span class="loop-type lt-presentation">Presentation</span></td><td>DATA</td><td>DATA, SYNC</td><td>Operator UI. Rick and Christine's tablet interface. Emits commands onto DATA, subscribes for real-time updates. VAULT pull for read operations. SYNC subscription reserved for V2 multi-device sync.</td></tr>
+      <tr><td><code>presentation:customerIntake</code></td><td><span class="loop-type lt-presentation">Presentation</span></td><td>—</td><td>—</td><td>Customer self-service form. Renders on customer's phone. Pulls config from VAULT for cut options and returning customer pre-population. Submit posts to working:orderIntake via HTTP (browser bridge, not bus).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout key">
+    <div class="callout-label">DD-002 — filter:orderValidation: KEEP (16 Loops)</div>
+    The TDD (v6, Q3) deferred the decision on whether filter:orderValidation should be absorbed into working:orderIntake. The filter has 16 check loops (4 structural checks across intake and cuts flows). Fix by Design analysis: the filter is a structural enforcement of the validation boundary between untrusted external input and internal processing. The routing table enforces that INTAKE_RAW goes to the filter (§1 #1), and INTAKE_VALIDATED can only come from the filter (§1 #2). Absorbing the filter replaces a bus routing guarantee with a code convention — the Working Loop would need to self-discipline its own validation. Fix by Design says don't do that. The number of checks is irrelevant to the structural analysis. Reversing this decision later is cheap: change the source field on two routing entries. The topology remains 16 loops.
+  </div>
+
+  <div class="callout note">
+    <div class="callout-label">Signal Loop Dependency Gates</div>
+    Both Signal Loops receive external service access through Dependency Gates — stub-replaceable interfaces injected via the <code>services</code> factory capability. signal:payments wraps the Stripe API; signal:notifications wraps Twilio (SMS) and an email provider. Each gate provides: the service interface, a circuit breaker (detects repeated failures, emits SERVICE_DEGRADED), and service restoration detection (emits SERVICE_RESTORED when connectivity returns). The gates also support Translator patterns for mapping between the constellation's packet format and the external API's request/response format.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: BUS CONFIGURATION                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 3</div>
+  <div class="chapter-title">Bus Configuration</div>
+
+  <p>Four standard buses. No additions required. Traffic separation is handled by packet types and routing table declarations, not by bus-level isolation.</p>
+
+  <table class="ref-table">
+    <thead><tr><th>Bus</th><th>Scope</th><th>Connected Loops</th><th>Delivery</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DATA</strong></td><td>Business events, commands, triggers, write confirmations, failure events</td><td>15 of 16 (all except presentation:customerIntake)</td><td>Publish-subscribe. Publisher declares, routing table specifies subscribers. No acknowledgment required — subscribers receive asynchronously.</td></tr>
+      <tr><td><strong>VAULT</strong></td><td>Persistence operations — pull requests and write commands</td><td>All 4 Vault Loops, both Workflow Loops, both Compute Loops, both Presentation Loops (10 total)</td><td>Request-response for pulls (synchronous from caller's perspective). Fire-and-confirm for writes (write command → confirmation or failure event on DATA).</td></tr>
+      <tr><td><strong>SIGNAL</strong></td><td>Outbound external requests — notifications and payment charges</td><td>Both Signal Loops (subscribe), both Workflow Loops (publish)</td><td>Command-result. Workflow emits command → Signal Loop processes → result event on DATA (not SIGNAL). Cross-bus pattern: command enters on SIGNAL, result exits on DATA.</td></tr>
+      <tr><td><strong>SYNC</strong></td><td>Coordination — device synchronization, integrity checks</td><td>presentation:dashboard (subscribe, forward-compatibility)</td><td>No V1 traffic. Bus is declared and initialized. Reserved for V2 multi-device synchronization between Rick's shed tablet and Christine's basement device.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout key">
+    <div class="callout-label">Priority Levels</div>
+    Three priority levels declared in the routing tables: CRITICAL (payment failures when customer is present — BALANCE_FAILED, STORAGE_FEE_FAILED at counter), STANDARD (normal business events and commands — the default), and LOW (informational events with no time sensitivity). Priority affects dashboard display ordering and notification urgency, not bus delivery order. All packets are delivered in emission order within a bus.
+  </div>
+
+  <div class="callout key">
+    <div class="callout-label">Cross-Bus Pattern</div>
+    SIGNAL bus traffic flows one direction: Workflow → Signal Loop. Results flow back on DATA, not SIGNAL. This means the Workflow Loop subscribes on DATA for payment and notification results, not on SIGNAL. The Signal Loop publishes results to DATA so the dashboard and other subscribers can observe them. This is standard Loop MMT — the SIGNAL bus carries commands to external services, DATA carries the results back into the constellation.
+  </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: PIPELINE DECLARATIONS                          -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 4</div>
+  <div class="chapter-title">Pipeline Declarations</div>
+
+  <p>14 pipelines across two Workflow Loops. Each pipeline declares its trigger, step sequence with emit/expect pairs, and per-step failure strategy (Abort, Skip, or Retry with max 3 attempts and exponential backoff). Absorbed from Pipeline Spec — workflow:orderLifecycle v2 and Pipeline Spec — workflow:notifications v2, which are superseded by this section.</p>
+
+  <div class="section-title">workflow:orderLifecycle — 8 Pipelines, 43 Steps</div>
+
+  <p>Owns the order state machine. Coordinates multi-step operations through a consistent pattern: fetch → validate → write → confirm → emit semantic event → audit. Every vault write is confirmed before any semantic business event is emitted. Payment failures never block business operations.</p>
+
+  <div class="pipeline-label">PIPELINE_ORDER_INTAKE</div>
+  <p><strong>Trigger:</strong> <code>INTAKE_VALIDATED</code> (§1 #2) or <code>INTAKE_DIRECT</code> (§1 #4). Creates a new order from external or internal intake. 8 steps: fetch customer → conditional create customer (fire-and-forget, Skip) → write order (Abort on fail) → conditional charge deposit (Skip — deposit waiver check; failure does not block) → audit → conditional request pricing (only if cuts present) → write pricing (Retry) → check Ready to Butcher gate.</p>
+  <p><em>Key decisions:</em> Dual trigger — same pipeline, different audit trail (external vs. internal origin). Deposit before pricing is deliberate (flat $75, no dependency on pricing engine). Known gap OP-009: no CUSTOMER_CREATE_FAILED routing entry — customer creation is fire-and-forget.</p>
+
+  <div class="pipeline-label">PIPELINE_LATE_CUTS</div>
+  <p><strong>Trigger:</strong> <code>CUTS_VALIDATED</code> (§1 #28) or <code>CUTS_DIRECT</code> (§1 #30). Customer completes cut selections after partial intake. 5 steps: write cuts (Abort) → request pricing (Skip) → write pricing (Retry) → check RTB gate → audit.</p>
+
+  <div class="pipeline-label">PIPELINE_STAGE_ADVANCE</div>
+  <p><strong>Trigger:</strong> <code>STAGE_ADVANCE_COMMAND</code> (§2 #31). Manual stage advance by Rick or Christine. 5 steps: fetch order (Abort) → validate transition (Abort — emits STAGE_ADVANCE_REJECTED §2 #34 with reason) → write stage change (Retry) → emit ORDER_STAGE_CHANGED (Skip) → audit. Gate conditions apply only to Ready to Butcher (hanging weight + pricing). Closed cannot be targeted manually — auto-triggered only.</p>
+
+  <div class="pipeline-label">PIPELINE_WEIGHT_RECORDING</div>
+  <p><strong>Trigger:</strong> <code>WEIGHT_RECORDED</code> (§2 #35). Rick records hanging weight. 4 steps: fetch order (Abort) → write weight (Retry) → audit (unconditional) → check RTB gate (may auto-advance). If gate opens, two distinct audit entries: weight recording and stage transition.</p>
+
+  <div class="pipeline-label">PIPELINE_CANCELLATION</div>
+  <p><strong>Trigger:</strong> <code>CANCEL_ORDER</code> (§2 #36). Only valid before butchering begins (Checked In, Pending Customer Input, Hanging, Ready to Butcher). 5 steps: fetch order (Abort) → validate eligibility (Abort — emits CANCEL_REJECTED §2 #38) → write cancellation (Retry) → emit ORDER_CANCELLED (Skip) → audit. Full deposit forfeit, no refund processing.</p>
+
+  <div class="pipeline-label">PIPELINE_PICKUP_CLOSE</div>
+  <p><strong>Trigger:</strong> <code>ORDER_STAGE_CHANGED</code> (§2 #33) — self-subscribe with match <code>{ newStage: 'Picked Up' }</code>. Auto-charges remaining balance and closes order. 6 steps: fetch order (Abort) → conditional charge balance (Skip — if balance ≤ 0, skip) → audit charge → write Closed (Retry) → emit ORDER_STAGE_CHANGED with newStage=Closed (Skip) → audit close. Self-subscribe is safe: match pattern filters for Picked Up only, emit produces Closed — no recursion.</p>
+  <p><em>Key decision:</em> Charge <em>completes</em> before close — not <em>succeeds</em>. Both BALANCE_CHARGED and BALANCE_FAILED are completion. The close proceeds regardless. The thank-you notification uses the charge outcome from the payload.</p>
+
+  <div class="pipeline-label">PIPELINE_STORAGE_FEE</div>
+  <p><strong>Trigger:</strong> <code>STORAGE_FEE_DUE</code> (§5 #67). Daily scan identifies overdue storage fee. 5 steps: fetch order (Abort) → verify fee due via lastStorageFeeChargedAt dedup (Abort if already charged — expected behavior) → charge storage fee (Skip) → conditional write charge timestamp (Retry — only if charge succeeded; if charge failed, timestamp must NOT update or next scan will skip this order) → audit.</p>
+  <p><em>Dedup is structural:</em> the order record's lastStorageFeeChargedAt timestamp is the single source of truth. The scan checks it, the pipeline writes it on success only.</p>
+
+  <div class="pipeline-label">PIPELINE_ABANDONMENT</div>
+  <p><strong>Trigger:</strong> <code>NO_SHOW_DEADLINE_REACHED</code> (§5 #68). Daily scan identifies order past no-show deadline (default 30 days after Ready for Pickup). 5 steps: fetch order (Abort) → conditional charge no-show balance (Skip — if balance ≤ 0, skip; failure does not prevent abandonment) → write Abandoned (Retry) → emit ORDER_ABANDONED (Skip) → audit. Terminal before recurring: daily scan checks no-show before storage fees per order.</p>
+
+  <div class="section-title">workflow:orderLifecycle — Summary</div>
+  <table class="ref-table">
+    <tr><th>Pipeline</th><th>Trigger</th><th>Steps</th></tr>
+    <tr><td>PIPELINE_ORDER_INTAKE</td><td>INTAKE_VALIDATED / INTAKE_DIRECT</td><td>8</td></tr>
+    <tr><td>PIPELINE_LATE_CUTS</td><td>CUTS_VALIDATED / CUTS_DIRECT</td><td>5</td></tr>
+    <tr><td>PIPELINE_STAGE_ADVANCE</td><td>STAGE_ADVANCE_COMMAND</td><td>5</td></tr>
+    <tr><td>PIPELINE_WEIGHT_RECORDING</td><td>WEIGHT_RECORDED</td><td>4</td></tr>
+    <tr><td>PIPELINE_CANCELLATION</td><td>CANCEL_ORDER</td><td>5</td></tr>
+    <tr><td>PIPELINE_PICKUP_CLOSE</td><td>ORDER_STAGE_CHANGED (Picked Up)</td><td>6</td></tr>
+    <tr><td>PIPELINE_STORAGE_FEE</td><td>STORAGE_FEE_DUE</td><td>5</td></tr>
+    <tr><td>PIPELINE_ABANDONMENT</td><td>NO_SHOW_DEADLINE_REACHED</td><td>5</td></tr>
+  </table>
+
+  <div class="section-title">workflow:orderLifecycle — Design Principles</div>
+  <p><strong>Vault confirms writes, workflow declares meaning.</strong> Every pipeline that writes to the vault waits for ORDER_UPDATED before emitting the semantic business event. The vault is the authority; the workflow is the narrator.</p>
+  <p><strong>Payment failures never block business operations.</strong> Deposit failure doesn't block order creation. Balance failure doesn't block pickup close. No-show charge failure doesn't block abandonment. The system flags failures; Rick handles them in person.</p>
+  <p><strong>Ready to Butcher gate is checked in three pipelines.</strong> PIPELINE_ORDER_INTAKE (step 8), PIPELINE_LATE_CUTS (step 4), PIPELINE_WEIGHT_RECORDING (step 4). Two inputs: weight + pricing. Either can arrive first. The gate checks both conditions every time.</p>
+  <p><strong>Retry limit: 3 attempts with exponential backoff.</strong> Declared in every Retry step. Retries exhaust → escalate to operator. Retry count and backoff strategy are specification, not implementation detail.</p>
+
+  <hr>
+
+  <div class="section-title">workflow:notifications — 6 Pipelines, 26 Steps</div>
+
+  <p>Owns all external customer notifications. Fire-and-forget sending — delivery results arrive asynchronously via NOTIFICATION_DELIVERED or NOTIFICATION_FAILED and are handled by dedicated pipelines. Retry logic is centralized, not duplicated across sending pipelines.</p>
+
+  <div class="pipeline-label">PIPELINE_AUTO_NOTIFICATION</div>
+  <p><strong>Trigger:</strong> Match set — <code>ORDER_CREATED</code> (partial intake only, status=Pending Customer Input), <code>ORDER_STAGE_CHANGED</code> (Ready for Pickup and Closed only), <code>ORDER_CANCELLED</code>, <code>ORDER_ABANDONED</code>. 6 steps: fetch customer (Abort) → check consent (Abort — no opted-in channel = suppressed notification, audited) → fetch order (Skip — trigger payload has enough for basic message) → fetch template (Skip — hardcoded fallback exists) → assemble and send via SEND_NOTIFICATION (fire-and-forget, Skip) → audit.</p>
+  <p><em>Five business events, one assembly pipeline.</em> Trigger type determines template and payload fields; mechanical flow is identical. Cancellation and abandonment notices are configurable — template can be set to "disabled" in vault:config.</p>
+
+  <div class="pipeline-label">PIPELINE_MANUAL_MESSAGE</div>
+  <p><strong>Trigger:</strong> <code>SEND_MANUAL_MESSAGE</code> (§4 #60). Operator sends custom message from dashboard. 3 steps: fetch customer (Abort) → assemble and send (Skip) → audit. No consent check — operator intent overrides (TCPA enforcement remains at signal:notifications level).</p>
+
+  <div class="pipeline-label">PIPELINE_MARKETING_OUTREACH</div>
+  <p><strong>Trigger:</strong> <code>MARKETING_OUTREACH_DUE</code> (§5 #72). Pre-season automated outreach. 4 steps: fetch campaign config (Abort — no partial sends from unknown template) → fetch eligible customers batch with filter marketingOptIn=true, hasCompletedOrder=true (Abort) → send batch (per-customer: fetch customer for current info, check consent, assemble, send; individual failures isolated, Skip) → audit batch completion.</p>
+  <p><em>Dedup is in compute:dailyScan, not here.</em> Campaign executedAt timestamp prevents re-triggering. Mid-batch failure + re-trigger = some customers get duplicate marketing message. Acceptable tradeoff for a small butcher shop.</p>
+
+  <div class="pipeline-label">PIPELINE_INCOMPLETE_REMINDER</div>
+  <p><strong>Trigger:</strong> <code>INCOMPLETE_REMINDER_DUE</code> (§5 #70). Orders in Pending Customer Input past reminder interval. 7 steps: fetch order (Abort) → check dedup via lastReminderSentAt (Abort — expected behavior if already sent recently) → fetch customer (Abort) → check consent (Abort — suppression audited) → fetch template (Skip — fallback available) → assemble and send with self-service link (Skip) → audit.</p>
+
+  <div class="pipeline-label">PIPELINE_DELIVERY_RETRY</div>
+  <p><strong>Trigger:</strong> <code>NOTIFICATION_FAILED</code> (§4 #58). 4 steps: check retry budget (3 paths: retry same channel, fallback to alternate channel, or escalate permanent failure) → retry send (Skip) OR escalate permanent failure via NOTIFICATION_PERMANENTLY_FAILED §4 #59 (Retry — Rick must see this action item) → audit attempt.</p>
+  <p><em>Retry schedule:</em> 1 min → 5 min → 15 min → 1 hour. Four attempts per channel, then fallback. Both channels exhausted → permanent failure. Non-retryable failures (invalid phone, deactivated email) bypass retry budget entirely.</p>
+
+  <div class="pipeline-label">PIPELINE_DELIVERY_CONFIRM</div>
+  <p><strong>Trigger:</strong> <code>NOTIFICATION_DELIVERED</code> (§4 #57). 2 steps: audit delivery (Skip) → conditional write lastReminderSentAt to order record (Retry — only for reminder notifications; dedup timestamp is critical).</p>
+
+  <div class="section-title">workflow:notifications — Summary</div>
+  <table class="ref-table">
+    <tr><th>Pipeline</th><th>Trigger</th><th>Steps</th></tr>
+    <tr><td>PIPELINE_AUTO_NOTIFICATION</td><td>ORDER_CREATED / ORDER_STAGE_CHANGED / ORDER_CANCELLED / ORDER_ABANDONED</td><td>6</td></tr>
+    <tr><td>PIPELINE_MANUAL_MESSAGE</td><td>SEND_MANUAL_MESSAGE</td><td>3</td></tr>
+    <tr><td>PIPELINE_MARKETING_OUTREACH</td><td>MARKETING_OUTREACH_DUE</td><td>4</td></tr>
+    <tr><td>PIPELINE_INCOMPLETE_REMINDER</td><td>INCOMPLETE_REMINDER_DUE</td><td>7</td></tr>
+    <tr><td>PIPELINE_DELIVERY_RETRY</td><td>NOTIFICATION_FAILED</td><td>4</td></tr>
+    <tr><td>PIPELINE_DELIVERY_CONFIRM</td><td>NOTIFICATION_DELIVERED</td><td>2</td></tr>
+  </table>
+
+  <div class="section-title">workflow:notifications — Design Principles</div>
+  <p><strong>Fire-and-forget send, separate delivery pipelines.</strong> Sending pipelines (1–4) emit SEND_NOTIFICATION and move on. Delivery results are handled by dedicated pipelines (5–6). Sending is fast; retry logic is centralized.</p>
+  <p><strong>Consent check is in the workflow, not the signal loop.</strong> Auto-notifications and reminders check consent before sending. Manual messages do not — operator intent overrides. Marketing uses marketingOptIn filter in batch pull. Signal Loop enforces TCPA at delivery level regardless — legal backstop.</p>
+  <p><strong>Template fallback is fix by design.</strong> Every notification type has a hardcoded fallback template. Config mistakes cannot produce blank messages. The fallback exists in code, not in config.</p>
+  <p><strong>Notifications never block business operations.</strong> A permanent notification failure does not reverse a stage transition, cancel an order, or block a payment. Rick or Christine can re-send manually or call the customer.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: CLOCK SCHEDULE                                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 5</div>
+  <div class="chapter-title">Clock Schedule</div>
+
+  <p>The Clock is infrastructure, not a loop. It reads a schedule table and emits packets to working:orderIntake on declared schedules. Once on the bus, Clock-originated packets are indistinguishable from human-initiated events except for the <code>operator: 'system:clock'</code> field. Absorbed from Clock Schedule Table v2, which is superseded by this section.</p>
+
+  <div class="section-title">Clock-Emitted Schedules</div>
+  <table class="ref-table">
+    <tr><th>Schedule</th><th>Frequency</th><th>Emits</th><th>Consumer</th><th>Routing</th></tr>
+    <tr><td><code>daily_overdue_scan</code></td><td>Daily, early morning</td><td><code>DAILY_SCAN_TRIGGERED</code></td><td>compute:dailyScan</td><td>§5 #64</td></tr>
+    <tr><td><code>daily_snapshot</code></td><td>Daily, end of day</td><td><code>SNAPSHOT_TRIGGERED</code> (snapshotType: "daily")</td><td>compute:reports</td><td>§5 #77</td></tr>
+    <tr><td><code>seasonal_snapshot</code></td><td>Configurable season boundary dates</td><td><code>SNAPSHOT_TRIGGERED</code> (snapshotType: "seasonal")</td><td>compute:reports</td><td>§5 #77</td></tr>
+  </table>
+  <p>Daily scan runs early morning so triggers are ready before Rick starts his day. Daily snapshot runs end of day to capture close-of-business state. Seasonal snapshots fire on configured dates (typically October and January — hunting season boundaries), stored in vault:config and editable by Rick through the dashboard.</p>
+
+  <div class="section-title">Scan-Derived Timing Parameters</div>
+  <p>Not Clock events — business rules with time thresholds evaluated during the daily overdue scan. compute:dailyScan pulls orders and config (§5 #65, #66), checks conditions in declared priority order per order, and emits trigger packets.</p>
+  <p><strong>Processing order per order:</strong> No-show deadline first (terminal — ends the order), then storage fees (recurring). Terminal supersedes recurring. This prevents two workflows racing on the same order. Incomplete reminders and marketing outreach are independent of this ordering.</p>
+
+  <table class="ref-table">
+    <tr><th>Condition</th><th>Default</th><th>Configurable</th><th>Emits</th><th>Consumer</th></tr>
+    <tr><td>Storage fee grace period</td><td>7 days after Ready for Pickup</td><td>System-wide, vault:config</td><td rowspan="2"><code>STORAGE_FEE_DUE</code> §5 #67</td><td rowspan="2">workflow:orderLifecycle</td></tr>
+    <tr><td>Storage fee cycle</td><td>7 days recurring</td><td>System-wide, vault:config</td></tr>
+    <tr><td>No-show deadline</td><td>30 days after Ready for Pickup</td><td>System-wide and per-order</td><td><code>NO_SHOW_DEADLINE_REACHED</code> §5 #68</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td>Incomplete reminder interval</td><td>3 days</td><td>System-wide, vault:config</td><td rowspan="2"><code>INCOMPLETE_REMINDER_DUE</code> §5 #70</td><td rowspan="2">workflow:notifications</td></tr>
+    <tr><td>Incomplete reminder cap</td><td>3 reminders max</td><td>System-wide, vault:config</td></tr>
+    <tr><td>Marketing campaign date</td><td>None (per campaign)</td><td>Per-campaign, vault:config</td><td><code>MARKETING_OUTREACH_DUE</code> §5 #72</td><td>workflow:notifications</td></tr>
+  </table>
+
+  <div class="section-title">Deduplication Mechanisms</div>
+  <table class="ref-table">
+    <tr><th>Condition</th><th>Dedup Field</th><th>Location</th><th>Written By</th></tr>
+    <tr><td>Storage fees</td><td><code>lastStorageFeeChargedAt</code></td><td>vault:orders</td><td>PIPELINE_STORAGE_FEE step 4</td></tr>
+    <tr><td>Incomplete reminders</td><td><code>lastReminderSentAt</code>, <code>reminderCount</code></td><td>vault:orders</td><td>PIPELINE_DELIVERY_CONFIRM step 2</td></tr>
+    <tr><td>Marketing campaigns</td><td><code>executedAt</code></td><td>vault:config (campaign record)</td><td>compute:dailyScan (before emitting trigger)</td></tr>
+    <tr><td>No-show</td><td>Order stage transition to Abandoned</td><td>vault:orders (stage field)</td><td>PIPELINE_ABANDONMENT step 3</td></tr>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: CAPABILITY INJECTION                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 6</div>
+  <div class="chapter-title">Capability Injection</div>
+
+  <p>Every loop's factory function receives exactly its permitted capabilities — the closure wall enforces boundaries at the language level. Four standard capabilities: <code>bus</code> (all loops — pre-filtered per bus assignment table), <code>db</code> (Vault Loops only), <code>services</code> (Signal Loops only), <code>document</code> (Presentation Loops only). Capability absence is the security model — a loop without <code>db</code> cannot access the database because the capability does not exist in its scope. Absorbed from Capability Injection Table v1, which is superseded by this section.</p>
+
+  <div class="section-title">Per-Loop Injected Capabilities</div>
+  <table class="ref-table">
+    <tr><th>Loop</th><th>Standard</th><th>Injected Capabilities</th></tr>
+    <tr><td><code>working:orderIntake</code></td><td>bus</td><td>HTTP endpoint handler (POST, returns 400/202), structural validator (required fields, types, formats), Clock packet recognition (routes system:clock triggers without intake validation)</td></tr>
+    <tr><td><code>working:paymentWebhook</code></td><td>bus</td><td>HTTP endpoint handler (POST, Stripe webhooks), Stripe signature verifier (signing secret injected, not hardcoded), webhook deduplicator (idempotency via Stripe event ID), payload normalizer (Stripe → PAYMENT_EVENT)</td></tr>
+    <tr><td><code>filter:orderValidation</code></td><td>bus</td><td>Structural pattern matchers (field type checks, phone format, tag number format, required field presence). No VAULT access — cannot do business validation.</td></tr>
+    <tr><td><code>compute:pricing</code></td><td>bus</td><td>Pricing engine (rate lookup, weight-based calculation, optional service pricing, overage calculation). Pulls config via VAULT bus.</td></tr>
+    <tr><td><code>compute:dailyScan</code></td><td>bus</td><td>Condition evaluator (overdue checks with priority ordering). Pulls orders and config via VAULT bus. Writes campaign dedup flags via VAULT bus.</td></tr>
+    <tr><td><code>compute:reports</code></td><td>bus</td><td>Snapshot assembler (aggregates orders, customers, config into point-in-time snapshots). Report generator (on-demand filtered views). Pulls from 3 vaults, writes to vault:snapshots via VAULT bus.</td></tr>
+    <tr><td><code>vault:orders</code></td><td>bus, db</td><td>Order record CRUD. Database connection to orders table. Emits confirmation/failure events onto DATA after writes.</td></tr>
+    <tr><td><code>vault:customers</code></td><td>bus, db</td><td>Customer record CRUD. Database connection to customers table. Batch query support for marketing outreach (FETCH_CUSTOMERS_BATCH).</td></tr>
+    <tr><td><code>vault:config</code></td><td>bus, db</td><td>Configuration read/write. Database connection to config table. In-place update (no archive stage).</td></tr>
+    <tr><td><code>vault:snapshots</code></td><td>bus, db</td><td>Append-only snapshot and audit storage. Database connection to snapshots table. Write-only for WRITE_AUDIT and STORE_SNAPSHOT. Read for FETCH_SNAPSHOTS. No update or delete — append-only by design.</td></tr>
+    <tr><td><code>signal:payments</code></td><td>bus, services</td><td>Stripe API via Dependency Gate. Circuit breaker (detects repeated failures → PAYMENT_SERVICE_DEGRADED). Service restoration detection → PAYMENT_SERVICE_RESTORED. Stub-replaceable for testing.</td></tr>
+    <tr><td><code>signal:notifications</code></td><td>bus, services</td><td>Twilio SMS + email provider via Dependency Gate. Channel routing (SMS or email per packet). TCPA enforcement at delivery level (rejects texts to non-consented numbers). Circuit breaker + service restoration. Stub-replaceable for testing.</td></tr>
+    <tr><td><code>workflow:orderLifecycle</code></td><td>bus</td><td>Pipeline engine (8 pipelines), state machine logic, transaction logging for crash recovery (State Reincarnation). No db, no services, no document — all persistence and external calls via bus.</td></tr>
+    <tr><td><code>workflow:notifications</code></td><td>bus</td><td>Pipeline engine (6 pipelines), retry scheduler (1/5/15/60 min backoff), template assembly engine, consent checker. No db, no services — all persistence and delivery via bus.</td></tr>
+    <tr><td><code>presentation:dashboard</code></td><td>bus, document</td><td>DOM/UI rendering. Session management (Supabase Auth JWT validation). Real-time subscription on DATA for live updates. VAULT pull for read operations. Emits commands onto DATA. Auth enforcement at V1 Presentation Loop level.</td></tr>
+    <tr><td><code>presentation:customerIntake</code></td><td>bus, document</td><td>DOM/UI rendering. Customer-facing form. VAULT pull for config (cut options) and returning customer pre-population. HTTP POST to working:orderIntake on submit. No DATA publish — submits via HTTP bridge, not bus.</td></tr>
+  </table>
+
+  <div class="callout key">
+    <div class="callout-label">Bus Filtering Is Per-Loop, Not Per-Type</div>
+    Two Compute Loops have different bus channel sets. compute:pricing gets DATA subscribe + publish and VAULT pull. compute:reports and compute:dailyScan additionally publish to VAULT. Same loop type, different bus objects. The bus assignment table (TDD-001 v6, Section 5) is the canonical reference for each loop's channel access.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: AUTH GATE                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 7</div>
+  <div class="chapter-title">Auth Gate</div>
+
+  <p>V1 authorization: two operators (Rick and Christine), both owners with full permissions. Auth is enforced at the Presentation Loop — no dedicated Auth Gate Filter Loop until V2. Absorbed from Auth Gate Role Matrix V2, which is superseded by this section.</p>
+
+  <div class="section-title">Role Definitions</div>
+  <table class="ref-table">
+    <tr><th>Role</th><th>Status</th><th>Description</th></tr>
+    <tr><td><strong>owner</strong></td><td>Active (V1)</td><td>Full access to all actions. Rick Holte, Christine Holte. <code>can: ['*']</code></td></tr>
+    <tr><td><strong>system</strong></td><td>Active (V1)</td><td>Clock and automated workflows. <code>operatorId: 'system:clock'</code> or <code>'system:workflow'</code>. Cannot be assigned to a human.</td></tr>
+    <tr><td><strong>operator</strong></td><td>Reserved (V2)</td><td>Limited access — intake, stage advances, lookups, reports. Cannot cancel, modify config, or send manual messages. For seasonal helpers.</td></tr>
+    <tr><td><strong>viewer</strong></td><td>Reserved (V2)</td><td>Read-only access. For accountants or tax preparers.</td></tr>
+  </table>
+
+  <div class="section-title">Action Catalog — 16 Actions, 5 Categories</div>
+  <p><strong>Order operations:</strong> <code>intake</code>, <code>stage_advance</code>, <code>cancel_order</code>, <code>record_weight</code>, <code>submit_cuts</code>. <strong>Customer operations:</strong> <code>update_customer</code>, <code>lookup_customer</code>. <strong>Configuration:</strong> <code>modify_config</code>, <code>view_config</code>. <strong>Reporting/communication:</strong> <code>request_report</code>, <code>view_orders</code>, <code>view_snapshots</code>, <code>send_manual_message</code>. <strong>System (not human-assignable):</strong> <code>trigger_daily_scan</code>, <code>trigger_snapshot</code>, <code>auto_close</code>.</p>
+
+  <div class="section-title">V1 Permission Matrix</div>
+  <p>V1 is flat — both human sessions are owner with <code>can: ['*']</code>. Owner-only actions in the V2 plan: <code>cancel_order</code>, <code>update_customer</code>, <code>modify_config</code>, <code>send_manual_message</code>. These are not delegation-safe without oversight. Unlisted read actions (view_orders, view_config, etc.) are permitted for all authenticated human roles.</p>
+
+  <div class="section-title">Session Management</div>
+  <table class="ref-table">
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Auth provider</td><td>Supabase Auth (already in dependency stack)</td></tr>
+    <tr><td>Token type</td><td>JWT with sub (user ID), role, exp claims</td></tr>
+    <tr><td>Expiration</td><td>1 hour, auto-refresh (silent — no interruption during processing days)</td></tr>
+    <tr><td>Concurrent sessions</td><td>Allowed, no limit (Rick on shed tablet + Christine on basement device)</td></tr>
+    <tr><td>Validation location</td><td>presentation:dashboard (V1). Invalid/expired → re-login prompt. No packets reach bus from unauthenticated session.</td></tr>
+    <tr><td>Operator identity</td><td><code>operatorId</code> field in every packet header. Audit trail records who performed each action.</td></tr>
+  </table>
+
+  <div class="section-title">Self-Service Link Auth Model</div>
+  <p>Customer self-service intake uses bearer token auth, not session auth. The <code>selfServiceLinkId</code> in the order record is a UUID v4 token embedded in the URL. Possession equals access. The token grants access to that order's cut selection form only — no other system data. Token is generated at order creation, null for direct-intake orders. If exposed, revoke and regenerate. presentation:customerIntake validates the token against vault:orders before rendering the form.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: DATA GATE POLICIES                             -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 8</div>
+  <div class="chapter-title">Data Gate Policies</div>
+
+  <p>Three gate types per the Standard: Transit Gate (buses — what happens to a packet after delivery), Retention Gate (vaults — data lifecycle), Workflow Gate (transaction logs — crash recovery retention). Absorbed from Data Gate Policies V2, which is superseded by this section.</p>
+
+  <div class="section-title">Transit Gate — Per Bus</div>
+  <p>Three policies: <code>consume</code> (destroy after delivery — the default), <code>archive</code> (retain copy in circular Archive Buffer), <code>hold</code> (keep until acknowledged — not used in V1). Policies declared per functional category.</p>
+
+  <p><strong>DATA bus</strong> (15 loops): Default <code>consume</code>. Three exception categories archived: failure events (11 types including payment failures — ORDER_CREATE_FAILED, ORDER_UPDATE_FAILED, DEPOSIT_FAILED, BALANCE_FAILED, STORAGE_FEE_FAILED, NOSHOW_BALANCE_FAILED, CONFIG_UPDATE_FAILED, CUSTOMER_UPDATE_FAILED, SNAPSHOT_STORE_FAILED, NOTIFICATION_PERMANENTLY_FAILED, PAYMENT_ALERT), service degradation (4 types — *_DEGRADED, *_RESTORED), rejection events (3 types — STAGE_ADVANCE_REJECTED, CANCEL_REJECTED, WEBHOOK_REJECTED). ~43 packet types consumed, ~18 archived.</p>
+
+  <p><strong>VAULT bus</strong> (10 loops): Pull requests <code>consume</code>. Write commands <code>archive</code> — every mutation request is retained in the archive buffer. At ~100 orders/season with ~8 writes per lifecycle, ~800 write packets per season. This is the single most valuable diagnostic tool in the constellation.</p>
+
+  <p><strong>SIGNAL bus</strong> (4 loops): All traffic <code>archive</code>, no exceptions. Every external request (Stripe charges, Twilio messages) is retained. Essential for dispute resolution and payment reconciliation. Volume is low — a few hundred per season.</p>
+
+  <p><strong>SYNC bus</strong>: Default <code>consume</code>. No V1 traffic.</p>
+
+  <div class="section-title">Retention Gate — Per Vault Domain</div>
+  <p>Three stages: Active (working set) → Archived (soft-removed, available on request) → Purged (permanently deleted). Seasonal business context: ~100 orders/season, storage cost is negligible.</p>
+
+  <table class="ref-table">
+    <tr><th>Domain</th><th>Active</th><th>Archived</th><th>Purged</th></tr>
+    <tr><td><strong>vault:orders</strong></td><td>Current season + 1 subsequent season</td><td>5 years from archive date (IRS 3yr + Maine 4yr + margin)</td><td>Immediate after archive expiry</td></tr>
+    <tr><td><strong>vault:customers</strong></td><td>Has Active order or order in last 3 seasons</td><td>7 years from archive date (TCPA consent records need 5yr minimum)</td><td>Immediate after archive expiry, OR operator-initiated purge (immediate, irreversible)</td></tr>
+    <tr><td><strong>vault:config</strong></td><td>Always (current operating state)</td><td>N/A (overwritten in place; historical state in snapshots)</td><td>N/A</td></tr>
+    <tr><td><strong>vault:snapshots</strong></td><td>Daily: 90 days. Seasonal: indefinite. Audit: never purged.</td><td>Daily snapshots archived after 90 days, retained 2 years</td><td>Immediate after archive expiry (daily only). Seasonal and audit records persist indefinitely.</td></tr>
+  </table>
+
+  <div class="section-title">Workflow Gate — Transaction Log Retention</div>
+  <table class="ref-table">
+    <tr><th>Workflow Group</th><th>Completed</th><th>Failed/Escalated</th><th>In-Progress</th></tr>
+    <tr><td>workflow:orderLifecycle (8 pipelines)</td><td>30 days active, 1 year archived</td><td>90 days active, 2 years archived</td><td>Indefinite (never gated — crash recovery requires it)</td></tr>
+    <tr><td>workflow:notifications (6 pipelines)</td><td>14 days active, 6 months archived</td><td>90 days active, 1 year archived</td><td>Indefinite</td></tr>
+  </table>
+
+  <div class="section-title">Background Sweep</div>
+  <p>Retention Gate transitions are executed by a daily background sweep. Runs after the daily snapshot completes (triggered by <code>RETENTION_SWEEP_TRIGGERED</code> from the Clock, after SNAPSHOT_STORED confirms the day's snapshot). The sweep is idempotent. Every transition is logged to the audit trail. Purge operations are logged before execution. At ~100 orders/season, the full sweep processes a few hundred records — no batching needed.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: PII POLICY                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 9</div>
+  <div class="chapter-title">PII Policy</div>
+
+  <p>Policy layer absorbed from PII Field Declarations v1 V2. The per-field PII catalog (which specific fields are PII in which records and packets) remains in the PII document as a standalone reference, cross-referenced by the PCR. This section declares the PII categories and handling rules. The PII document declares which fields belong to which category.</p>
+
+  <div class="section-title">PII Categories</div>
+  <table class="ref-table">
+    <tr><th>Category</th><th>Tag</th><th>Definition</th><th>Regulatory Context</th></tr>
+    <tr><td><strong>DIRECT</strong></td><td>D</td><td>Fields that directly identify a person. Name, phone, email.</td><td>Maine data breach notification statute (10 M.R.S. §1348). Exposure = reportable breach.</td></tr>
+    <tr><td><strong>GOV-ID</strong></td><td>G</td><td>Government-issued identifiers. State hunting tag numbers (link to MDIFW license holder).</td><td>State wildlife regulation. Chains to broader data via license application.</td></tr>
+    <tr><td><strong>FINANCIAL</strong></td><td>F</td><td>Payment identifiers and monetary amounts tied to a person. Stripe charge/customer IDs, transaction amounts correlatable to an individual.</td><td>PCI DSS (indirect — Stripe holds card data, but IDs are linkable).</td></tr>
+    <tr><td><strong>CONSENT</strong></td><td>C</td><td>Communication consent records. Opt-in flags with timestamps.</td><td>TCPA. Consent records retained 5+ years after last communication.</td></tr>
+    <tr><td><strong>TOKEN</strong></td><td>T</td><td>Access tokens granting access to PII. Self-service link tokens.</td><td>Not PII per se but security-sensitive. Leaked token exposes PII.</td></tr>
+    <tr><td><strong>EMBEDDED</strong></td><td>E</td><td>Composite objects containing PII from other records. Snapshot orderState, notification body.</td><td>Inherits requirements of most sensitive embedded field.</td></tr>
+  </table>
+
+  <div class="section-title">Handling Rules</div>
+  <p><strong>Encrypt at rest:</strong> All PII fields in vault records are encrypted at the database level. Supabase provides column-level encryption for designated fields.</p>
+  <p><strong>Mask in logs:</strong> PII fields are masked (replaced with category tag + field hash) in application logs. Audit records in vault:snapshots retain full values (they are the authorized PII store, not a log leak).</p>
+  <p><strong>Purge on deletion:</strong> When an order or customer record is purged per Retention Gate policy, all PII fields are destroyed. Audit records documenting the purge persist (they record that a purge happened, not the purged data).</p>
+  <p><strong>Exclude from snapshots (selective):</strong> Daily snapshots include PII (they are point-in-time records for tax and audit purposes). On-demand reports mask PII unless the requesting operator has owner role.</p>
+  <p><strong>Retention alignment:</strong> PII retention follows the Retention Gate policies in Section 8. TCPA consent records (CONSENT category) must survive the customer record's active→archive transition — the 7-year archive retention for vault:customers already exceeds the 5-year TCPA minimum.</p>
+  <p><strong>Append-only audit constraint:</strong> vault:snapshots is append-only. PII that enters via WRITE_AUDIT never leaves during the active retention window. Deleting PII from a vault record does not remove it from existing snapshots. This is a known architectural constraint — append-only audit trails and data deletion requests are structurally at odds. V1 accepts this constraint; full cross-domain erasure is a V2 enhancement.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Per-Field Catalog Is in the PII Document</div>
+    This section declares the rules. The PII Field Declarations document (v1 V2) declares which specific fields in which records are PII: Order record (11 PII fields), Customer record (9 PII fields), Snapshot record (3 PII fields), Config record (0 PII fields), plus 3 packet-only transit PII fields across 8 packet types. The PCR cross-references the PII document for per-field declarations. Phase 1 implementers consult both: this section for policy, the PII document for field-level classification.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: DEFERRED DECISION RESOLUTIONS                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 10</div>
+  <div class="chapter-title">Deferred Decision Resolutions</div>
+
+  <p>Decisions deferred during Phase 0 that are resolved at assembly time. Each resolution states the decision, the rationale, and any downstream effects.</p>
+
+  <div class="section-title">DD-002 — filter:orderValidation Absorption</div>
+  <p><strong>Decision: KEEP. 16 loops.</strong> The filter remains as a structural enforcement of the validation boundary between untrusted external input and internal processing. Fix by Design: the routing table enforces that INTAKE_RAW goes to the filter (§1 #1) and INTAKE_VALIDATED can only come from the filter (§1 #2). Absorbing the filter replaces a bus routing guarantee with a code convention. The number of structural checks (4 checks, 16 loops through intake + cuts paths) is irrelevant — the architectural value is the boundary enforcement, not the check count. Reversing later is cheap: change the source field on two routing entries. Creating the filter later requires the operator to recognize when the code convention has become unreliable — harder to detect than a structural violation.</p>
+  <p><strong>Downstream effects:</strong> None. Topology remains 16 loops. No routing table changes required.</p>
+
+  <div class="section-title">RETENTION_SWEEP_TRIGGERED Routing Entry</div>
+  <p><strong>Decision: Declare as a Clock-emitted schedule.</strong> The retention sweep is triggered by the Clock after the daily snapshot window. RETENTION_SWEEP_TRIGGERED follows the same path as other Clock events: Clock → working:orderIntake → DATA. Consumer is determined at Phase 1 implementation — either a dedicated sweep handler in an existing Compute Loop, or the Vault Loops process the sweep directly. The routing entry pattern is: working:orderIntake emits RETENTION_SWEEP_TRIGGERED onto DATA, consumed by the sweep processor.</p>
+  <p><strong>Downstream effects:</strong> One new routing entry needed (added to Clock schedules in Section 5). The RETENTION_SWEEP_TRIGGERED packet type needs a PCR entry. These are Phase 1 tasks — the Constellation Spec declares the decision, the affected documents are updated before implementation begins.</p>
+
+  <div class="section-title">WRITE_ORDER_UPDATE from workflow:notifications</div>
+  <p><strong>Decision: New routing entry in §4 (or §5 at #71).</strong> PIPELINE_DELIVERY_CONFIRM (step 2) writes lastReminderSentAt to vault:orders via WRITE_ORDER_UPDATE. The existing §1 #24 WRITE_ORDER_UPDATE has source = workflow:orderLifecycle. Two options were identified: (a) add a new entry with source = workflow:notifications, (b) document §1 #24 as multi-source. Option (a) is cleaner — a §5 entry #71 for WRITE_ORDER_UPDATE from workflow:notifications already exists in the post-renumbering routing table. This entry provides the routing path. The PCR reuse entry for WRITE_ORDER_UPDATE already accounts for this — no PCR change needed.</p>
+  <p><strong>Downstream effects:</strong> §5 #71 is confirmed as the routing authority. No routing table change required — the entry already exists.</p>
+
+  <div class="section-title">§4 Trigger Table Cross-Reference Error</div>
+  <p><strong>Decision: Correct the reference.</strong> The §4 trigger table referenced ORDER_ABANDONED as §3 #48 — the correct reference is §5 #69 (post-renumbering). This is a documentation error in the §4 routing table's trigger table, not a routing entry error. The routing entries themselves are correct. The §4 trigger table should be corrected before Phase 1 to avoid confusion during implementation.</p>
+  <p><strong>Downstream effects:</strong> §4 routing table trigger table needs one cross-reference correction. No routing entry changes.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Deferred Decisions May Propagate to Referenced Documents</div>
+    The RETENTION_SWEEP_TRIGGERED decision requires updates to referenced documents before Phase 1: a new routing entry (routing table update), a new PCR entry (Packet Contract Registry update), and confirmation of the sweep processor loop assignment. These downstream updates happen after Constellation Spec assembly but before Phase 1 starts.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 11: DOCUMENT AUTHORITY MAP                         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 11</div>
+  <div class="chapter-title">Document Authority Map</div>
+
+  <p>Every fact in the corpus has exactly one authoritative home. Phase 1 sessions consult the authority, not a copy.</p>
+
+  <table class="ref-table">
+    <thead><tr><th>Concern</th><th>Authoritative Document</th><th>What It Owns</th></tr></thead>
+    <tbody>
+      <tr><td>System identity and topology</td><td><strong>Constellation Spec §1–§3</strong></td><td>Which loops exist, their types, bus connections, capability designations. The answer to "what is this system?"</td></tr>
+      <tr><td>System configuration</td><td><strong>Constellation Spec §4–§9</strong></td><td>Pipelines, clock schedules, capability injection, auth rules, retention policies, PII handling rules.</td></tr>
+      <tr><td>Deferred decisions</td><td><strong>Constellation Spec §10</strong></td><td>Resolutions of decisions deferred during Phase 0.</td></tr>
+      <tr><td>Packet flow — routing</td><td><strong>Routing Tables §1–§6</strong></td><td>Entry numbers, sources, destinations, buses, modes, priorities, subscriber lists. "Where does this packet go?"</td></tr>
+      <tr><td>Packet flow — contracts</td><td><strong>Packet Contract Registry v1 V2</strong></td><td>Field names, types, constraints, design notes for every packet type. "What's in this packet?"</td></tr>
+      <tr><td>Record structure</td><td><strong>Pass 2a v2 corrected</strong></td><td>Field-level schema definitions for Order, Customer, Config, Snapshot records.</td></tr>
+      <tr><td>PII field classification</td><td><strong>PII Field Declarations v1 V2</strong></td><td>Which specific fields are PII in which records and packets. Per-field catalog.</td></tr>
+      <tr><td>Design rationale</td><td><strong>TDD-001 v6</strong></td><td>Why the system is structured the way it is. Bus assignment strategy, topology decisions, rejected alternatives.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Phase 1 Loading Protocol</div>
+  <p>Every Phase 1 session loads the Constellation Spec. Beyond that:</p>
+
+  <table class="ref-table">
+    <tr><th>Task</th><th>Load Additionally</th></tr>
+    <tr><td>Implementing a Vault Loop (e.g., vault:orders)</td><td>PCR (WRITE_* and FETCH_* contracts for this vault) + Pass 2a (record schema) + relevant routing table section(s)</td></tr>
+    <tr><td>Implementing a Workflow Loop</td><td>PCR (all packet types the workflow handles) + routing table sections the workflow touches</td></tr>
+    <tr><td>Implementing a Signal Loop (e.g., signal:payments)</td><td>PCR (CHARGE_* and result contracts) + §3 routing table</td></tr>
+    <tr><td>Implementing a Presentation Loop</td><td>PCR (all packet types the dashboard emits/subscribes to) + §6 routing table</td></tr>
+    <tr><td>Implementing a Compute Loop (e.g., compute:dailyScan)</td><td>PCR (scan trigger and result contracts) + §5 routing table</td></tr>
+    <tr><td>Auditor verification</td><td>PCR + all routing tables + Pass 2a</td></tr>
+    <tr><td>Understanding a design decision</td><td>TDD-001 v6</td></tr>
+  </table>
+
+  <div class="section-title">Superseded Documents</div>
+  <p>The following documents are superseded by the Constellation Spec and should be marked historical:</p>
+  <p>Pipeline Spec — workflow:orderLifecycle v2 (superseded by §4). Pipeline Spec — workflow:notifications v2 (superseded by §4). Clock Schedule Table v2 (superseded by §5). Capability Injection Table v1 (superseded by §6). Auth Gate Role Matrix V2 (superseded by §7). Data Gate Policies V2 (superseded by §8). PII Field Declarations v1 V2 — partially superseded: policy layer absorbed into §9, per-field catalog remains standalone.</p>
+  <p>The following documents remain current and are referenced (not superseded): Routing Tables §1–§6. Packet Contract Registry v1 V2. Pass 2a v2 corrected. TDD-001 v6. Problem Description v4 (historical for domain requirements, superseded for system identity by §1).</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- SECTION 12: ROUTING SUMMARY                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 12</div>
+  <div class="chapter-title">Routing Summary</div>
+
+  <p>Compact reference: 95 entries across 6 routing table sections. One row per entry. No subscriber lists, no priority, no mode, no prose — those belong to the authoritative routing tables. This table exists so a reader can see the full packet flow at a glance without opening six separate files. <strong>If this table and a routing table disagree, the routing table wins.</strong></p>
+
+  <div class="callout warn">
+    <div class="callout-label">Documented Duplication</div>
+    This is the one place where the Fix by Design no-duplication principle is deliberately relaxed. The routing summary duplicates entry → packet type → source → destination from the authoritative routing tables. The tradeoff: without it, the Constellation Spec cannot convey how the system works without loading six additional files. The summary is structurally limited (no subscriber lists, no priority, no prose, no field contracts) to minimize the surface area for drift. The risk is accepted because: (a) the summary is compact and mechanically verifiable, (b) the routing tables are stable (no changes since Session 10 renumbering), and (c) the routing tables are declared as authoritative.
+  </div>
+
+  <table class="routing-table">
+    <thead><tr><th>#</th><th>§</th><th>Packet Type</th><th>Source</th><th>Bus</th><th>Destination(s)</th></tr></thead>
+    <tbody>
+    <tr><td class="entry-num">#1</td><td>§1</td><td><code>INTAKE_RAW</code></td><td>working:orderIntake</td><td>DATA</td><td>filter:orderValidation</td></tr>
+    <tr><td class="entry-num">#2</td><td>§1</td><td><code>INTAKE_VALIDATED</code></td><td>filter:orderValidation</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#3</td><td>§1</td><td><code>INTAKE_REJECTED</code></td><td>filter:orderValidation</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#4</td><td>§1</td><td><code>INTAKE_DIRECT</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#5</td><td>§1</td><td><code>FETCH_CUSTOMER</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#6</td><td>§1</td><td><code>WRITE_ORDER_CREATE</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#7</td><td>§1</td><td><code>ORDER_CREATED</code></td><td>vault:orders</td><td>DATA</td><td>workflow:orderLifecycle, workflow:notifications, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#8</td><td>§1</td><td><code>ORDER_CREATE_FAILED</code></td><td>vault:orders</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#9</td><td>§1</td><td><code>WRITE_CUSTOMER_CREATE</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#10</td><td>§1</td><td><code>CUSTOMER_CREATED</code></td><td>vault:customers</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#11</td><td>§1</td><td><code>CUSTOMER_CREATE_FAILED</code></td><td>vault:customers</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#12</td><td>§1</td><td><code>WRITE_AUDIT</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:snapshots</td></tr>
+    <tr><td class="entry-num">#13</td><td>§1</td><td><code>AUDIT_WRITE_FAILED</code></td><td>vault:snapshots</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#14</td><td>§1</td><td><code>CHARGE_DEPOSIT</code></td><td>workflow:orderLifecycle</td><td>SIGNAL</td><td>signal:payments</td></tr>
+    <tr><td class="entry-num">#15</td><td>§1</td><td><code>DEPOSIT_CHARGED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#16</td><td>§1</td><td><code>DEPOSIT_FAILED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#17</td><td>§1</td><td><code>WRITE_AUDIT</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:snapshots</td></tr>
+    <tr><td class="entry-num">#18</td><td>§1</td><td><code>DEPOSIT_WAIVED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#19</td><td>§1</td><td><code>WRITE_AUDIT</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:snapshots</td></tr>
+    <tr><td class="entry-num">#20</td><td>§1</td><td><code>PRICING_REQUESTED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>compute:pricing</td></tr>
+    <tr><td class="entry-num">#21</td><td>§1</td><td><code>FETCH_CONFIG</code></td><td>compute:pricing</td><td>VAULT</td><td>vault:config</td></tr>
+    <tr><td class="entry-num">#22</td><td>§1</td><td><code>ORDER_PRICED</code></td><td>compute:pricing</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#23</td><td>§1</td><td><code>PRICING_REJECTED</code></td><td>compute:pricing</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#24</td><td>§1</td><td><code>WRITE_ORDER_UPDATE</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#25</td><td>§1</td><td><code>ORDER_UPDATED</code></td><td>vault:orders</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard, workflow:notifications</td></tr>
+    <tr><td class="entry-num">#26</td><td>§1</td><td><code>ORDER_UPDATE_FAILED</code></td><td>vault:orders</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#27</td><td>§1</td><td><code>CUTS_RAW</code></td><td>working:orderIntake</td><td>DATA</td><td>filter:orderValidation</td></tr>
+    <tr><td class="entry-num">#28</td><td>§1</td><td><code>CUTS_VALIDATED</code></td><td>filter:orderValidation</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#29</td><td>§1</td><td><code>CUTS_REJECTED</code></td><td>filter:orderValidation</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#30</td><td>§1</td><td><code>CUTS_DIRECT</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#31</td><td>§2</td><td><code>STAGE_ADVANCE_COMMAND</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#32</td><td>§2</td><td><code>FETCH_ORDER</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#33</td><td>§2</td><td><code>ORDER_STAGE_CHANGED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard, workflow:notifications, workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#34</td><td>§2</td><td><code>STAGE_ADVANCE_REJECTED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#35</td><td>§2</td><td><code>WEIGHT_RECORDED</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#36</td><td>§2</td><td><code>CANCEL_ORDER</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#37</td><td>§2</td><td><code>ORDER_CANCELLED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard, workflow:notifications</td></tr>
+    <tr><td class="entry-num">#38</td><td>§2</td><td><code>CANCEL_REJECTED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#39</td><td>§3</td><td><code>CHARGE_BALANCE</code></td><td>workflow:orderLifecycle</td><td>SIGNAL</td><td>signal:payments</td></tr>
+    <tr><td class="entry-num">#40</td><td>§3</td><td><code>BALANCE_CHARGED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#41</td><td>§3</td><td><code>BALANCE_FAILED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#42</td><td>§3</td><td><code>CHARGE_STORAGE_FEE</code></td><td>workflow:orderLifecycle</td><td>SIGNAL</td><td>signal:payments</td></tr>
+    <tr><td class="entry-num">#43</td><td>§3</td><td><code>STORAGE_FEE_CHARGED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#44</td><td>§3</td><td><code>STORAGE_FEE_FAILED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#45</td><td>§3</td><td><code>CHARGE_NOSHOW_BALANCE</code></td><td>workflow:orderLifecycle</td><td>SIGNAL</td><td>signal:payments</td></tr>
+    <tr><td class="entry-num">#46</td><td>§3</td><td><code>NOSHOW_BALANCE_CHARGED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#47</td><td>§3</td><td><code>NOSHOW_BALANCE_FAILED</code></td><td>signal:payments</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#48</td><td>§3</td><td><code>PAYMENT_EVENT</code></td><td>working:paymentWebhook</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#49</td><td>§3</td><td><code>PAYMENT_ALERT</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#50</td><td>§3</td><td><code>WEBHOOK_REJECTED</code></td><td>working:paymentWebhook</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#51</td><td>§3</td><td><code>PAYMENT_SERVICE_DEGRADED</code></td><td>signal:payments</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#52</td><td>§3</td><td><code>PAYMENT_SERVICE_RESTORED</code></td><td>signal:payments</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#53</td><td>§4</td><td><code>FETCH_CUSTOMER</code></td><td>workflow:notifications</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#54</td><td>§4</td><td><code>FETCH_ORDER</code></td><td>workflow:notifications</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#55</td><td>§4</td><td><code>FETCH_CONFIG</code></td><td>workflow:notifications</td><td>VAULT</td><td>vault:config</td></tr>
+    <tr><td class="entry-num">#56</td><td>§4</td><td><code>SEND_NOTIFICATION</code></td><td>workflow:notifications</td><td>SIGNAL</td><td>signal:notifications</td></tr>
+    <tr><td class="entry-num">#57</td><td>§4</td><td><code>NOTIFICATION_DELIVERED</code></td><td>signal:notifications</td><td>DATA</td><td>workflow:notifications</td></tr>
+    <tr><td class="entry-num">#58</td><td>§4</td><td><code>NOTIFICATION_FAILED</code></td><td>signal:notifications</td><td>DATA</td><td>workflow:notifications</td></tr>
+    <tr><td class="entry-num">#59</td><td>§4</td><td><code>NOTIFICATION_PERMANENTLY_FAILED</code></td><td>workflow:notifications</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#60</td><td>§4</td><td><code>SEND_MANUAL_MESSAGE</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:notifications</td></tr>
+    <tr><td class="entry-num">#61</td><td>§4</td><td><code>FETCH_CUSTOMERS_BATCH</code></td><td>workflow:notifications</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#62</td><td>§4</td><td><code>NOTIFICATION_SERVICE_DEGRADED</code></td><td>signal:notifications</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#63</td><td>§4</td><td><code>NOTIFICATION_SERVICE_RESTORED</code></td><td>signal:notifications</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#64</td><td>§5</td><td><code>DAILY_SCAN_TRIGGERED</code></td><td>working:orderIntake</td><td>DATA</td><td>compute:dailyScan</td></tr>
+    <tr><td class="entry-num">#65</td><td>§5</td><td><code>FETCH_ORDERS</code></td><td>compute:dailyScan</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#66</td><td>§5</td><td><code>FETCH_CONFIG</code></td><td>compute:dailyScan</td><td>VAULT</td><td>vault:config</td></tr>
+    <tr><td class="entry-num">#67</td><td>§5</td><td><code>STORAGE_FEE_DUE</code></td><td>compute:dailyScan</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#68</td><td>§5</td><td><code>NO_SHOW_DEADLINE_REACHED</code></td><td>compute:dailyScan</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#69</td><td>§5</td><td><code>ORDER_ABANDONED</code></td><td>workflow:orderLifecycle</td><td>DATA</td><td>presentation:dashboard, workflow:notifications</td></tr>
+    <tr><td class="entry-num">#70</td><td>§5</td><td><code>INCOMPLETE_REMINDER_DUE</code></td><td>compute:dailyScan</td><td>DATA</td><td>workflow:notifications</td></tr>
+    <tr><td class="entry-num">#71</td><td>§5</td><td><code>WRITE_ORDER_UPDATE</code></td><td>workflow:notifications</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#72</td><td>§5</td><td><code>MARKETING_OUTREACH_DUE</code></td><td>compute:dailyScan</td><td>DATA</td><td>workflow:notifications</td></tr>
+    <tr><td class="entry-num">#73</td><td>§5</td><td><code>WRITE_CONFIG_UPDATE</code></td><td>compute:dailyScan</td><td>VAULT</td><td>vault:config</td></tr>
+    <tr><td class="entry-num">#74</td><td>§5</td><td><code>CONFIG_UPDATED</code></td><td>vault:config</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#75</td><td>§5</td><td><code>CONFIG_UPDATE_FAILED</code></td><td>vault:config</td><td>DATA</td><td>compute:dailyScan, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#76</td><td>§5</td><td><code>DAILY_SCAN_COMPLETED</code></td><td>compute:dailyScan</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#77</td><td>§5</td><td><code>SNAPSHOT_TRIGGERED</code></td><td>working:orderIntake</td><td>DATA</td><td>compute:reports</td></tr>
+    <tr><td class="entry-num">#78</td><td>§5</td><td><code>FETCH_ORDERS</code></td><td>compute:reports</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#79</td><td>§5</td><td><code>FETCH_CUSTOMERS</code></td><td>compute:reports</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#80</td><td>§5</td><td><code>STORE_SNAPSHOT</code></td><td>compute:reports</td><td>VAULT</td><td>vault:snapshots</td></tr>
+    <tr><td class="entry-num">#81</td><td>§5</td><td><code>SNAPSHOT_STORED</code></td><td>vault:snapshots</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#82</td><td>§5</td><td><code>SNAPSHOT_STORE_FAILED</code></td><td>vault:snapshots</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#83</td><td>§5</td><td><code>REPORT_REQUESTED</code></td><td>presentation:dashboard</td><td>DATA</td><td>compute:reports</td></tr>
+    <tr><td class="entry-num">#84</td><td>§5</td><td><code>FETCH_CONFIG</code></td><td>compute:reports</td><td>VAULT</td><td>vault:config</td></tr>
+    <tr><td class="entry-num">#85</td><td>§5</td><td><code>REPORT_GENERATED</code></td><td>compute:reports</td><td>DATA</td><td>presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#86</td><td>§6</td><td><code>FETCH_ORDERS</code></td><td>presentation:dashboard</td><td>VAULT</td><td>vault:orders</td></tr>
+    <tr><td class="entry-num">#87</td><td>§6</td><td><code>FETCH_CUSTOMERS</code></td><td>presentation:dashboard</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#88</td><td>§6</td><td><code>FETCH_CONFIG</code></td><td>presentation:dashboard</td><td>VAULT</td><td>vault:config</td></tr>
+    <tr><td class="entry-num">#89</td><td>§6</td><td><code>FETCH_SNAPSHOTS</code></td><td>presentation:dashboard</td><td>VAULT</td><td>vault:snapshots</td></tr>
+    <tr><td class="entry-num">#90</td><td>§6</td><td><code>CUSTOMER_UPDATE_COMMAND</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#91</td><td>§6</td><td><code>WRITE_CUSTOMER_UPDATE</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:customers</td></tr>
+    <tr><td class="entry-num">#92</td><td>§6</td><td><code>CUSTOMER_UPDATED</code></td><td>vault:customers</td><td>DATA</td><td>presentation:dashboard, workflow:notifications</td></tr>
+    <tr><td class="entry-num">#93</td><td>§6</td><td><code>CUSTOMER_UPDATE_FAILED</code></td><td>vault:customers</td><td>DATA</td><td>workflow:orderLifecycle, presentation:dashboard</td></tr>
+    <tr><td class="entry-num">#94</td><td>§6</td><td><code>CONFIG_CHANGE_COMMAND</code></td><td>presentation:dashboard</td><td>DATA</td><td>workflow:orderLifecycle</td></tr>
+    <tr><td class="entry-num">#95</td><td>§6</td><td><code>WRITE_CONFIG_UPDATE</code></td><td>workflow:orderLifecycle</td><td>VAULT</td><td>vault:config</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Counts:</strong> §1 Order Intake: 30 entries. §2 Stage Transitions: 8 entries. §3 Payment Lifecycle: 14 entries. §4 Notifications: 11 entries. §5 Reports &amp; Snapshots: 22 entries. §6 Dashboard &amp; Config: 10 entries. Total: 95 entries.</p>
+
+  <p><strong>Entry numbering:</strong> Post-renumbering values throughout. For §1, entries ≤10 are unchanged from the original; entry 11 (CUSTOMER_CREATE_FAILED) and entry 13 (AUDIT_WRITE_FAILED) were inserted during Session 10; entries ≥14 are original + 2. For §2–§6, all entries are original + 2. The routing table files in the project are pre-renumbering (§1 v3, §2 v3, §3 v4, §4 v4, §5 v4, §6 v4). Post-renumbering versions exist in the Operator's local files. The PCR v1 V2 crosswalk uses post-renumbering numbers and is verified.</p>
+</div>
+
+
+</div><!-- /content -->
+
+<div class="page-footer">
+  <span>Butcher Constellation · Constellation Spec · v1</span>
+  <span>6 April 2026</span>
+  <span>© 2026 Shea Gunther · CC BY-NC 4.0 · Technical writing by Claude (Anthropic) under Shea's direction.</span>
+</div>
+
+<script>
+function setSkin(id){
+  document.body.className=id==='og'?'':'skin-'+id;
+  try{localStorage.setItem('cs-v1-skin',id);}catch(e){}
+  document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===id));
+}
+document.addEventListener('DOMContentLoaded',()=>{let s='og';try{s=localStorage.getItem('cs-v1-skin')||'og';}catch(e){}setSkin(s);});
+</script>
+</body>
+</html>
