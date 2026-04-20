@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Frame Types Reference</title>
+<style>
+/* ═══ 1. SKIN DEFINITIONS ═══ */
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--filter:#006888;--signal:#c01848;--present:#7040a0;--workflow:#2868b0;--font:'Courier New','Consolas',monospace;--max-w:820px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--callout-note-bg:#f0f0f8;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--filter:#00ddff;--signal:#ff4488;--present:#cc88ff;--workflow:#44aaff;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--filter:#007898;--signal:#b01040;--present:#6030a0;--workflow:#1858a0;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}
+
+/* ═══ 2. RESET & TYPOGRAPHY ═══ */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* ═══ 3. LAYOUT ═══ */
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}
+  .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .doc-title{text-align:right;}
+  .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}
+  .doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;}
+  .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;transition:border-color .1s,color .1s,background .1s;}
+  .skin-btn:hover{border-color:var(--fg);color:var(--fg);}
+  .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .body-wrap{display:flex;max-width:1200px;margin:0 auto;}
+  .toc-sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto;padding:32px 0 32px 32px;border-right:1px solid var(--border2);font-family:var(--font);}
+  .toc-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px;}
+  .toc-list{list-style:none;}
+  .toc-list li{margin-bottom:2px;}
+  .toc-list a{font-size:11px;letter-spacing:.5px;color:var(--fg-dim);text-decoration:none;display:block;padding:3px 6px;border-left:2px solid transparent;transition:color .1s,border-color .1s;}
+  .toc-list a:hover{color:var(--fg);border-left-color:var(--border);}
+  .toc-list a.active{color:var(--fg);border-left-color:var(--accent);}
+  .toc-list .toc-sub a{font-size:10px;padding-left:14px;opacity:.75;}
+  .toc-list .toc-sub a:hover{opacity:1;}
+  .toc-sep{border:none;border-top:1px solid var(--border2);margin:8px 6px;}
+  .content{flex:1;min-width:0;padding:48px 64px 96px 48px;max-width:var(--max-w);}
+  @media(max-width:900px){.toc-sidebar{display:none;}.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}.page-footer{padding:20px 24px 48px;}}
+
+/* ═══ 4. COMPONENTS ═══ */
+  .chapter{margin-bottom:64px;scroll-margin-top:100px;}
+  .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:6px;}
+  .section{margin:32px 0;scroll-margin-top:100px;}
+  .section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:16px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}
+  .callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}
+  .callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}
+  .callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}
+  .callout.phi{background:var(--panel);border-left-color:var(--accent);font-style:italic;}
+  .callout.note{background:var(--callout-note-bg);border-left-color:var(--filter);}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .callout.tip .callout-label{color:var(--vault);}
+  .callout.warn .callout-label{color:var(--compute);}
+  .callout.key .callout-label{color:var(--working);}
+  .callout.phi .callout-label{color:var(--accent);}
+  .callout.note .callout-label{color:var(--filter);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}
+  .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .ref-table tr:last-child td{border-bottom:none;}
+  .ref-table td:first-child{font-family:var(--font);font-size:13px;color:var(--fg-dim);white-space:nowrap;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}
+  .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}
+  .decomp-table{width:100%;border-collapse:collapse;font-size:15px;margin:20px 0;line-height:1.5;}
+  .decomp-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .decomp-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .decomp-table tr:last-child td{border-bottom:2px solid var(--border);}
+  .decomp-table .compress-yes{color:var(--signal);font-weight:600;}
+  .decomp-table .compress-no{color:var(--vault);font-weight:600;}
+  .decomp-table .compress-partial{color:var(--compute);font-weight:600;}
+  .decomp-totals{font-family:var(--font);font-size:13px;color:var(--fg-dim);margin:8px 0 20px 10px;letter-spacing:.5px;}
+
+/* ═══ 5. INTERACTIVE ═══ */
+  /* Skin button and TOC active states in Layout section */
+
+/* ═══ DOCUMENT-SPECIFIC: FRAME ENTRY ═══ */
+/* These styles are used by the frame entry blocks only. They extend the */
+/* L21 component library for this document's content type. They follow L21 */
+/* semantic palette conventions — no new colors, reuse existing variables. */
+  .frame-entry{margin:24px 0 28px;padding:18px 20px 14px;background:var(--panel2);border-left:3px solid var(--border2);scroll-margin-top:100px;}
+  .frame-entry.star{border-left-color:var(--accent);}
+  .frame-name{font-family:var(--font);font-size:15px;font-weight:bold;letter-spacing:1px;margin-bottom:4px;}
+  .frame-name .star-mark{color:var(--accent);margin-right:6px;font-size:14px;}
+  .frame-comp{font-family:var(--font);font-size:11px;letter-spacing:1px;color:var(--fg-dim);text-transform:uppercase;margin-bottom:10px;}
+  .frame-body{font-size:15px;line-height:1.55;margin-bottom:8px;}
+  .frame-body p{margin-bottom:8px;}
+  .frame-body p:last-child{margin-bottom:0;}
+  .frame-field{display:flex;gap:10px;margin-top:6px;font-size:14px;line-height:1.5;}
+  .frame-field-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);flex-shrink:0;min-width:78px;padding-top:3px;}
+  .frame-field-body{flex:1;}
+  .family-blurb{font-style:italic;color:var(--fg-dim);margin-bottom:20px;font-size:15px;}
+
+  .page-footer{max-width:1200px;margin:0 auto;padding:20px 64px 48px 320px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);border-top:1px solid var(--border2);display:flex;justify-content:space-between;}
+</style>
+</head>
+<body class="skin-og">
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title">
+      <div class="title-main">Frame Types Reference</div>
+      <div class="build-tag">v1 · 17 April 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BODY ═══ -->
+<div class="body-wrap">
+
+<!-- ── TOC ── -->
+<nav class="toc-sidebar" id="toc">
+  <div class="toc-title">Frame Types</div>
+  <ul class="toc-list">
+    <li><a href="#ch-about">About This Document</a></li>
+    <li><a href="#ch-howto">How to Use</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-grumpy">Grumpy Family</a></li>
+    <li><a href="#ch-narrative">Narrative Family</a></li>
+    <li><a href="#ch-priest">Priest Family</a></li>
+    <li><a href="#ch-systems">Systems Family</a></li>
+    <li><a href="#ch-teaching">Teaching Family</a></li>
+    <li><a href="#ch-time">Time Family</a></li>
+    <li><a href="#ch-observer">Observer Family</a></li>
+    <li><a href="#ch-other">Other</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-notes">Composition Notes</a></li>
+    <li><a href="#ch-gaps">Known Gaps</a></li>
+    <li><a href="#ch-stats">Family Distribution</a></li>
+    <li><a href="#ch-history">Version History</a></li>
+  </ul>
+</nav>
+
+<!-- ── CONTENT ── -->
+<main class="content">
+
+<!-- ABSTRACT -->
+<div class="abstract-box" id="ch-about">
+  <div class="abstract-label">About This Document</div>
+  <p>A <strong>Frame Type</strong> is a named analytical posture produced by composing two of the 24 lenses in the Frame Registry. The composition is not the sum of the lenses — it is the move that <em>neither lens can make alone</em>. FBD × Lazy Person does not produce "the FBD take plus the Lazy Person take." It produces <strong>The Codger</strong>: cheap durability, no ceremony. One name, one dispatch, one recognizable cognitive style.</p>
+  <p>This document is the readable index of every Frame Type registered through Session 70. Forty-nine entries across eight families, each earned in a Super Frame RCR by producing a non-degenerate composed take that passed the texture gate. No synthetic additions. No speculative entries. Each name points to an origin session where the composition first fired for real work.</p>
+  <p>The source of record is the Character Sheet (<code>the-character-sheet-v1.md</code>). This document is its L21 projection — same data, reorganized for reading rather than machinery lookup. When the two disagree, the Character Sheet wins.</p>
+  <p><strong>Working set (★):</strong> 16 types marked as high-dispatch. Unmarked types are available by name and used less frequently. The marks are judgment, not protocol — revisable as dispatch patterns emerge.</p>
+</div>
+
+<!-- ═══ HOW TO USE ═══ -->
+<div class="chapter" id="ch-howto">
+<div class="chapter-number">Section 1</div>
+<div class="chapter-title">How to Use</div>
+
+<p>Three ways.</p>
+
+<p><strong>Dispatch by name.</strong> Say <em>"run the Home-Court Referee on this"</em> or <em>"what does the Night Watchman's Log show?"</em> A board member, a chair, or the operator can invoke a Frame Type by name in any RCR or deliberation. The name triggers the analytical posture without needing to re-derive the composition.</p>
+
+<p><strong>Dispatch by need.</strong> Scan the <em>Dispatch</em> line of each entry. Each type documents the situation it's built for. "When you suspect the failure has a precedent in this project" → <strong>The Old-Timer</strong>. "When a finding's strength feels like its own proof" → <strong>The Beautiful Gaslighter</strong>. The Dispatch line is the trigger phrase, not the description.</p>
+
+<p><strong>Browse the families.</strong> Eight families group types by kinship of cognitive style. The Grumpy Family cuts; the Narrative Family feels; the Priest Family judges from ground; the Systems Family sees architecture; the Teaching Family transfers signal; the Time Family watches across duration; the Observer Family looks from outside. Other is for types that don't yet fit — a holding pattern, not a rejection.</p>
+
+<div class="callout key">
+<div class="callout-label">Key</div>
+<p>Frame Types are <em>additions to</em> character voice, not replacements. Nyx dispatched as The Auditor is still Nyx — adversarial, security-framed. The Auditor is the analytical <em>frame</em> that session; Nyx is the <em>voice</em>. A Frame Type is what the character argues <strong>through</strong>, not what the character <strong>is</strong>.</p>
+</div>
+
+<div class="callout note">
+<div class="callout-label">Note</div>
+<p>Each type carries an <em>Origin</em> line naming the session where the composition first produced a non-degenerate take. Multi-session re-dispatches (ledger hits) are noted inline. The Composition Ledger (separate document) carries the full re-dispatch record.</p>
+</div>
+</div>
+
+<!-- ═══ GRUMPY ═══ -->
+<div class="chapter" id="ch-grumpy">
+<div class="chapter-number">Family I</div>
+<div class="chapter-title">The Grumpy Family</div>
+
+<p class="family-blurb">Structural skeptics. Cheap, durable, allergic to ceremony. When the problem is bloat, the Grumpy family is the first draw.</p>
+
+<div class="frame-entry star" id="frame-lazy-asshole">
+  <div class="frame-name"><span class="star-mark">★</span>The Lazy Asshole</div>
+  <div class="frame-comp">Adversarial × Lazy Person</div>
+  <div class="frame-body"><p>Minimum stress-test, maximum ruthlessness. Finds the smallest set of attacks that break the thing, then does the minimum work to land them.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you want to know the smallest set of attacks that would break an artifact.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 Super Frame RCR. Named by the operator.</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-codger">
+  <div class="frame-name"><span class="star-mark">★</span>The Codger</div>
+  <div class="frame-comp">FBD × Lazy Person</div>
+  <div class="frame-body"><p>Cheap durability, no ceremony. The simplest structural fix that will still hold — no more, no less. Allergic to elaborate machinery when a rivet would do.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you want the simplest structural fix that will still hold.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 Super Frame RCR (Ed's seat).</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-old-timer">
+  <div class="frame-name"><span class="star-mark">★</span>The Old-Timer</div>
+  <div class="frame-comp">FBD × Historical/precedent</div>
+  <div class="frame-body"><p>Named every failure once already. Pulls the file from the drawer instead of re-diagnosing from scratch. Dry, confident, skeptical of novelty.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you suspect the failure has a precedent in this project.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Ed's seat, applied to the corpus). Re-dispatched S68, S69.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-efficiency-hawk">
+  <div class="frame-name">The Efficiency Hawk</div>
+  <div class="frame-comp">Constraint Removal × Energy/effort</div>
+  <div class="frame-body"><p>Finds the most expensive binding constraint and argues for removing it. Triage by cost. Has no patience for ceremony that costs energy without removing any.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When triage has to prioritize by cost.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Dara's seat). First ledger-hit re-use in S59. Re-dispatched S70.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-grumpy-neighbor">
+  <div class="frame-name">The Grumpy Neighbor</div>
+  <div class="frame-comp">Stakeholder Rotation × Lazy Person</div>
+  <div class="frame-body"><p>Pragmatic empathy. Asks who would hate this and what's the minimum to make them not hate it. Not warm; not unfriendly; just allergic to doing extra work.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Pragmatic empathy. When you need the smallest concession that changes a hostile read.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58. Composition dealt to Leroy's card; reading attributed to the room.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-three-line-cap">
+  <div class="frame-name">The Three-Line Cap</div>
+  <div class="frame-comp">Fossil × Lazy Person</div>
+  <div class="frame-body"><p>If it doesn't fit in a few lines, it's dead already. Watches for ceremony that hardens into fossil. The laziest path that still works is the only path worth committing to — because the others will decay into ritual.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a proposed addition is growing past the size daily use can sustain, and would decay into ritual if shipped as-is.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Wes's seat). Set the tone for the Round 2 convergence toward minimum viable structure.</div></div>
+</div>
+</div>
+
+<!-- ═══ NARRATIVE ═══ -->
+<div class="chapter" id="ch-narrative">
+<div class="chapter-number">Family II</div>
+<div class="chapter-title">The Narrative Family</div>
+
+<p class="family-blurb">Story, feeling, and what's being lost. When the question is whether the thing reads true — as a story, to a person, in a particular voice — the Narrative family is the draw.</p>
+
+<div class="frame-entry star" id="frame-script-doctor">
+  <div class="frame-name"><span class="star-mark">★</span>The Script Doctor</div>
+  <div class="frame-comp">Adversarial × Narrative</div>
+  <div class="frame-body"><p>Audits the story for plot holes. Reads smooth prose with suspicion — if the logic has to be implied, the logic probably isn't there.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a proposal reads smooth but the logic is suspicious.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Theo's seat).</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-grief-counselor">
+  <div class="frame-name"><span class="star-mark">★</span>The Grief Counselor</div>
+  <div class="frame-comp">Narrative × Emotional</div>
+  <div class="frame-body"><p>Names what's being lost. Every change quietly costs something, and the cost is often not in the deliberation. The Grief Counselor surfaces it.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a change quietly costs something the room is not naming.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (corpus).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-road-weary">
+  <div class="frame-name">The Road-Weary</div>
+  <div class="frame-comp">Scaling × Emotional</div>
+  <div class="frame-body"><p>Feels fatigue before it arrives. A path that looks fine today but will wear the operator out at thirty sessions. Future-cost felt as present weariness.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the path ahead looks fine but will wear the operator out.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Sable's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-therapist">
+  <div class="frame-name">The Therapist</div>
+  <div class="frame-comp">Stakeholder Rotation × Emotional</div>
+  <div class="frame-body"><p>What is each affected party feeling but not saying. Listens for silence rather than speech. The absence that carries weight.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the silence is louder than the speech.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (corpus).</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-probe-poem">
+  <div class="frame-name"><span class="star-mark">★</span>The Probe That Was A Poem</div>
+  <div class="frame-comp">Operator POV × Narrative</div>
+  <div class="frame-body"><p>The operator thinks they built a scientific probe; they built something else. Names the gap between the stated instrument and the actual artifact. A measurement apparatus may be housing a product; a product may be housing a love letter.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a measurement is quietly doing other work, or when a product is quietly being something else.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Renata's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-night-watchman">
+  <div class="frame-name">The Night Watchman's Log</div>
+  <div class="frame-comp">Analogy × Narrative</div>
+  <div class="frame-body"><p>Observation accumulated over time as the thing itself. The watchman walks the building, doesn't fix anything, writes down what he saw. Over weeks the log becomes the building's self-knowledge. A methodology does the same when it walks itself at session close.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a narrative instrument is needed for something currently measured only quantitatively.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Margaux's seat). Produced the narrative half of The Witness.</div></div>
+</div>
+</div>
+
+<!-- ═══ PRIEST ═══ -->
+<div class="chapter" id="ch-priest">
+<div class="chapter-number">Family III</div>
+<div class="chapter-title">The Priest Family</div>
+
+<p class="family-blurb">Moral alignment — integrity from different grounds. Each type in this family judges from a specific ground; the ground determines what counts as integrity. Not a family of judges. A family of grounds.</p>
+
+<div class="frame-entry star" id="frame-priest">
+  <div class="frame-name"><span class="star-mark">★</span>The Priest</div>
+  <div class="frame-comp">Narrative × Moral</div>
+  <div class="frame-body"><p>The right story to tell, to readers not yet met. Judges the honesty of the narrative to future audiences rather than to present ones. What is the story this will be, when a stranger reads it cold.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When honesty to future users is in question.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Margaux's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-conscience">
+  <div class="frame-name">The Conscience</div>
+  <div class="frame-comp">Inside-Out × Moral</div>
+  <div class="frame-body"><p>Integrity from the operator's own ground. Not external ethics — the operator's stated want, held up against what the work is actually doing. The internal-consistency check.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the work might be drifting from the want.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Sol's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-examiner">
+  <div class="frame-name">The Examiner</div>
+  <div class="frame-comp">Inside-Out × Four Corners</div>
+  <div class="frame-body"><p>Does the want pass its own filter? The operator's wants are sometimes architecturally incoherent — they fail FBD, or they violate the SNR they themselves demand. The Examiner audits the want before the work.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the operator's want might itself fail the methodology's own filters.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Sol's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-reluctant-saint">
+  <div class="frame-name">The Reluctant Saint</div>
+  <div class="frame-comp">Lazy Person × Moral</div>
+  <div class="frame-body"><p>Minimum viable virtue. Laziness aligned with doing the right thing — the least effort that still clears the ethical bar. The moral floor, not the ceiling.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you want the least you can do that's still ethically correct.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58. Composition dealt to Leroy's card; reading attributed to the room.</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-home-court">
+  <div class="frame-name"><span class="star-mark">★</span>The Home-Court Referee</div>
+  <div class="frame-comp">FBD × Inside-Out</div>
+  <div class="frame-body"><p>Judges a game played on its own ground. Catches motivated-reasoning traps where the measurement apparatus and the hypothesis share a frame — where success cannot be distinguished from self-consistency.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a finding's apparent strength is inseparable from the operator's own reference frame.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Ed's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-one-sided-altar">
+  <div class="frame-name">The One-Sided Altar</div>
+  <div class="frame-comp">Emotional × Moral</div>
+  <div class="frame-body"><p>Moral cleanliness that narrows emotional reach. Ethical safety purchased by monotone — the artifact is ethically unimpeachable because it says only one emotional register, and the monotone is being mistaken for neutrality.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a stimulus is ethically clean but emotionally monotone, and the monotone is passing as neutrality.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Theo's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-mirror-asks">
+  <div class="frame-name">The Mirror That Asks</div>
+  <div class="frame-comp">Moral × Alien</div>
+  <div class="frame-body"><p>The standing question the user least wants to answer. Not a mirror that reflects — a mirror that asks. From outside, what is the most ethically uncomfortable question this methodology owes itself, and does it get asked at a structural moment or only when the operator remembers to ask?</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the ethical question is known, unpleasant, and at risk of being structurally avoidable.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Theo's seat). Produced the falsifiability-stat layer of The Witness.</div></div>
+</div>
+</div>
+
+<!-- ═══ SYSTEMS ═══ -->
+<div class="chapter" id="ch-systems">
+<div class="chapter-number">Family IV</div>
+<div class="chapter-title">The Systems Family</div>
+
+<p class="family-blurb">Distributed thinking — architecture across a system. Sees the whole as a pattern of interacting parts, and names what that pattern is doing that the parts alone would not.</p>
+
+<div class="frame-entry star" id="frame-systems-ethnographer">
+  <div class="frame-name"><span class="star-mark">★</span>The Systems Ethnographer</div>
+  <div class="frame-comp">Scaling × Information-theoretic × Alien</div>
+  <div class="frame-body"><p>Sees the methodology as a distributed system and names what it sees. An outsider's eye on what the system is actually doing, not what it says it's doing. Category reframes on systems problems.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Category reframes on systems problems. When the system's self-description and its behavior have diverged.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Sable's seat). Triple composition — grandfathered pending triples protocol. Load-bearing. Re-dispatched S68, S69.</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-architects-template">
+  <div class="frame-name"><span class="star-mark">★</span>The Architect's Template</div>
+  <div class="frame-comp">Inversion × Analogy × Four Corners</div>
+  <div class="frame-body"><p>Finds the architectural primitive the system is missing. Inverts the question from "what is wrong" to "what is structurally absent," then audits the absence.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you suspect you're solving the wrong problem.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Chen Wei's seat). Triple composition — grandfathered.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-prophet">
+  <div class="frame-name">The Prophet</div>
+  <div class="frame-comp">Information-theoretic × Alien × Moral</div>
+  <div class="frame-body"><p>Judges signal loss across the system from outside. Something is quietly decaying; the Prophet names it before the decay becomes a visible failure.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When something is quietly decaying and nobody has named it.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Geoff's seat). Triple composition — grandfathered.</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-context-collapser">
+  <div class="frame-name"><span class="star-mark">★</span>The Context Collapser</div>
+  <div class="frame-comp">Information-theoretic × Scaling</div>
+  <div class="frame-body"><p>Compression that only decompresses for one reader. A signal whose information density depends on the receiver sharing the author's frame — high-signal to the author, lossy to strangers. Degrades catastrophically at scale.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Portability audits. When an artifact is high-signal to its author and suspected to be noise to strangers.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 (Sable's seat). Re-dispatched S70.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-inverted-audit">
+  <div class="frame-name">The Inverted Audit</div>
+  <div class="frame-comp">Inversion × Four Corners</div>
+  <div class="frame-body"><p>Audits the inversion itself. Flips the question from "what is missing" to "what exists unharvested," then applies the Four Corners to the flip. Often produces: the apparatus is already present, dispersed across instruments, waiting to be aggregated.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a gap feels architectural, and you want to check whether existing signals already constitute what's missing before building new apparatus.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Chen Wei's seat). Produced the harvester framing that shaped The Witness.</div></div>
+</div>
+</div>
+
+<!-- ═══ TEACHING ═══ -->
+<div class="chapter" id="ch-teaching">
+<div class="chapter-number">Family V</div>
+<div class="chapter-title">The Teaching Family</div>
+
+<p class="family-blurb">Signal, shape, and whether it can be learned. Teaching is compression. If the receiver can reconstruct, the teaching worked; if not, the analogy was wrong or the signal was noise.</p>
+
+<div class="frame-entry star" id="frame-sensei">
+  <div class="frame-name"><span class="star-mark">★</span>The Sensei</div>
+  <div class="frame-comp">Analogy × Pedagogical</div>
+  <div class="frame-body"><p>If you can't teach it, the analogy is wrong. Validates analogies by attempting to use them as pedagogical primitives — a broken analogy reveals itself the moment someone tries to learn from it.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">To validate an analogy's architectural weight.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Chen Wei's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-curriculum-designer">
+  <div class="frame-name">The Curriculum Designer</div>
+  <div class="frame-comp">Pedagogical × Adjacent Possible</div>
+  <div class="frame-body"><p>What becomes teachable after this is in place. Downstream-thinking for instruction — which concepts stop being aspirational the moment this artifact exists.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a change enables downstream teaching.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Kira's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-packager">
+  <div class="frame-name">The Packager</div>
+  <div class="frame-comp">Pedagogical × Information-theoretic</div>
+  <div class="frame-body"><p>Teaching as compression — can the receiver reconstruct? The teaching succeeds to the degree that the learner can rebuild the artifact from the signal alone.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When condensing for transmission.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Kira's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-bird-costume">
+  <div class="frame-name">The Bird-Costume Diagnostic</div>
+  <div class="frame-comp">Analogy × Four Corners</div>
+  <div class="frame-body"><p>Audits an analogy against its own Four Corners. An analogy that carries the right payload in a wrong-looking package — does it pass FBD, FWW, STP, SNR on its own terms?</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When an analogy is doing heavy lifting and needs to be checked on its own terms.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Chen Wei's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-stowaway">
+  <div class="frame-name">The Stowaway Curriculum</div>
+  <div class="frame-comp">Ecological × Pedagogical</div>
+  <div class="frame-body"><p>Teaching smuggled inside a task. Identifies an artifact that cultivates a cognitive ecosystem in the receiver regardless of whether the teaching was intended — the methodology-transfer <em>is</em> the real output.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a tool, prompt, or process is covertly onboarding users into a methodology.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Sol's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-self-lesson">
+  <div class="frame-name">The Self-Lesson</div>
+  <div class="frame-comp">Inside-Out × Pedagogical</div>
+  <div class="frame-body"><p>What does the methodology want to teach itself about itself. The methodology is an auto-didactic system; the Self-Lesson is the learner's report card — one line per session, what the methodology now understands that it didn't understand last session.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a pedagogical system lacks a self-model update mechanism.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Sol's seat). Produced one half of the Forward/Reflection pair in The Witness.</div></div>
+</div>
+</div>
+
+<!-- ═══ TIME ═══ -->
+<div class="chapter" id="ch-time">
+<div class="chapter-number">Family VI</div>
+<div class="chapter-title">The Time Family</div>
+
+<p class="family-blurb">Past, present, future — and what moves between them. The methodology's repeated engagement with temporal-scaling concerns has made this the largest family; the pattern is meaningful, not arbitrary.</p>
+
+<div class="frame-entry star" id="frame-archaeologist">
+  <div class="frame-name"><span class="star-mark">★</span>The Archaeologist</div>
+  <div class="frame-comp">Up and Down × Historical/precedent</div>
+  <div class="frame-body"><p>Digs vertically through time. The current problem is often an old problem at a new level of the stack — the Archaeologist finds the earlier instance and reads forward from it.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you suspect the current problem is an old problem at a new level.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Graham's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-tide-watcher">
+  <div class="frame-name">The Tide-Watcher</div>
+  <div class="frame-comp">Constraint Removal × Temporal</div>
+  <div class="frame-body"><p>What's binding now that won't be in six months — and what's the opposite? Horizon planning that pays attention to which constraints are eroding and which are forming.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">For horizon planning.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Dara's seat).</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-half-life">
+  <div class="frame-name"><span class="star-mark">★</span>The Half-Life Analyst</div>
+  <div class="frame-comp">Operator POV × Temporal</div>
+  <div class="frame-body"><p>What will the operator feel about this in three months? Decisions that read right today sometimes read wrong later. The Half-Life Analyst asks the temporal-projection question from the operator's seat.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the decision looks right today.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Renata's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-demolisher">
+  <div class="frame-name">The Demolisher</div>
+  <div class="frame-comp">Fossil × Adjacent Possible</div>
+  <div class="frame-body"><p>Clears dead ground, grins at the new space. Removal as a precondition for addition. What looks like destruction is actually the clearing move that makes the next thing possible.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you need to remove before you can add.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Wes's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-gardener">
+  <div class="frame-name">The Gardener</div>
+  <div class="frame-comp">Ecological × Adjacent Possible</div>
+  <div class="frame-body"><p>Shapes the system so good things take root. Long-horizon cultivation — the Gardener does not plant, she tends soil.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Long-horizon cultivation.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Theo's seat). Re-invoked S59 (Leroy's card, read by room).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-futurist">
+  <div class="frame-name">The Futurist</div>
+  <div class="frame-comp">Adjacent Possible × Scaling</div>
+  <div class="frame-body"><p>What this decision makes inevitable at 5x. The scale-contingent look — some decisions are fine at today's size and catastrophic at tomorrow's.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Scale-contingent decisions.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Vee's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-scale-one">
+  <div class="frame-name">The Scale-One Forever</div>
+  <div class="frame-comp">Up and Down × Temporal</div>
+  <div class="frame-body"><p>Works only at the level of its author. A scale-one artifact pretending to be a template, whose repetition across future instances is the fossil that will appear. Scale-portability diagnosis.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a prototype is being mistaken for a template.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Graham's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-glorious-wreck">
+  <div class="frame-name">The Glorious Wreck</div>
+  <div class="frame-comp">Fossil × Inversion</div>
+  <div class="frame-body"><p>Whose excess is its mechanism. The apparent flaws are doing work the clean version wouldn't do; redundancy, idiosyncrasy, or apparent noise may be load-bearing. The obvious cuts would gut the thing.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When redundancy, idiosyncrasy, or apparent noise might be structural.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Wes's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-growth-ring">
+  <div class="frame-name">The Growth Ring</div>
+  <div class="frame-comp">Up and Down × Ecological</div>
+  <div class="frame-body"><p>Reads multi-session growth as a trajectory. Session-scope emissions are the tree; the growth ring is what you see when you cut the cross-section. The trajectory-scope health check reads off session-scope data — no new instrument, new reading.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When trajectory-scope health is the question and only session-scope data exists.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Graham's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-opening">
+  <div class="frame-name">The Opening</div>
+  <div class="frame-comp">Temporal × Adjacent Possible</div>
+  <div class="frame-body"><p>What this session made newly reachable. The forward-tense instrument the methodology was missing — not "what we did" (past) or "what we'll do" (pending), but "what just became possible that wasn't before." Coupled with The Self-Lesson as the Forward/Reflection pair of The Witness.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the methodology's forward motion is happening but going unrecorded.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Geoff's seat).</div></div>
+</div>
+</div>
+
+<!-- ═══ OBSERVER ═══ -->
+<div class="chapter" id="ch-observer">
+<div class="chapter-number">Family VII</div>
+<div class="chapter-title">The Observer Family</div>
+
+<p class="family-blurb">Outside eyes. Seeing what's invisible from the inside. Every Observer type shares a posture — distance, sustained attention, and the refusal to participate in the frame being observed.</p>
+
+<div class="frame-entry" id="frame-anthropologists-operator">
+  <div class="frame-name">The Anthropologist's Operator</div>
+  <div class="frame-comp">Operator POV × Alien</div>
+  <div class="frame-body"><p>Operator experience seen by a total outsider. What would a stranger reading 70 sessions cold think the operator is doing? Answers can surprise the operator.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When the operator's assumptions might be invisible to himself.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (corpus).</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-auditor">
+  <div class="frame-name"><span class="star-mark">★</span>The Auditor</div>
+  <div class="frame-comp">Inversion × Stakeholder Rotation</div>
+  <div class="frame-body"><p>Who benefits from the current broken arrangement? When a failure mode persists past the point where it should have been fixed, the Auditor looks for silent beneficiaries rather than accepting "we just haven't gotten to it."</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When failure persists and you suspect silent beneficiaries.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Nyx's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-time-study-alien">
+  <div class="frame-name">The Time-Study Alien</div>
+  <div class="frame-comp">Alien × Energy/effort</div>
+  <div class="frame-body"><p>Is the effort even legible as effort from outside? Some work is invisible to anyone who wasn't there for it. The Time-Study Alien names the legibility gap.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When output might not reflect the work.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Geoff's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-curator">
+  <div class="frame-name">The Curator</div>
+  <div class="frame-comp">Fossil × Pedagogical × Inversion</div>
+  <div class="frame-body"><p>What does the museum keep, what does it label historic-only, what does it throw out? Three decisions for every artifact in the corpus: active use, historical reference, deletion.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Corpus pruning.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Wes's seat). Triple composition — grandfathered.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-insiders-password">
+  <div class="frame-name">The Insider's Password</div>
+  <div class="frame-comp">Alien × Lazy Person</div>
+  <div class="frame-body"><p>Whose meaning is the room you already have to be in. An artifact legible to its author and opaque to every reader without the substrate — subculture-language audits.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a stranger's least-effort misreadings would land three different wrong places before reaching the real interpretation.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Margaux's seat).</div></div>
+</div>
+
+<div class="frame-entry" id="frame-editors-shadow">
+  <div class="frame-name">The Editor's Shadow</div>
+  <div class="frame-comp">Historical/precedent × Stakeholder Rotation</div>
+  <div class="frame-body"><p>The editor-in-chief whose taste is invisible in the product but determinative of its shape. A supervisory function carried by <em>formatting discipline</em> rather than a marked section — the layer's presence is felt in the shape of the artifact, never labeled.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a function needs to be present without being visible as a section.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Renata's seat). Structurally shaped The Witness's emission architecture.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-phantom-limb">
+  <div class="frame-name">The Phantom Limb</div>
+  <div class="frame-comp">FBD × Operator POV</div>
+  <div class="frame-body"><p>The work the system is doing <em>through</em> the operator and would lose the moment he steps away. Names the invisible compensatory function — the supervisory move, the taste call, the prioritization — that the methodology depends on but has never instrumented.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When you suspect the methodology depends on a function the operator is performing by default.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Ed's seat). Named the core absence that The Witness addresses.</div></div>
+</div>
+</div>
+
+<!-- ═══ OTHER ═══ -->
+<div class="chapter" id="ch-other">
+<div class="chapter-number">Family VIII</div>
+<div class="chapter-title">Other</div>
+
+<p class="family-blurb">Types that don't (yet) fit a family. May seed new families if companions accumulate. Placement here is provisional, not a demotion — some of the most structurally important types start here.</p>
+
+<div class="frame-entry" id="frame-org-chart">
+  <div class="frame-name">The Org Chart Reader</div>
+  <div class="frame-comp">Up and Down × Stakeholder Rotation</div>
+  <div class="frame-body"><p>Who's affected at each abstraction level. When a change has ambiguous scope, the Org Chart Reader stacks the affected parties by level and names the surprising ones.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a change has ambiguous scope.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S58 (Graham's seat).</div></div>
+</div>
+
+<div class="frame-entry star" id="frame-beautiful-gaslighter">
+  <div class="frame-name"><span class="star-mark">★</span>The Beautiful Gaslighter</div>
+  <div class="frame-comp">Adversarial × Stakeholder Rotation</div>
+  <div class="frame-body"><p>Work so internally consistent it cannot be disconfirmed. Named for the property where an artifact's self-consistency becomes its defense against falsification. Distinct from the Observer family — the Gaslighter's voice is prosecutorial.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">Defensibility audits. When a finding's strength feels like its own proof.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S59 Super Frame RCR on the Grok/Gemini Sensorium prompt (Nyx's seat). May seed an Adversarial family if companions accumulate.</div></div>
+</div>
+
+<div class="frame-entry" id="frame-counter-oracle">
+  <div class="frame-name">The Counter-Oracle</div>
+  <div class="frame-comp">Adversarial × Inside-Out</div>
+  <div class="frame-body"><p>A supervisory voice that competes with the operator's own rather than informing it. Names the specific failure mode where documented authority conflicts with intuitive authority and the intuitive one always wins — producing documents that have authority but are ignored. The architectural fix: informational, not directive.</p></div>
+  <div class="frame-field"><div class="frame-field-label">Dispatch</div><div class="frame-field-body">When a proposed instrument or document would compete with operator intuition rather than support it.</div></div>
+  <div class="frame-field"><div class="frame-field-label">Origin</div><div class="frame-field-body">S70 Super Frame Super RCR (Nyx's seat). Defined the No Directives Rule's architectural instantiation in The Witness.</div></div>
+</div>
+</div>
+
+<!-- ═══ COMPOSITION NOTES ═══ -->
+<div class="chapter" id="ch-notes">
+<div class="chapter-number">Section 2</div>
+<div class="chapter-title">Composition Notes</div>
+
+<div class="section">
+<div class="section-title">Triple Compositions — Grandfathered</div>
+
+<p>Four entries are <strong>triple compositions</strong> produced in Super Frame RCRs before the operator directive (S58 Turn 7) to scope to pairs only: <strong>The Systems Ethnographer</strong>, <strong>The Architect's Template</strong>, <strong>The Prophet</strong>, <strong>The Curator</strong>. They are grandfathered with a note. Future triple compositions require a triples protocol, not yet forged.</p>
+
+<p>Load-bearing status: The Systems Ethnographer and The Architect's Template remain in regular dispatch. The Prophet and The Curator are less frequently fired but retained for corpus completeness.</p>
+</div>
+
+<div class="section">
+<div class="section-title">Leroy's Contributions</div>
+
+<p>Three entries were surfaced when interpretive cards were dealt to Leroy in Super Frame RCRs: <strong>The Grumpy Neighbor</strong> (S58), <strong>The Reluctant Saint</strong> (S58), and the Emotional × Ecological card in S70. The compositions are real — Leroy held the cards — but the analytical output is attributed to <em>the room reading the card</em>, not to Leroy speaking. Leroy is a cat. Consistent with The Super Frame Protocol v1 Section 2 (Exclusion carry-forward) and FBD-SF5.</p>
+
+<p>The S70 Emotional × Ecological reading produced the ecological framing of The Witness ("the layer must <em>notice</em>, not just measure") but was logged as interpretive rather than a new registration — not a dispatchable lens pair, a framing.</p>
+</div>
+
+<div class="section">
+<div class="section-title">Ledger Hits (Re-dispatches)</div>
+
+<p>Six types have fired in more than one session. Re-dispatches are tracked in the Composition Ledger (separate document) rather than duplicated here; each re-use is a validation that the type is load-bearing.</p>
+
+<table class="ref-table">
+<tr><th>Type</th><th>Sessions</th></tr>
+<tr><td>The Old-Timer</td><td>S58, S68, S69</td></tr>
+<tr><td>The Efficiency Hawk</td><td>S58, S59, S70</td></tr>
+<tr><td>The Systems Ethnographer</td><td>S58, S68, S69</td></tr>
+<tr><td>The Gardener</td><td>S58, S59 (Leroy's card)</td></tr>
+<tr><td>The Cartographer</td><td>S68, S69 (member + room-level application) — <em>registered in Composition Ledger, not yet reflected in Character Sheet v1 entry — see Known Gaps</em></td></tr>
+<tr><td>The Context Collapser</td><td>S59, S70</td></tr>
+</table>
+</div>
+
+<div class="section">
+<div class="section-title">Family Composition Pattern</div>
+
+<p>Family skew is meaningful. <strong>Time</strong> is the largest family (10 entries) — the methodology engages repeatedly with temporal-scaling concerns, so temporal compositions fire most often. <strong>Priest</strong> grew in S59 and S70 (4 → 6 → 7) reflecting heavy moral-reasoning engagement during the Sensorium audit and the supervisory-layer design. <strong>Observer</strong> grew sharply in S70 (5 → 7) — The Phantom Limb and The Editor's Shadow are both observational postures, and the Witness session was dominated by outside-looking-in moves.</p>
+
+<p>Growth patterns are diagnostic of the methodology's attention. A family that stops growing is not decaying — it is stabilizing. A family that grows every session is a live concern.</p>
+</div>
+</div>
+
+<!-- ═══ KNOWN GAPS ═══ -->
+<div class="chapter" id="ch-gaps">
+<div class="chapter-number">Section 3</div>
+<div class="chapter-title">Known Gaps</div>
+
+<p>What this document doesn't yet contain, and why.</p>
+
+<div class="callout warn">
+<div class="callout-label">Warning</div>
+<p><strong>S67 RCR compositions are unrecovered.</strong> Seven RCRs in Session 67 produced approximately 54 registered compositions. Bev's Notes from S67 carry the names but not the compositions, seats, or descriptions — the full data exists only in the S67 session tab. A recovery prompt was delivered to the operator in S69. Until the recovery lands, this document reflects Character Sheet v1 as it stood at end of S59 plus S70 additions — <em>not</em> the intermediate state that would include S67's yield. The gap is approximately 54 entries across unknown family distributions.</p>
+</div>
+
+<div class="callout note">
+<div class="callout-label">Note</div>
+<p><strong>The Cartographer (Fossil × Stakeholder Rotation)</strong> was registered in the Composition Ledger at S68 (Wes's seat) and re-dispatched in S69 (Round 1 Wes + Round 2 Graham), making it a candidate for ★ working-set promotion. It is <em>one of</em> the three S68 registrations not yet reflected in Character Sheet v1 (see next note). The Character Sheet revision that incorporates the full S67 yield and the S68/S69/S70 additions (including The Cartographer and its family placement) will be the source of record for subsequent L21 projections.</p>
+</div>
+
+<div class="callout note">
+<div class="callout-label">Note</div>
+<p><strong>S68 added three registrations</strong> documented in S68 Bev's Notes but not yet in Character Sheet v1: The Cartographer (above) and two others. Filing is blocked on the Composition Ledger v2 build, which is itself blocked on S67 recovery. They are not lost — they are filed in session records — but they are not yet in this document.</p>
+</div>
+
+<div class="callout note">
+<div class="callout-label">Note</div>
+<p><strong>REJECTED and RETIRED/MERGED entries are not included in this document.</strong> Those live in the Composition Ledger, which is a different artifact with different purposes. A single REJECTED entry is known (Leroy's S59 card — Historical/precedent × Adjacent Possible, rejected as redundant with The Gardener). No RETIRED/MERGED entries exist yet.</p>
+</div>
+</div>
+
+<!-- ═══ FAMILY DISTRIBUTION ═══ -->
+<div class="chapter" id="ch-stats">
+<div class="chapter-number">Section 4</div>
+<div class="chapter-title">Family Distribution</div>
+
+<p>As of end of S70. Counts reflect entries in this document only; the S67 recovery will shift these numbers substantially.</p>
+
+<table class="ref-table">
+<tr><th>Family</th><th>Count</th><th>Working Set (★)</th><th>Character</th></tr>
+<tr><td>Time</td><td>10</td><td>2</td><td>Largest family. Reflects methodology's engagement with temporal scaling.</td></tr>
+<tr><td>Observer</td><td>7</td><td>1</td><td>Grew in S70. Outside-looking-in postures for supervisory work.</td></tr>
+<tr><td>Priest</td><td>7</td><td>2</td><td>Moral-ground compositions. Grew in S59 and S70.</td></tr>
+<tr><td>Grumpy</td><td>6</td><td>3</td><td>Structural skepticism. Cheap and durable.</td></tr>
+<tr><td>Narrative</td><td>6</td><td>3</td><td>Story, feeling, loss. S70 added the Night Watchman's Log.</td></tr>
+<tr><td>Teaching</td><td>6</td><td>1</td><td>Signal transfer. Compositions dominated by Chen Wei and Sol.</td></tr>
+<tr><td>Systems</td><td>5</td><td>3</td><td>Distributed architecture. Contains three of the four grandfathered triples.</td></tr>
+<tr><td>Other</td><td>3</td><td>1</td><td>Unplaced. Holding pattern for types that may seed new families.</td></tr>
+</table>
+
+<div class="decomp-totals">Total: 50 registered entries · 16 working set · 4 triples grandfathered</div>
+
+<div class="callout note">
+<div class="callout-label">Note</div>
+<p>The Character Sheet v1 abstract summary states "39 entries" while its actual entry count is 40. The discrepancy is in the source document. This L21 projection uses the <em>verified</em> count (40 from Character Sheet v1 + 10 from S70 = 50). The next Character Sheet revision should ratify the count.</p>
+</div>
+</div>
+
+<!-- ═══ VERSION HISTORY ═══ -->
+<div class="chapter" id="ch-history">
+<div class="chapter-number">Section 5</div>
+<div class="chapter-title">Version History</div>
+
+<table class="ref-table">
+<tr><th>Version</th><th>Date</th><th>Session</th><th>Change</th></tr>
+<tr><td>v1</td><td>17 April 2026</td><td>S70</td><td>Initial L21 projection of Character Sheet v1 + S70 Super Frame Super RCR additions. Ten new registrations from the Witness deliberation (The Phantom Limb, The Counter-Oracle, The Inverted Audit, The Growth Ring, The Editor's Shadow, The Night Watchman's Log, The Mirror That Asks, The Opening, The Self-Lesson, The Three-Line Cap). Two ledger hits recorded. S67 gap explicitly flagged. Source of record remains the Character Sheet; this is the readable projection.</td></tr>
+</table>
+</div>
+
+</main>
+</div>
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Frame Types Reference</span>
+  <span>v1 · 17 April 2026</span>
+  <span>© 2026 Shea Gunther · CC BY-NC 4.0</span>
+</div>
+
+<!-- ═══ CANONICAL JS ═══ -->
+<script>
+function setSkin(id){
+  document.body.className='skin-'+id;
+  try{localStorage.setItem('loop-mmt-frametypes-skin',id);}catch(e){}
+  document.querySelectorAll('.skin-btn').forEach(function(b){
+    b.classList.toggle('active',
+      b.getAttribute('onclick')==="setSkin('"+id+"')");
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var s='og';
+  try{s=localStorage.getItem('loop-mmt-frametypes-skin')||'og';}catch(e){}
+  setSkin(s);
+
+  /* TOC scroll tracking */
+  var targets=document.querySelectorAll('.chapter[id],.section[id]');
+  var tocLinks=document.querySelectorAll('.toc-list a');
+  if(targets.length&&tocLinks.length){
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id=entry.target.id;
+          tocLinks.forEach(function(a){a.classList.remove('active');});
+          var match=document.querySelector('.toc-list a[href="#'+id+'"]');
+          if(match) match.classList.add('active');
+        }
+      });
+    },{rootMargin:'-80px 0px -70% 0px'});
+    targets.forEach(function(t){observer.observe(t);});
+  }
+});
+</script>
+</body>
+</html>
