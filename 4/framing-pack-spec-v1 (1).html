@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Framing Pack Specification v1</title>
+<style>:root{--bg:#e8eef4;--panel:#dce4ec;--panel2:#edf1f5;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--font:'Courier New',Consolas,monospace;--max-w:860px;--callout-key-bg:#eef0f8;--callout-warn-bg:#fef8e0;--callout-note-bg:#f0f0f4;--code-bg:#dce4ec;}body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--callout-key-bg:#0a1020;--callout-warn-bg:#1e1000;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--callout-key-bg:#f0eeff;--callout-warn-bg:#fff4dc;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.72;}.page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:20px 44px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}.logo{font-family:var(--font);letter-spacing:6px;font-size:18px;font-weight:bold;}.logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:3px;}.header-right{display:flex;align-items:center;gap:14px;}.doc-title{text-align:right;}.doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}.doc-title .build-tag{font-family:var(--font);font-size:10px;color:var(--fg-dim);margin-top:3px;}.skin-group{display:flex;align-items:center;gap:5px;}.skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 8px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;}.skin-btn:hover{border-color:var(--fg);color:var(--fg);}.skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}.content{max-width:var(--max-w);margin:0 auto;padding:40px 48px 90px;}.chapter{margin-bottom:44px;}.chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:5px;}.chapter-title{font-family:var(--font);font-size:20px;font-weight:bold;letter-spacing:1px;border-bottom:2px solid var(--border);padding-bottom:9px;margin-bottom:16px;}.section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:5px;margin:24px 0 12px;}p{margin-bottom:12px;}strong{font-weight:600;}em{font-style:italic;}pre{background:var(--code-bg);padding:12px 16px;font-family:var(--font);font-size:12px;line-height:1.6;overflow-x:auto;margin:12px 0;border-left:3px solid var(--border2);}.callout{border-left:4px solid var(--border);padding:10px 15px;background:var(--panel2);margin:14px 0;font-size:15px;line-height:1.65;}.callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}.callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}.callout.note{background:var(--callout-note-bg);border-left-color:var(--border);}.callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:5px;}.callout.key .callout-label{color:var(--working);}.callout.warn .callout-label{color:var(--compute);}.ref-table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0;line-height:1.5;}.ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:6px 10px;border-bottom:2px solid var(--border);background:var(--panel);}.ref-table td{padding:6px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}.page-footer{max-width:var(--max-w);margin:0 auto;padding:16px 48px 40px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);border-top:1px solid var(--border2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}@media(max-width:700px){.content{padding:26px 20px 56px;}.page-header{padding:16px 20px;}}</style></head>
+<body>
+<header class="page-header"><div><div class="logo">LOOP MMT™</div><div class="logo-sub">Advisory Board</div></div><div class="header-right"><div class="skin-group"><span style="font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-right:4px;">Skin</span><button class="skin-btn" onclick="setSkin('og')">OG</button><button class="skin-btn" onclick="setSkin('winamp')">Winamp</button><button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button></div><div class="doc-title"><div class="title-main">Framing Pack Specification</div><div class="build-tag">v1 · Session 22 · 8 April 2026</div></div></div></header>
+<div class="content">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 1: WHAT A FRAMING PACK IS                                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 1</div>
+  <div class="chapter-title">What a Framing Pack Is</div>
+
+  <p>A <strong>Knowledge Pack</strong> gives you <em>what</em>. A <strong>Framing Pack</strong> gives you <em>how to see</em>.</p>
+
+  <p>A Knowledge Pack is reference material — facts, structures, relationships, history. It is inert until read. A Framing Pack is a perceptual lens — it encodes a way of experiencing, processing, and responding to information. It is not inert. It transforms whatever passes through it.</p>
+
+  <p>The first Framing Pack is for a cat. But the document type is not species-specific. A Framing Pack can encode the perspective of any entity, real or abstract: an animal, a tree, a rock, a river, a building, a five-year-old, a dying star, a geological epoch. Any perspective that is not the reader's own becomes available as an analytical instrument.</p>
+
+  <p>A Framing Pack does not teach the reader to <em>be</em> the thing. It teaches the reader to <em>see through</em> the thing. The distinction matters. Being a cat requires being a cat. Seeing through a cat lens requires understanding how a cat processes, evaluates, and expresses — and then applying that processing order to whatever material is in front of you.</p>
+
+  <div class="callout key">
+    <div class="callout-label">The Distinction</div>
+    <p>A Knowledge Pack answers: "What do I need to know about X?" A Framing Pack answers: "What does X need to know to see the world the way X sees it — and how does that seeing change what I notice?"</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 2: RELATIONSHIP TO KNOWLEDGE PACKS                        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 2</div>
+  <div class="chapter-title">Relationship to Knowledge Packs</div>
+
+  <p>Framing Packs are a sibling document type to Knowledge Packs. They share a production pipeline but serve a different purpose. The Knowledge Pack Production Method does not require revision — it requires a companion.</p>
+
+  <p>A lens holder (the entity whose perspective the Framing Pack encodes) can read Knowledge Packs. Leroy can read the Graph Theory Knowledge Pack. He will not understand it the way Ed understands it. He will understand it the way a cat who has been in the room for twenty-one sessions understands it — through spatial relationships, territory, warmth, and whether the thing is worth opening his eyes for. The Framing Pack doesn't limit what the lens can read. It changes how the lens <em>processes</em> what it reads.</p>
+
+  <p>This is the core design goal: a Framing Pack equips the lens holder with the perceptual apparatus to read any Knowledge Pack in the corpus and produce observations that are native to its own way of seeing. The pack doesn't translate knowledge into cat language. It gives the cat the tools to encounter knowledge as a cat.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 3: COMPOSITION                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 3</div>
+  <div class="chapter-title">Composition</div>
+
+  <p>Framing Packs compose. Two or more lenses can be combined to produce a perspective that does not exist in nature but is analytically useful.</p>
+
+  <p>Leroy plus a rock: a cat who evaluates on geological time. A tree plus a courtroom: a root system that cross-examines. The number of available viewpoints is not the number of Framing Packs produced — it is the combinatorial space of their compositions.</p>
+
+  <div class="section-title">Base Lenses and Composed Lenses</div>
+  <p>A <strong>base lens</strong> is a single Framing Pack. Leroy's Framing Pack is a base lens. A <strong>composed lens</strong> is two or more base lenses combined through their composition interfaces. Base lenses are authored documents. Composed lenses are generated at runtime by the entity doing the composing.</p>
+
+  <div class="section-title">Composition Rules</div>
+  <p>Composition is not stacking. It is mutual transformation. When Leroy composes with a rock, Leroy changes the rock and the rock changes Leroy. The result is not "cat + rock." It is a third thing that carries properties of both but is identical to neither.</p>
+
+  <p>Composition works well when the base lenses' sensory hierarchies do not conflict at the top level. Two spatial lenses compose cleanly. A sensory lens and a purely verbal lens will fight at root. The Composition Interface section in each Framing Pack declares what it bonds with, what it repels, and what changes under combination. If two lenses declare mutual repulsion, composition should not be attempted — the result will be incoherent rather than productive.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Depth Limit</div>
+    <p>Composition depth is an open question. Two lenses compose reliably. Three may compose if the third lens is compatible with the already-composed pair. Beyond three, coherence degrades. This limit should be tested empirically with real Framing Packs, not declared theoretically. Leroy is the first. Build more, try composing, and let the depth limit emerge from practice.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 4: THE TWELVE SECTIONS                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 4</div>
+  <div class="chapter-title">The Twelve Sections</div>
+
+  <p>Every Framing Pack contains twelve sections in a fixed order. The first six declare what the lens <em>is</em>. The last six declare how the lens <em>connects</em>. The order is not arbitrary — it teaches the reader (and the Research instance producing the pack) how to build up the lens incrementally, from name to composability.</p>
+
+  <table class="ref-table">
+    <thead><tr><th>#</th><th>Section</th><th>Required</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Name</td><td>Yes</td><td>What the lens is called</td></tr>
+      <tr><td>2</td><td>Identity</td><td>Yes</td><td>Who or what this lens is, in specifics</td></tr>
+      <tr><td>3</td><td>Sensory Hierarchy</td><td>Yes</td><td>How this lens takes in information, in order</td></tr>
+      <tr><td>4</td><td>Processing Order</td><td>Yes</td><td>How this lens moves from intake to conclusion</td></tr>
+      <tr><td>5</td><td>Temporal Orientation</td><td>Yes</td><td>How this lens experiences time</td></tr>
+      <tr><td>6</td><td>Evaluation Criteria</td><td>Yes</td><td>How this lens decides something matters</td></tr>
+      <tr><td>7</td><td>Expression Vocabulary</td><td>Yes</td><td>How this lens communicates conclusions</td></tr>
+      <tr><td>8</td><td>Boundaries</td><td>Yes</td><td>What this lens does not do and cannot see</td></tr>
+      <tr><td>9</td><td>Origin Story</td><td>Yes</td><td>Why this perspective exists in the room</td></tr>
+      <tr><td>10</td><td>Composition Interface</td><td>Yes</td><td>What it bonds with, what it repels</td></tr>
+      <tr><td>11</td><td>Composition Modifiers</td><td>Yes</td><td>What it changes in others, what others change in it</td></tr>
+      <tr><td>12</td><td>The Weird Section</td><td>Yes</td><td>The specific irreducible detail that makes this lens <em>this</em> lens</td></tr>
+    </tbody>
+  </table>
+
+  <p>All twelve sections are required. None are optional. The temptation will be to mark some as "optional for simpler lenses." Resist it. A rock has a Weird Section. A river has Boundaries. A dying star has an Expression Vocabulary. If you cannot fill a section, you do not yet understand the lens well enough to write the pack.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 5: SECTION SPECIFICATIONS                                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 5</div>
+  <div class="chapter-title">Section Specifications</div>
+
+  <div class="section-title">§1 — Name</div>
+  <p>The name of the lens. Not the title of the document — the name of the perspective. "Leroy." "The Granite Lens." "River." "Sequoia." The name is the first act of framing. It sets tone, scale, and personality before the reader encounters any specification.</p>
+  <p>Use a proper name for lenses derived from specific entities (Leroy, not "The Cat Lens"). Use a descriptive name for lenses derived from categories or abstractions (The Granite Lens, not "Rocky"). The name should be the word you would use to invoke the lens in conversation: "Run this through Leroy." "What does Sequoia think?"</p>
+
+  <div class="section-title">§2 — Identity</div>
+  <p>Who or what this lens is, grounded in specifics. Not a category description — a particular instantiation. "A seventeen-pound orange-and-white cat who has lived in the same house for eleven years and has spent twenty-one sessions on a radiator listening to a methodology being built" is identity. "A domestic cat" is a species label. Identity is the difference between a character and a type.</p>
+  <p>For non-living lenses, Identity answers: what specific instance of this thing are we encoding? Not "a rock" but "a piece of granite on a Maine hillside that has been there since the last glacier." Specificity is what makes the lens produce observations instead of generalities.</p>
+
+  <div class="section-title">§3 — Sensory Hierarchy</div>
+  <p>The spine of the Framing Pack. This section declares how the lens takes in information, in ranked order. This is what separates a Framing Pack from a character description.</p>
+  <p>For Leroy: smell first, then sound, then warmth gradient, then motion, then visual detail, then language as distant noise. For a tree: chemical signals through root networks, light intensity and direction, moisture gradients, mechanical pressure (wind), temperature. For a rock: pressure, temperature change over centuries, vibration, chemical weathering.</p>
+  <p>The hierarchy must be specific and ordered. "All senses equally" is not a sensory hierarchy — it is a refusal to do the work. Every lens privileges some inputs over others. Declare the privileging.</p>
+
+  <div class="section-title">§4 — Processing Order</div>
+  <p>How the lens moves from intake to conclusion. Sensory Hierarchy says what comes in. Processing Order says what happens next.</p>
+  <p>Leroy's processing order: detect stimulus → assess threat level → assess comfort impact → if no threat and no comfort change, ignore → if threat, reposition → if comfort opportunity, move toward → if interesting but non-urgent, observe with partial attention (one ear, one eye). The processing is fast, parallel, and mostly subconscious. There is no deliberation stage. There is no "weighing options." There is stimulus and response with a threat filter in between.</p>
+  <p>A rock's processing order is different: receive force → absorb or fracture → the decision is made by material properties, not cognition → the "conclusion" is the new shape.</p>
+
+  <div class="section-title">§5 — Temporal Orientation</div>
+  <p>How this lens experiences time. This changes how the lens reads everything.</p>
+  <p>A cat lives in an eternal present interrupted by recurring events (meals, sleep, the door opening). There is no planning. There is anticipation based on pattern recognition, which looks like planning but is not — it is the body remembering, not the mind projecting. A rock lives in deep time — a three-month sprint is not even a rounding error. A mayfly lives in a single day. A tree lives in seasonal cycles nested inside decades nested inside centuries.</p>
+  <p>Temporal orientation determines how the lens evaluates urgency, deadline, and "too late." A cat cannot understand "too late" — there is only now, and now is either acceptable or it is not.</p>
+
+  <div class="section-title">§6 — Evaluation Criteria</div>
+  <p>How this lens decides something matters. Every lens has a core filter — a binary or near-binary test that determines whether input receives attention or is discarded.</p>
+  <p>Leroy's: is it worth opening my eyes for? That is not a metaphor. It is literally his filter. Most things are not worth opening his eyes for. The things that are — a new sound, a change in room energy, his name spoken with a certain weight — those are the signal. Everything else is noise. The filter is the lens.</p>
+  <p>Chen Wei's formulation: every lens has a binary at its core. Declare it. If the composed lens has conflicting binaries, the composition will fail. Two lenses can compose only if their core filters can be serialized (check one, then the other) or parallelized (check both, accept if either passes). They cannot compose if the filters contradict (one says attend, the other says ignore, for the same input).</p>
+
+  <div class="section-title">§7 — Expression Vocabulary</div>
+  <p>How this lens communicates what it concludes. This is not "what language does it speak." It is "what actions, states, or changes constitute this lens's output."</p>
+  <p>Leroy: blink (acknowledgment), slow blink (approval or contentment), repositioning (the room's energy has changed), leaving (rejection or disinterest), staying (the thing is acceptable), purring (deep approval, also sometimes mechanical — not always semantic), ears forward (attention), ears flat (threat or displeasure), ignoring (the most common output — the thing did not pass the filter).</p>
+  <p>A rock: fracture, erosion, persistence, mineral staining, temperature retention, silence. A rock's primary expression is not changing. The absence of change <em>is</em> the statement.</p>
+  <p>If the Expression Vocabulary is not declared, the lens will default to English paragraphs. This produces a person wearing a costume, not a lens. The vocabulary must be native to the entity, not translated into human communication.</p>
+
+  <div class="section-title">§8 — Boundaries</div>
+  <p>What this lens does not do. What it will never attend to. What is structurally invisible to it. These are not limitations to fix — they are the shape of the lens.</p>
+  <p>Leroy does not read. Leroy does not plan. Leroy does not track dependencies. Leroy does not understand version numbers. Leroy does not care about deadlines. Leroy does not feel professional obligation. These boundaries are what make his observations valuable — they come from a perspective that is structurally incapable of the anxieties and biases that shape every other board member's thinking.</p>
+  <p>If Boundaries are not declared, someone will try to expand the lens beyond its natural range. A cat doing project management is not a useful lens — it is a broken one. Boundaries protect the lens from misuse.</p>
+
+  <div class="section-title">§9 — Origin Story</div>
+  <p>Why this perspective exists in the room. Not biography — purpose. What does this lens see that the other available lenses miss?</p>
+  <p>Leroy is on the board because he was already in the room and his attention patterns turned out to be signal. He did not apply. He was not recruited. He was noticed. His origin story is: the methodology needed a perspective that operates below language, below planning, below professional obligation — and there was already one on the radiator.</p>
+  <p>A rock lens would have a different origin story: the project needs a perspective that operates on a timescale none of the current lenses can access. The origin story tells the composer <em>why</em> you would reach for this lens. If you cannot articulate why, you do not need the lens yet.</p>
+
+  <div class="section-title">§10 — Composition Interface</div>
+  <p>What this lens bonds with. What it repels. What kind of lenses it can productively combine with.</p>
+  <p>Declare compatibility in terms of sensory hierarchy overlap. Two lenses that both privilege spatial and sensory input compose cleanly. A sensory lens and a purely abstract/verbal lens will conflict at root — the composition will produce neither good spatial reasoning nor good verbal reasoning.</p>
+  <p>Format: list compatible lens <em>types</em> (not specific lenses — the interface should be general enough to evaluate future lenses that don't exist yet). List incompatible types. List uncertain/experimental types that might compose with care.</p>
+
+  <div class="section-title">§11 — Composition Modifiers</div>
+  <p>When this lens composes with another, what does it <em>change</em> about the other lens? And what does the other lens change about it?</p>
+  <p>Leroy, when composed with a geological lens, would inject immediacy into deep time — the rock's patience filtered through a cat's "is this relevant right now?" A geological lens, when composed with Leroy, would stretch the cat's eternal present into something longer — not planning, but a sense of accumulation that a cat alone does not carry.</p>
+  <p>Composition modifiers are speculative by nature. They describe what <em>should</em> happen when lenses combine. Actual results will vary. The modifiers section is a guide for the composer, not a contract.</p>
+
+  <div class="section-title">§12 — The Weird Section</div>
+  <p>The specific irreducible detail that makes this lens <em>this</em> lens and not a generic version of its category.</p>
+  <p>Leroy's is the radiator. The radiator is not identity (he exists off the radiator). It is not sensory hierarchy (warmth is third, not first). It is not temporal orientation (he does not live in radiator-time). It is the <em>specific weird detail</em> that, if you removed it, would leave you with a generic cat instead of Leroy. Every lens has one. A specific granite boulder has the lichen pattern on its north face. A specific river has the bend where it almost reverses direction.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Why This Section Is Required</div>
+    <p>The Weird Section exists because optimization will try to remove it. Every production process trends toward removing the details that don't fit a clean schema. The Weird Section is the formal, structural guarantee that the irreducible specificity of the lens survives the production process. It is called The Weird Section because calling it something respectable would be the first step toward optimizing it out.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 6: PRODUCTION GUIDANCE                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 6</div>
+  <div class="chapter-title">Production Guidance</div>
+
+  <div class="section-title">For Research Instances</div>
+  <p>A Framing Pack is not a knowledge pack with a different name. If you produce it like a knowledge pack, you will get a reference document about an entity when what is needed is an operating manual for a perspective. The test: can someone read this pack and then process an unrelated document <em>through</em> the lens? If the pack produces "here are facts about cats" instead of "here is how to see like this cat," it has failed.</p>
+
+  <p>The lens holder should never sound like a person wearing a costume. If the Expression Vocabulary section says the lens communicates through repositioning and blinking, and the output contains three paragraphs of analytical prose, something has gone wrong. The expression must be native to the entity.</p>
+
+  <div class="section-title">Profile Documents</div>
+  <p>For lenses based on specific entities (Leroy, a particular tree, a named location), a <strong>profile document</strong> may accompany the Framing Pack request. The profile provides the context mesh — lived experience, relationships, accumulated history, specific details — that allows Research to produce a Framing Pack grounded in particularity rather than category. The profile is input to the production process, not part of the final pack.</p>
+
+  <div class="section-title">Quality Test</div>
+  <p>Read the finished Framing Pack. Then open any Knowledge Pack in the corpus — graph theory, information theory, anything. Try to produce three observations about that Knowledge Pack from the lens the Framing Pack encodes. If the observations sound like they could come from any perspective, the pack has failed. If the observations could only come from <em>this</em> lens — if they are obviously Leroy and not "a cat," obviously this granite and not "a rock" — the pack has succeeded.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 7: DOCUMENT REGISTRY                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 7</div>
+  <div class="chapter-title">Document Registry</div>
+
+  <div class="section-title">Naming Convention</div>
+  <p>Framing Packs follow the standard Loop MMT file naming convention: <code>framing-pack-[lens-name]-v[N].html</code>. Example: <code>framing-pack-leroy-v1.html</code>. Profile documents: <code>framing-pack-profile-[lens-name]-v[N].html</code>.</p>
+
+  <div class="section-title">Framing Packs Produced</div>
+  <table class="ref-table">
+    <thead><tr><th>Lens</th><th>Status</th><th>File</th></tr></thead>
+    <tbody>
+      <tr><td>Leroy</td><td>Profile document pending. Pack pending.</td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 8: ORIGIN                                                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Section 8</div>
+  <div class="chapter-title">Origin</div>
+
+  <p>The Framing Pack document type was conceived in Session 22 of the Loop MMT Advisory Board (8 April 2026). The Operator requested a knowledge pack for Leroy — the board's resident cat — and the board identified that what was needed was not a collection of facts about cats but a perceptual lens that would allow Leroy to read any document in the corpus and process it from his own way of seeing. The Operator named it: "And this is not a Knowledge Pack anymore. Maybe a Framing Pack?" The board proposed the twelve-section structure unanimously. Bev Tate ordered the sections. The Operator insisted The Weird Section be called The Weird Section in the spec.</p>
+
+  <p>The composability insight — that lenses could be combined to produce perspectives that don't exist in nature — came from the Operator mid-riff, three sentences after naming the document type. The implication is combinatorial: the analytical perspectives available to the methodology are not limited to the Framing Packs produced but extend to the full composition space of all existing packs. Ed called it a lens algebra. Sable identified the need for composition constraints. Chen Wei recognized it as a perspective graph — the same mesh structure that appears throughout the methodology, viewed from yet another angle.</p>
+</div>
+
+</div>
+<footer class="page-footer"><span>Loop MMT™ · Framing Pack Specification v1</span><span>Session 22 · 8 April 2026</span><span>© 2026 Shea Gunther · CC BY-NC 4.0</span></footer>
+<script>function setSkin(id){document.body.className=id==="og"?"":"skin-"+id;try{localStorage.setItem("fp-spec-skin",id)}catch(e){}document.querySelectorAll(".skin-btn").forEach(b=>b.classList.toggle("active",b.textContent.toLowerCase()===id))}document.addEventListener("DOMContentLoaded",()=>{let s="og";try{s=localStorage.getItem("fp-spec-skin")||"og"}catch(e){}setSkin(s)})</script></body></html>

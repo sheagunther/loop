@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Hex for Five Knowledge Pack · v1</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--font:'Courier New','Consolas',monospace;--max-w:860px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--callout-note-bg:#f0f0f4;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}.logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}.logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}.header-right{display:flex;align-items:center;gap:16px;}.doc-title{text-align:right;}.doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}.doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}.skin-group{display:flex;align-items:center;gap:5px;}.skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;}.skin-btn:hover{border-color:var(--fg);color:var(--fg);}.skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .body-wrap{display:flex;max-width:1160px;margin:0 auto;}.toc-sidebar{width:248px;flex-shrink:0;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto;padding:24px 0 24px 24px;border-right:1px solid var(--border2);font-family:var(--font);}.toc-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}.toc-list{list-style:none;}.toc-list li{margin-bottom:1px;}.toc-list a{font-size:11px;color:var(--fg-dim);text-decoration:none;display:block;padding:3px 6px;border-left:2px solid transparent;}.toc-list a:hover{color:var(--fg);border-left-color:var(--border);}.toc-list a.active{color:var(--fg);border-left-color:var(--accent);}.toc-sep{border:none;border-top:1px solid var(--border2);margin:5px 6px;}
+  .content{flex:1;min-width:0;padding:48px 48px 96px 40px;max-width:var(--max-w);}.chapter{margin-bottom:56px;scroll-margin-top:84px;}.chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}.chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:16px;}.section{margin:28px 0;scroll-margin-top:84px;}.section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:12px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}.callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}.callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}.callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}.callout.note{background:var(--callout-note-bg);border-left-color:var(--border);}.callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}.callout.key .callout-label{color:var(--working);}.callout.tip .callout-label{color:var(--vault);}.callout.warn .callout-label{color:var(--compute);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}.ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}.ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}.ref-table tr:last-child td{border-bottom:none;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}.abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}.page-footer{max-width:1160px;margin:0 auto;padding:20px 48px 48px 292px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);display:flex;justify-content:space-between;}
+  @media(max-width:860px){.toc-sidebar{display:none;}.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}.page-footer{padding:20px 24px 48px;}}
+</style></head>
+<body class="skin-og">
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group"><span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span><button class="skin-btn active" onclick="setSkin('og')">OG</button><button class="skin-btn" onclick="setSkin('winamp')">Winamp</button><button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button></div>
+    <div class="doc-title"><div class="title-main">Hex for Five Knowledge Pack</div><div class="build-tag">v1 · 8 April 2026</div></div>
+  </div>
+</div>
+<div class="body-wrap">
+<nav class="toc-sidebar"><div class="toc-title">Contents</div><ul class="toc-list">
+  <li><a href="#ch-abstract">About</a></li><hr class="toc-sep">
+  <li><a href="#ch-what">1 · What Is Hex?</a></li>
+  <li><a href="#ch-shape">2 · The Shape</a></li>
+  <li><a href="#ch-principles">3 · Principles</a></li>
+  <li><a href="#ch-movement">4 · Movement</a></li>
+  <li><a href="#ch-five">5 · How Hex Changes at 5v5</a></li>
+  <li><a href="#ch-mistakes">6 · Common Mistakes</a></li>
+  <li><a href="#ch-defense">7 · Defense — Flex for Five</a></li>
+  <li><a href="#ch-drills">8 · Drills &amp; Practice</a></li>
+  <li><a href="#ch-refs">References</a></li>
+</ul></nav>
+<main class="content">
+
+<!-- ══ ABSTRACT ══ -->
+<div class="abstract-box" id="ch-abstract">
+  <div class="abstract-label">About This Document</div>
+  <p style="margin-bottom:8px;">This is a complete guide to Hexagon Offense — called "Hex" for short — adapted for 5-on-5 youth ultimate. Hex was invented for 7v7 play, but its creator Felix Shardlow has always said it works with fewer players. This document takes the core ideas and rebuilds them specifically for five-player teams on a youth-sized field.</p>
+  <p style="margin-bottom:8px;">The guide covers offense, defense, common mistakes, and practice drills. It is written for players around age 12, but the strategy inside is real — the same ideas are used by national teams and elite club teams around the world.</p>
+  <p style="margin-bottom:0;">Strategic commentary throughout comes from Dara Tehrani, a former handler for San Francisco Fury (one of the most successful women's club teams in the history of the sport) and current youth coach. Dara played seven seasons at the elite level, won two national championships, and represented the United States at the World Championships twice. She knows what good spacing looks like.</p>
+</div>
+
+
+<!-- ══ 1: WHAT IS HEX? ══ -->
+<div class="chapter" id="ch-what">
+  <div class="chapter-number">Chapter 1</div>
+  <div class="chapter-title">What Is Hex?</div>
+
+  <div class="section"><div class="section-title">Where It Came From</div>
+  <p>Hex was created by a coach named Felix Shardlow in Brighton, England, in 2012. He had been playing ultimate for twelve years and was frustrated with how most offenses worked. Traditional offenses — vertical stack, horizontal stack, side stack — organize players in lines. The players in the line wait for their turn to cut. Most of the time, most of the players aren't doing anything.</p>
+  <p>Felix wanted an offense where everyone was involved all the time. He drew seven dots on a field and connected them with triangles instead of lines. The dots formed a hexagon — a six-sided shape. He called it Hexagon Offense. His team Brighton City tried it in competitive games in 2013 against European champions Clapham — one of the best teams in England — and scored easily in the opening exchanges. Clapham had to call two timeouts and switch defensive strategies three times. They eventually won 15-11, but Brighton's coach at the time described the result as a breakthrough. Brighton City finished third at UK Nationals that year using Hex on 90% of their points. By 2015, Great Britain's U23 Mixed team played nothing but Hex at the World Championships and finished fifth.</p>
+  <p>Today, teams on every continent use Hex or something very close to it. The ideas behind it are spreading fast because they work.</p>
+  </div>
+
+  <div class="section"><div class="section-title">How Hex Is Different</div>
+  <p>In a stack offense, players have fixed jobs. Some are "handlers" who touch the disc a lot, and some are "cutters" who run deep and try to get open. The handlers stand in the back. The cutters stand in a line. Everyone takes turns.</p>
+  <p>Hex throws all of that away. There are no handlers and no cutters. Every player does both jobs. There are no lines — players spread out across the field in a shape made of triangles. There are no turns — any player can move to any position at any time. The disc moves fast, and the shape moves with it.</p>
+
+  <div class="callout key">
+    <div class="callout-label">The Big Idea</div>
+    Think of Hex as a game of keep-away on a full field. You and your teammates spread out, make triangles, and pass the disc quickly to whoever is open. You don't wait in a line. You don't wait for your turn. You read the field, find the open pass, and take it.
+  </div>
+  </div>
+
+  <div class="section"><div class="section-title">Why Hex Is Great for Youth Players</div>
+  <p>Most offenses were designed for adults with powerful throws and years of experience. Stack offenses ask players to stand still and wait, then explode into a sprint at exactly the right moment. That requires a lot of timing and discipline, and honestly, standing around is boring.</p>
+  <p>Hex works differently. Everyone is always part of the play. Everyone gets to throw. Everyone gets to cut. The disc moves to whoever is open, and since you're spread out in triangles, someone is almost always open. Felix Shardlow has taught Hex to complete beginners and found they pick up the fundamentals of the game faster than players learning traditional offenses.</p>
+  <p>And here's the best part: it's fun. You're making decisions every second. You're moving with purpose. You're part of every play, not watching from a stack waiting for your name to get called.</p>
+  </div>
+</div>
+
+
+<!-- ══ 2: THE SHAPE ══ -->
+<div class="chapter" id="ch-shape">
+  <div class="chapter-number">Chapter 2</div>
+  <div class="chapter-title">The Shape — Triangles, Not Lines</div>
+
+  <div class="section"><div class="section-title">Why Triangles?</div>
+  <p>The triangle is the most efficient shape in ultimate. When three players stand at the corners of a triangle, each one can throw to the other two. That gives the person with the disc two options immediately. And after they throw, the receiver has two options too — the person who just threw to them, plus the third corner of the triangle.</p>
+  <p>Triangles also create excellent spacing. Players are spread out enough that their defenders can't help each other easily, but close enough that every pass is short and reliable. If you're standing 8 to 12 yards from each teammate in a triangle, most passes are easy throws that your team can complete at a very high rate.</p>
+  <p>The entire Hex offense is built from overlapping triangles. In 7v7, those triangles combine into a hexagon. In 5v5, they combine into a shape more like a kite or an arrowhead. But the building block is always the same: three players, three connections, two options.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The 7v7 Shape (For Context)</div>
+  <p>In regular 7-on-7 ultimate, Hex uses seven players arranged in a 2-3-2 formation: two backs, two wings, one "hat" (the center player), and two forwards. Six equilateral triangles link up to form a hexagon with the hat in the middle. The disc sits on the outside edge of this hexagon, not in the center. This is important — if the disc is in the middle, defenders can surround it from every direction. Keeping the disc on the edge means the thrower can see all six teammates in front of them.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The 5v5 Shape — The Kite</div>
+  <p>With five players instead of seven, you can't build a full hexagon. But you can build something just as effective: three overlapping triangles that form a kite shape.</p>
+  <p>The five positions are:</p>
+
+  <table class="ref-table">
+    <tr><th>Position</th><th>Where</th><th>Job</th></tr>
+    <tr><td><strong>Thrower</strong></td><td>On the edge of the shape, holding the disc</td><td>Find the open pass. Face infield. Move the disc.</td></tr>
+    <tr><td><strong>Back</strong></td><td>Behind and slightly infield of the thrower</td><td>Reset option. Safety valve. Keeps the offense from stalling.</td></tr>
+    <tr><td><strong>Hat</strong></td><td>Center of the shape, roughly level with the disc</td><td>Connected to everyone. The hub. The most important off-disc position.</td></tr>
+    <tr><td><strong>Near Forward</strong></td><td>Ahead of the disc on the active side</td><td>Continuation target. Keeps the disc moving forward after the hat.</td></tr>
+    <tr><td><strong>Far Forward</strong></td><td>Ahead and across the field</td><td>Deep threat. Connected to the hat, not directly to the thrower.</td></tr>
+  </table>
+
+  <p>These five positions create three triangles:</p>
+  <ul>
+    <li><strong>Triangle 1:</strong> Thrower — Back — Hat</li>
+    <li><strong>Triangle 2:</strong> Thrower — Hat — Near Forward</li>
+    <li><strong>Triangle 3:</strong> Hat — Near Forward — Far Forward</li>
+  </ul>
+
+  <p>Notice that the hat appears in all three triangles. In 7v7, the hat is important. In 5v5, the hat is everything. It is the only position that connects the back of the offense to the front. If the hat drifts out of position or gets stuck behind a defender, the whole shape breaks apart.</p>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    When I played handler for Fury, my job was to connect the back of the offense to the front. I was the link between the reset and the attack. In 5v5 Hex, the hat is that link. Whoever is in the hat position at any given moment is the most important player on the field who doesn't have the disc. Keep that position filled. Always.
+  </div>
+  </div>
+
+  <div class="section"><div class="section-title">How the Shape Rotates</div>
+  <p>The shape is not nailed to one spot on the field. It moves as the disc moves.</p>
+  <p>When the disc is on the sideline, the kite points infield — the thrower is on the line, the back is behind them, the hat is toward the middle of the field, and the two forwards are ahead and across. When the disc swings to the other sideline, the entire shape rotates. The kite flips to point infield from the new side.</p>
+  <p>When the disc is near the center of the field, the shape looks more like a 2-1-2 diamond — two players behind or level, the hat in the middle, and two players ahead.</p>
+  <p>The key idea: the disc is always on the outside edge of the shape, and the shape always extends infield from the disc toward the center of the available space.</p>
+  </div>
+
+  <div class="section"><div class="section-title">After the Pull</div>
+  <p>When your team receives the pull, the person who picks it up becomes the thrower. Everyone else should immediately move into shape around them. Don't think about which position you "are" — look at where the disc is, look at where your teammates are, and fill the open spot.</p>
+  <p>If the pull goes to the sideline, set up the kite pointing infield. If it goes to the middle, set up the 2-1-2 diamond. The faster your team gets into shape after the pull, the sooner you can start moving the disc.</p>
+  </div>
+
+  <div class="section"><div class="section-title">After a Turnover</div>
+  <p>If the other team drops the disc or throws it away, your team gets possession. Whoever picks it up becomes the thrower. Everyone else sets up shape around them — quickly. In Hex, fast transitions are a weapon. If you can get into shape and start moving the disc before the defense has set up their force, you can score easy points.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Watch Out</div>
+    The biggest mistake after a turnover is everyone running toward the disc. Only one person picks it up. The other four should be getting into shape. If three people crowd the disc, you have zero passing options. Spread out first, then play.
+  </div>
+  </div>
+
+  <div class="section"><div class="section-title">The Rule of Three</div>
+  <p>Here is the single most important spacing rule in 5v5 Hex: <strong>the thrower should be directly connected to exactly three teammates.</strong> The fourth off-disc player should be connected to one of those three — not to the thrower. If all four off-disc players try to get close to the disc, the area around the thrower gets crowded and the defenders have an easy time.</p>
+  <p>Three connections to the thrower. One player extending the chain further out. That's it.</p>
+  </div>
+</div>
+
+
+<!-- ══ 3: PRINCIPLES ══ -->
+<div class="chapter" id="ch-principles">
+  <div class="chapter-number">Chapter 3</div>
+  <div class="chapter-title">Principles — The Rules That Never Change</div>
+
+  <p>Hex has a set of core principles that apply whether you're playing 7v7, 5v5, 3v3, or any other format. These are the rules that make the offense work. If your team follows these principles, the offense runs itself. If your team ignores them, nothing else matters — the plays, the drills, the shape — none of it will help.</p>
+
+  <div class="section"><div class="section-title">When You Have the Disc</div>
+  <table class="ref-table">
+    <tr><th>Principle</th><th>What It Means</th></tr>
+    <tr><td><strong>Take the open pass</strong></td><td>If someone is open, throw to them. Don't wait for a "better" option. Don't hold the disc looking for a long throw when a short one is available. The open pass is always the right pass — regardless of how much yardage it gains, what the stall count is, or who the receiver is.</td></tr>
+    <tr><td><strong>Face infield</strong></td><td>After you catch the disc, turn to face the center of the field so you can see all your teammates. If you're on the sideline, face straight infield — not downfield, not toward the endzone. Seeing all your options is more important than looking at the endzone.</td></tr>
+    <tr><td><strong>Fake honestly</strong></td><td>If you're not sure a throw is open, fake it. A good fake gets the defender to react — they jump, they lean, they shift weight — and that reaction opens up a different throw. But only fake to throws you could actually complete. If you fake to someone who isn't there, the defense doesn't react and you've wasted time.</td></tr>
+    <tr><td><strong>Throw and go</strong></td><td>After you throw, run. Don't just stand there watching. The person you threw to will often look back at you for a return pass — and if you're running, you're open. This is the foundation of the give-and-go, which is the foundation of everything in Hex.</td></tr>
+  </table>
+  </div>
+
+  <div class="section"><div class="section-title">When You Don't Have the Disc</div>
+  <table class="ref-table">
+    <tr><th>Principle</th><th>What It Means</th></tr>
+    <tr><td><strong>Make triangles</strong></td><td>Position yourself so that you form a triangle with the thrower and one other teammate. If you can't see how you fit into a triangle, you're probably in the wrong spot.</td></tr>
+    <tr><td><strong>Don't crowd the disc</strong></td><td>In 5v5, only three of the four off-disc players should be connected to the thrower. If you're the fourth and you drift toward the disc, you're crowding it. Stay connected to the hat or a forward instead.</td></tr>
+    <tr><td><strong>Take what the defender gives you</strong></td><td>If your defender is behind you, cut toward the disc. If they're in front of you, go deep. If they're on your left, go right. Don't fight your defender — take the easy path and signal with your hands where you want the disc.</td></tr>
+    <tr><td><strong>Create space by moving</strong></td><td>Even if you're closely covered and can't get open, you can still help your team by moving. When you move, your defender has to move with you — and that might open up space for a teammate.</td></tr>
+    <tr><td><strong>React to fakes</strong></td><td>When the thrower fakes in your direction, your defender will react. That reaction creates space — but only if you move into it. When you see a fake, change direction.</td></tr>
+    <tr><td><strong>Communicate</strong></td><td>Use your voice. Call out if you're open. Call out if you see a teammate open. Call "no break" or "up" or whatever your team uses. Ultimate without talking is just running.</td></tr>
+  </table>
+  </div>
+
+  <div class="callout key">
+    <div class="callout-label">Dara's Take</div>
+    The most important principle on this list is "take the open pass." I know that sounds too simple. But I played seven years at the highest level of club ultimate, and the single biggest difference between good teams and great teams was willingness to take the easy throw. Bad teams hold the disc looking for the perfect play. Great teams throw to whoever is open and trust the next person to do the same thing. The disc is faster than any defender. Keep it moving.
+  </div>
+</div>
+
+
+<!-- ══ 4: MOVEMENT ══ -->
+<div class="chapter" id="ch-movement">
+  <div class="chapter-number">Chapter 4</div>
+  <div class="chapter-title">Movement — The Decision Tree</div>
+
+  <p>Felix Shardlow created a decision tree that tells you what to do in every situation on the field. It sounds complicated, but it's really just a checklist you run through in your head — and after a few games, it becomes automatic.</p>
+
+  <div class="section"><div class="section-title">When You Have the Disc</div>
+  <p>Run through these questions in order:</p>
+  <ol>
+    <li><strong>Is someone open in front of you?</strong> If yes — throw to them. Then run (throw-and-go) and look for the return pass.</li>
+    <li><strong>Is the person who just threw to you open?</strong> If yes — throw it back to them. This is the give-and-go. Then look for the return pass again.</li>
+    <li><strong>Can you continue the path of the disc?</strong> If the disc came from your left, can you keep it moving to the right? If yes — throw it. Same direction, keep it flowing.</li>
+    <li><strong>If the answer to any of those is "maybe"</strong> — fake, and check again. The fake might turn a "maybe" into a "yes."</li>
+    <li><strong>If the answer to all three is "no"</strong> — face infield toward where the hat should be. You should be able to see all your teammates. Options will open up. Don't panic.</li>
+  </ol>
+  </div>
+
+  <div class="section"><div class="section-title">When You Don't Have the Disc</div>
+  <ol>
+    <li><strong>Am I in good shape?</strong> Check: is the team's kite/diamond roughly intact? If not — move to fill the open position. Do it fast.</li>
+    <li><strong>Can I create useful space for a teammate?</strong> If you see a teammate who could get open if your defender wasn't in the way, move to drag your defender somewhere else.</li>
+    <li><strong>None of the above? Chill.</strong> Don't force it. Don't run around just to look busy. If everyone on your team is following the same decision tree, options will appear. Stay heads-up, stay on your toes, and be ready.</li>
+  </ol>
+  </div>
+
+  <div class="section"><div class="section-title">The Give-and-Go</div>
+  <p>The give-and-go is the most important move in Hex. Here's how it works:</p>
+  <ol>
+    <li>You have the disc. You throw it to a teammate.</li>
+    <li>Immediately after releasing the disc, you run — toward the person you threw to, past them, at an angle, wherever there's space.</li>
+    <li>The person who caught it looks back at you. If you're open, they throw it right back.</li>
+    <li>Now you have the disc again, but you've moved 5-10 yards and your defender is behind you.</li>
+  </ol>
+  <p>The give-and-go works because defenders expect you to stand still after you throw. When you run instead, they're caught off guard. And because Hex keeps everyone spread out, there's usually space for you to run into.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Dribbling</div>
+  <p>Dribbling is what happens when you string multiple give-and-goes together. You throw to player A, run, get it back. Then you throw to player B, run, get it back. Then player A again. The disc is bouncing between you and your teammates like a basketball being dribbled — except you're the one moving, and the disc is just going back and forth between you and the nearest person.</p>
+  <p>Dribbling is hard to defend because the disc is always moving and the player with the disc is always running. The defense can't set up a force because by the time they get in position, you've already thrown and moved. In 5v5, you have fewer teammates to dribble off of, so each one needs to be ready to catch and return the disc quickly.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Inverted Pivot</div>
+  <p>In most offenses, when you catch the disc near the sideline, you pivot toward the sideline and look to swing the disc across the field. The inverted pivot is the opposite: after catching, you immediately look infield for a quick continuation pass — toward the hat or toward the center of the field.</p>
+  <p>This is powerful because the defense expects the sideline swing. When you go infield instead, you're attacking the middle of the field where there's more space and more options.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Negative Space — Throwing Backward on Purpose</div>
+  <p>In traditional offense, throwing backward is a last resort — something you do when the stall count is climbing and you can't find anything downfield. It's a survival move, not an attack.</p>
+  <p>In Hex, throwing backward is a weapon. When you throw to the back position behind you, you're not giving up — you're redirecting the attack. The back player catches the disc and suddenly sees the whole field from a different angle. Defenders who were set up to stop a forward attack are now out of position. The backward pass creates new triangles, new angles, and new chances to score.</p>
+  <p>Don't think of backward throws as negative. Think of them as changing direction. The best Hex teams move the disc forward, backward, sideways — whatever opens up the defense.</p>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    When I coach youth players, the hardest thing to teach them is that throwing backward is good. They've been told their whole life to get the disc closer to the endzone. But the disc doesn't care which direction it goes — it moves at the same speed in every direction. A backward throw that keeps the disc moving is infinitely better than holding the disc for five seconds looking for a forward throw that isn't there. Trust the system. Throw it back. The forward options will open up.
+  </div>
+  </div>
+
+  <div class="section"><div class="section-title">Scoring</div>
+  <p>In Hex, goals happen two ways. First, from a deep throw — someone gets open with space behind them and the thrower puts it out there. Second, from sustained flow — the disc moves quickly through a series of give-and-goes and the defense gets pulled apart until someone is standing in the endzone uncovered.</p>
+  <p>When your team is close to the endzone, scoring gets harder because the defenders have less space to cover. The deep throw is no longer a threat because there's no deep space. If you stall out near the endzone, the best move is to flow the disc <em>backward</em> — away from the endzone — until the defenders are pulled out of it. Then attack again. This feels wrong, but it works. Moving away from the endzone to create space is smarter than trying to force the disc into a crowded endzone.</p>
+  </div>
+</div>
+
+
+<!-- ══ 5: HOW HEX CHANGES AT 5v5 ══ -->
+<div class="chapter" id="ch-five">
+  <div class="chapter-number">Chapter 5</div>
+  <div class="chapter-title">How Hex Changes at 5v5</div>
+
+  <p>Everything in the previous chapters applies to both 7v7 and 5v5. But playing with five instead of seven does change some things. This chapter covers what's different and what it means for how you play.</p>
+
+  <div class="section"><div class="section-title">More Space Per Player</div>
+  <p>Youth 5v5 is typically played on a smaller field than adult 7v7 — exact dimensions vary by league, but something around 50-55 yards long by 25 yards wide is common for U14 play. Even on this smaller field, you have more space per player because there are fewer people. In 7v7 with 14 players on the field, the field is crowded. In 5v5 with 10, there's noticeably more room to work with. This means cuts can be bigger, passing lanes are wider, and a fast player can find a lot of open grass if they read the field well.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Deep Throw Is Stronger</div>
+  <p>With only five defenders on the field, it's much harder for the defense to cover both the short game and the deep game at the same time. In 7v7, there are usually two defenders in the deep space who can help out. In 5v5, there might only be one — and if they get pulled forward by a fake or a cut, the deep space is completely empty.</p>
+  <p>This means your team should always have someone threatening the deep space, even if they don't get the disc. Just being downfield and running forces a defender to stay back there, which opens up the short game for everyone else.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Every Player Must Do Everything</div>
+  <p>In 7v7 Hex, there are already no fixed handler/cutter roles. In 5v5, this is even more extreme. With only five players, there's no room for a specialist who only catches deep throws, or a player who only handles the disc in the backfield. Every player needs to be able to throw, catch, cut, reset, and play the hat position. If even one player on your team can only do one thing, the defense will figure it out and shut it down.</p>
+  <p>The good news is that playing Hex builds these skills naturally. By the time you've played a season of 5v5 Hex, every player on your team will be more versatile than they would be in any other system.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Hat Is Even More Important</div>
+  <p>In 7v7, if the hat drifts out of position, the wings and the second row of forwards can compensate. The shape has redundancy. In 5v5, there is no redundancy. The hat is the only position that links the back of the offense to the front. If nobody is playing the hat, you have two disconnected groups — the thrower and the back on one side, and the two forwards on the other — with no way to move the disc between them.</p>
+  <p>This means the hat position needs to be filled at all times. It doesn't have to be the same person — players should cycle through the hat constantly. But someone must always be there.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Dara's Take</div>
+    In 5v5, I'd tell my players: if you look around and nobody is in the hat, that's you. Don't wait for someone else to fill it. Just go. The hat is the most unselfish position on the field — you're not usually the one scoring, but you're the one making every score possible.
+  </div>
+  </div>
+
+  <div class="section"><div class="section-title">Shape Maintenance Is Harder</div>
+  <p>With only five players, the shape deforms faster when people move. In 7v7, if one player cuts out of position, there are still six others holding the shape. In 5v5, one player moving leaves only three players plus the thrower trying to maintain three triangles. It falls apart fast.</p>
+  <p>The fix is awareness and urgency. When you see the shape getting stretched or lopsided, move to fix it. Don't wait for a whistle or a call — just go fill the gap. And when you cut, be aware that you're leaving a hole. If your cut doesn't result in getting the disc within a few seconds, get back into shape quickly.</p>
+  </div>
+
+  <div class="section"><div class="section-title">7v7 vs 5v5 Comparison</div>
+  <table class="ref-table">
+    <tr><th>Element</th><th>7v7 Hex</th><th>5v5 Hex</th></tr>
+    <tr><td><strong>Shape</strong></td><td>Hexagon (2-3-2)</td><td>Kite/Diamond (1-2-2 or 2-1-2)</td></tr>
+    <tr><td><strong>Triangles</strong></td><td>6 overlapping</td><td>3 overlapping</td></tr>
+    <tr><td><strong>Hat role</strong></td><td>Important</td><td>Critical — only link between back and front</td></tr>
+    <tr><td><strong>Deep threat</strong></td><td>Useful but defended</td><td>Very powerful — fewer defenders deep</td></tr>
+    <tr><td><strong>Role specialization</strong></td><td>None (Hex principle)</td><td>Even less — impossible to specialize</td></tr>
+    <tr><td><strong>Shape recovery</strong></td><td>Forgiving — redundancy</td><td>Unforgiving — must be fast</td></tr>
+    <tr><td><strong>Dribbling targets</strong></td><td>Up to 3 nearby bounce partners</td><td>Typically 2 nearby bounce partners</td></tr>
+    <tr><td><strong>Connections to thrower</strong></td><td>3 (Rule of Three applies too)</td><td>3 (4th player connects to non-thrower)</td></tr>
+  </table>
+  </div>
+</div>
+
+
+<!-- ══ 6: COMMON MISTAKES ══ -->
+<div class="chapter" id="ch-mistakes">
+  <div class="chapter-number">Chapter 6</div>
+  <div class="chapter-title">Common Mistakes and How to Fix Them</div>
+
+  <p>Every team that learns Hex makes the same mistakes at first. Knowing about them in advance won't stop you from making them — but it will help you recognize them faster and fix them sooner.</p>
+
+  <table class="ref-table">
+    <tr><th>Mistake</th><th>What's Happening</th><th>How to Fix It</th></tr>
+    <tr><td><strong>Everyone floods downfield</strong></td><td>All four off-disc players push toward the endzone. Nobody is behind the disc. The thrower has zero reset options.</td><td>Two players must always be behind or level with the disc. If you're one of the forwards and you see both back positions empty, stop and fill one — even if it feels like you're going the wrong way.</td></tr>
+    <tr><td><strong>Crowding the disc</strong></td><td>Three or four players cluster around the thrower. The thrower is surrounded. All the passing options are short and covered.</td><td>Rule of Three: only three off-disc players should be connected to the thrower. If you're the fourth, move away and connect to the hat or a forward instead.</td></tr>
+    <tr><td><strong>Holding the disc too long</strong></td><td>The thrower sees a "maybe" option and waits for it to become a "yes" instead of faking or throwing to someone else. The stall count climbs.</td><td>If it's not a clear "yes," fake and check again. If nothing opens up by stall 5, throw to the back position or the hat. Living to throw another pass is better than a stall-out.</td></tr>
+    <tr><td><strong>Cutting without reading</strong></td><td>A player sprints into a space that's already occupied by a teammate. Two offensive players end up in the same area, which makes it easy for one defender to cover both.</td><td>Before you cut, look. Is the space you want to cut into empty? Is a teammate already going there? If someone is already moving to that spot, go somewhere else — the spot they left is now open.</td></tr>
+    <tr><td><strong>Standing still after throwing</strong></td><td>The thrower releases the disc and plants their feet. They don't run. They miss the give-and-go opportunity. The offense slows down.</td><td>Throw and go. Every time. Even if you don't get the disc back, running after you throw keeps the defense off-balance and opens space for the next play.</td></tr>
+    <tr><td><strong>Nobody in the hat</strong></td><td>The hat position is empty. The front of the offense is disconnected from the back. The disc can't move from the thrower/back to the forwards.</td><td>If you look around and nobody is in the hat, go there. Don't wait. The hat is everyone's responsibility.</td></tr>
+    <tr><td><strong>Stagnation near the endzone</strong></td><td>The team is within 10 yards of scoring and nobody can get open because the defenders have almost no space to cover.</td><td>Flow backward. Move the disc away from the endzone until the defenders are pulled out of it. Then re-attack with flow or a deep throw. Going backward to go forward is not a mistake — it's the plan.</td></tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    When I coach youth and I see the shape falling apart, I stop the point and ask everyone to freeze. Then I say: "Who's in the hat?" Usually the answer is nobody. Then I say: "Who's behind the disc?" Usually nobody. Those two positions — hat and back — are the ones kids forget because they don't feel exciting. But they're the positions that make everything else work. If in doubt about where to go, fill the hat or fill the back.
+  </div>
+</div>
+
+
+<!-- ══ 7: DEFENSE — FLEX FOR FIVE ══ -->
+<div class="chapter" id="ch-defense">
+  <div class="chapter-number">Chapter 7</div>
+  <div class="chapter-title">Defense — Flex for Five</div>
+
+  <p>Hex has a defensive partner called Flexagon, or "Flex" for short. Flex was also created by Felix Shardlow, and it's designed to counter the kind of fast-moving, spread-out offense that Hex produces. But it works against any offense.</p>
+
+  <div class="section"><div class="section-title">What Flex Is</div>
+  <p>Flex is a hybrid between man-to-man defense and zone defense. In regular man defense, each defender guards one specific offensive player. In zone defense, each defender guards an area of the field. Flex combines them: every offensive player has a defender near them, but the defenders work together as a team — switching, helping, and communicating constantly.</p>
+  <p>The key idea is that Flex is not "my player" defense. It's "our area" defense. You start by guarding someone, but if the offense moves and your teammate is better positioned to cover your player, you switch. If two offensive players cluster together, two defenders surround them instead of both chasing the same person.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Force</div>
+  <p>One defender marks the thrower and puts on a "force" — standing in a position that makes it hard for the thrower to throw in one direction, which pushes them to throw the other way. In Flex for 5v5:</p>
+  <ul>
+    <li>When the disc is near the <strong>sideline</strong>, force toward the sideline. This traps the thrower against the line and gives your teammates on the open side a better chance to make plays.</li>
+    <li>When the disc is near the <strong>middle of the field</strong>, force toward the middle. This sounds backward, but it works: when you force middle, the thrower's hardest throws go to the sidelines — and your teammates can position themselves on each shoulder of the thrower, covering the most dangerous inside lanes while the sideline throws are long and contested.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Switching</div>
+  <p>Switching is the core skill of Flex defense. When two offensive players cross paths — running toward each other or past each other — their two defenders switch who they're guarding. Instead of both defenders chasing their own player through the tangle, the defenders essentially trade assignments.</p>
+  <p>Switching saves energy and prevents the offense from using crossing patterns to shake free. But it only works if both defenders communicate. The defender who sees the switch coming calls it out: "Switch!" or "I've got yours!" or whatever word your team uses. If you don't talk, you'll either both switch (leaving someone else open) or neither switch (leaving the crosser wide open).</p>
+  </div>
+
+  <div class="section"><div class="section-title">Surrounding</div>
+  <p>If two or three offensive players cluster together — maybe they're trying to set up a stack or a pick play — the defenders don't follow them into the cluster. Instead, they surround it. Two defenders position themselves on opposite sides of the group, covering the most likely exit routes. This turns the offense's cluster into a trap rather than an advantage.</p>
+  <p>In 5v5, clustering happens less often because there are fewer players. But when it does — especially near the endzone — surrounding is the right response.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Communication Is Non-Negotiable</div>
+  <p>Flex does not work without communication. Every switch needs a call. Every screen or crossing pattern needs a heads-up. Every deep threat needs a warning. If your team is playing Flex defense in silence, you are not playing Flex — you are just playing bad man defense with occasional accidental switches.</p>
+  <p>Some useful calls:</p>
+  <ul>
+    <li><strong>"Switch!"</strong> — Two defenders trading assignments.</li>
+    <li><strong>"No switch!"</strong> — You're staying on your player, don't trade.</li>
+    <li><strong>"Strike!" or "Up!"</strong> — The disc is in the air.</li>
+    <li><strong>"Last back!"</strong> — You are the deepest defender; nobody is behind you.</li>
+    <li><strong>"No break!"</strong> — Reminding the mark to hold the force.</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="callout-label">Talk or Die</div>
+    I'm not being dramatic. Defense in ultimate without communication is five people running around independently, each hoping someone else will cover the open player. Flex defense is about teamwork — and teamwork requires talking. It feels weird at first. Do it anyway. The team that talks more wins more.
+  </div>
+  </div>
+
+  <div class="section"><div class="section-title">Defending Hex Specifically</div>
+  <p>When the other team is playing Hex, they'll be moving the disc quickly and trying to dribble through your defense with give-and-goes. Here's how to counter it:</p>
+  <table class="ref-table">
+    <tr><th>They're Doing This</th><th>You Do This</th></tr>
+    <tr><td>Give-and-go (thrower releases and runs)</td><td>The defender on the thrower must stay with them after the throw. Don't ball-watch. Your job is the person, not the disc.</td></tr>
+    <tr><td>Dribbling (quick bounces between 2-3 players)</td><td>Force them to go sideways, not forward. Contain their progress. They'll eventually throw a risky pass or the stall count will catch up.</td></tr>
+    <tr><td>Inverted pivot (catching on the sideline and immediately going infield)</td><td>Defenders on the open side need to be ready for this. Don't cheat toward the sideline swing — protect the infield lane.</td></tr>
+    <tr><td>Backward pass to the back position</td><td>Don't relax when the disc goes backward. The back player is about to swing the disc to the other side of the field. Get into position now.</td></tr>
+    <tr><td>Deep shot after a few quick passes</td><td>The deepest defender must always be aware. After three or four quick short passes, the deep throw is coming. Stay disciplined.</td></tr>
+  </table>
+  </div>
+</div>
+
+
+<!-- ══ 8: DRILLS & PRACTICE ══ -->
+<div class="chapter" id="ch-drills">
+  <div class="chapter-number">Chapter 8</div>
+  <div class="chapter-title">Drills &amp; Practice</div>
+
+  <div class="section"><div class="section-title">How to Introduce Hex</div>
+  <p>Felix Shardlow recommends teaching Hex through a play progression: start small and build up. The progression goes 2v2, then 3v3, then 4v4, then full 5v5. At each step, you add one focus point. By the time players get to 5v5, they've already practiced the key principles in simpler situations.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Progression</div>
+  <table class="ref-table">
+    <tr><th>Game</th><th>Focus</th><th>How It Works</th></tr>
+    <tr><td><strong>2v2</strong></td><td>Take the open pass</td><td>Two small teams on a narrow mini-field. Players learn to take the lateral pass when the defender gives it, and to lead pass forward when the defender takes the lateral away. Keep it simple: throw to whoever is open.</td></tr>
+    <tr><td><strong>3v3</strong></td><td>Make triangles</td><td>Three per side on a slightly wider field. Players set up in a triangle shape and try to keep the triangle intact while moving the disc. First time they experience the triangle as a structure.</td></tr>
+    <tr><td><strong>4v4</strong></td><td>Don't surround the disc + the hat position</td><td>Four per side. Now there are enough players to form multiple triangles. Introduce the hat concept: one player stays central, connecting the front and back triangles. Players learn that crowding the disc breaks the offense.</td></tr>
+    <tr><td><strong>5v5</strong></td><td>Full shape + give-and-go</td><td>Full team. Set up the kite shape after the pull. Encourage throw-and-go on every pass. Stop the game when shape breaks down badly and let players reposition before continuing.</td></tr>
+  </table>
+  </div>
+
+  <div class="section"><div class="section-title">Keepdisc</div>
+  <p><strong>Players:</strong> 5v5 (or 4v4). <strong>Field:</strong> Half-field including one endzone. <strong>Focus:</strong> Possession and shape.</p>
+  <p>The offense tries to keep the disc as long as possible without scoring. Turnover switches possession. The goal is not to advance — it's to keep the disc moving and maintain shape. Use a stall count of 6 (faster than normal) to force quick decisions. This is the single best exercise for learning Hex shape because it removes the temptation to hero-throw toward the endzone and forces players to focus on short passes and spacing.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Give-Go-Swill</div>
+  <p><strong>Players:</strong> 5–8. <strong>Setup:</strong> Four or five players stand in a zigzag line about 8 yards apart. One active player starts at one end with the disc and a defender. <strong>Focus:</strong> Give-and-go moves and misdirection.</p>
+  <p>The active player works the disc from one end of the line to the other using give-and-goes off the stationary players. Rules: you can only throw to a player you're "connected" to (within one triangle), and the stationary players can't pass to each other. When the disc reaches the far end, the last player throws a long floaty pass (a "swill") back to the start, and the active player and defender both chase it. This drill teaches players how to use give-and-goes to beat a defender without needing a big cut.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Triangle Rotation</div>
+  <p><strong>Players:</strong> 3 (plus optional defender). <strong>Setup:</strong> Three players in a triangle, about 8 yards apart. <strong>Focus:</strong> Cutting patterns and triangle maintenance.</p>
+  <p>Player A throws to Player B on the break side. Player C, who started deep, cuts under to the open side. Player B throws deep to the now-open deep space (which Player A vacated by cutting across after their throw). The triangle rotates: the break-side pass triggers a rotation where each player moves to the next position. Add a defender to make it realistic. This drill teaches the fundamental triangle cutting pattern that drives Hex flow.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Dribble Slalom</div>
+  <p><strong>Players:</strong> 4–5. <strong>Setup:</strong> Three or four players stand in a line about 7 yards apart. One "dribbler" starts at one end with the disc. <strong>Focus:</strong> Dribbling technique and balance.</p>
+  <p>The dribbler works the disc down the line by throwing to each player and immediately getting it back — a give-and-go with every player. The stationary players are "posts" — they catch and immediately return the disc. The dribbler must maintain balance and control while catching, pivoting, and throwing at speed. Time it and compete. This drill builds the footwork and quick-release throwing that makes dribbling work in games.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Running Your First Hex Practice</div>
+  <p>If you're a coach or captain introducing Hex for the first time, here's a simple 90-minute session plan:</p>
+  <ol>
+    <li><strong>0–15 min:</strong> Warm up. Throwing pairs, then a quick round of 3v3 keep-away with no teaching — just play.</li>
+    <li><strong>15–25 min:</strong> Explain the kite shape. Mark it out with cones. Walk everyone through the five positions. Answer questions.</li>
+    <li><strong>25–35 min:</strong> 2v2 games. Focus: take the open pass.</li>
+    <li><strong>35–45 min:</strong> 3v3 games. Focus: make triangles.</li>
+    <li><strong>45–55 min:</strong> Give-Go-Swill drill or Dribble Slalom.</li>
+    <li><strong>55–80 min:</strong> Full 5v5 scrimmage. Blow the whistle when shape breaks down. Freeze everyone, let them see the shape, reposition, then continue.</li>
+    <li><strong>80–90 min:</strong> Cool down. Ask everyone what they noticed. What felt different from their usual offense?</li>
+  </ol>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    Don't over-explain on day one. Kids learn Hex by playing it, not by listening to someone talk about it. Give them the shape, give them the three biggest principles — take the open pass, make triangles, throw and go — and then let them play. Stop them when the shape breaks. Let them fix it. Then play again. They'll figure out more in one scrimmage than in an hour of diagrams.
+  </div>
+  </div>
+</div>
+
+
+<!-- ══ REFERENCES ══ -->
+<div class="chapter" id="ch-refs">
+  <div class="chapter-number">References</div>
+  <div class="chapter-title">References</div>
+
+  <table class="ref-table">
+    <tr><th>#</th><th>Source</th></tr>
+    <tr><td>1</td><td>Shardlow, Felix. "Hexagon Offence v2.34." Hive Ultimate, 2021. <em>hiveultimate.com</em></td></tr>
+    <tr><td>2</td><td>Shardlow, Felix. "Hexagon Offence v2.1." Push Pass Productions, 2014. <em>pushpass.co.uk</em></td></tr>
+    <tr><td>3</td><td>Iani, Valerio and Laura Cincotta. "Hexagon, the Bestagon: A Look Inside the Hex Offense." Ultiworld, January 28, 2021.</td></tr>
+    <tr><td>4</td><td>Shardlow, Felix. "Hex Movement Decision Tree." Hive Ultimate, 2018. <em>archive.hiveultimate.com</em></td></tr>
+    <tr><td>5</td><td>"Training Hex Offence with your team." Ultimate Rob / Hive Ultimate, 2016/2021. <em>ultimaterob.com / hiveultimate.com</em></td></tr>
+    <tr><td>6</td><td>Shardlow, Felix. "Flexagon Defence — Basics, Advanced, Videos, Training." Hive Ultimate. <em>hiveultimate.com</em></td></tr>
+    <tr><td>7</td><td>"Flexagon Defence." Push Pass Productions / Ultimate Rob. <em>pushpass.co.uk / ultimaterob.com</em></td></tr>
+    <tr><td>8</td><td>"How to Train Hex series." Hive Ultimate. <em>hiveultimate.com</em></td></tr>
+  </table>
+
+  <div class="callout note">
+    <div class="callout-label">Operator Note</div>
+    <p>The 5v5 adaptation in this document — the kite shape, the hat-as-linchpin analysis, the tactical implications of fewer players — is original analysis built on top of Shardlow's stated principle that Hex works with fewer players. Shardlow's documentation includes brief mentions of 5v5 as a training format but does not provide a dedicated 5v5 shape specification. The kite/diamond geometry and the "Rule of Three" framing are derived from first principles applied to the Hex framework. Strategic commentary from Dara Tehrani reflects the perspective of a Loop MMT Advisory Board member and is written in character.</p>
+  </div>
+</div>
+
+
+</main>
+</div>
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>Hex for Five Knowledge Pack · v1</span>
+  <span>© 2026 Shea Gunther · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script>
+function setSkin(id){document.body.className='skin-'+id;try{localStorage.setItem('loop-mmt-hex5-skin',id);}catch(e){}document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));}
+document.addEventListener('DOMContentLoaded',()=>{
+  let s='og';try{s=localStorage.getItem('loop-mmt-hex5-skin')||'og';}catch(e){}setSkin(s);
+  const ch=document.querySelectorAll('.chapter,.section[id]');
+  const tl=document.querySelectorAll('.toc-list a');
+  const ob=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;tl.forEach(l=>l.classList.remove('active'));const a=document.querySelector('.toc-list a[href="#'+id+'"]');if(a)a.classList.add('active');}});},{rootMargin:'-80px 0px -60% 0px'});
+  ch.forEach(c=>ob.observe(c));
+});
+</script>
+</body></html>

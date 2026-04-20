@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun, Whimsy, and Weird (and Chaos) — Knowledge Pack v2.1</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--filter:#006888;--signal:#c01848;--present:#7040a0;--workflow:#2868b0;--bus-data:#6030c0;--bus-vault:#006830;--bus-signal:#c01848;--bus-sync:#1060b0;--font:'Courier New','Consolas',monospace;--max-w:820px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--callout-note-bg:#f0f0f8;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--filter:#00ddff;--signal:#ff4488;--present:#cc88ff;--workflow:#44aaff;--bus-data:#a060ff;--bus-vault:#33ff44;--bus-signal:#ff4488;--bus-sync:#44aaff;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--filter:#007898;--signal:#b01040;--present:#6030a0;--workflow:#1858a0;--bus-data:#5828b0;--bus-vault:#007030;--bus-signal:#b01040;--bus-sync:#0060c0;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}
+  .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .doc-title{text-align:right;}
+  .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}
+  .doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;}
+  .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;transition:border-color .1s,color .1s,background .1s;}
+  .skin-btn:hover{border-color:var(--fg);color:var(--fg);}
+  .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .body-wrap{display:flex;max-width:1200px;margin:0 auto;}
+  .toc-sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto;padding:32px 0 32px 32px;border-right:1px solid var(--border2);font-family:var(--font);}
+  .toc-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px;}
+  .toc-list{list-style:none;}
+  .toc-list li{margin-bottom:2px;}
+  .toc-list a{font-size:11px;letter-spacing:.5px;color:var(--fg-dim);text-decoration:none;display:block;padding:3px 6px;border-left:2px solid transparent;transition:color .1s,border-color .1s;}
+  .toc-list a:hover{color:var(--fg);border-left-color:var(--border);}
+  .toc-list a.active{color:var(--fg);border-left-color:var(--accent);}
+  .toc-list .toc-sub a{font-size:10px;padding-left:14px;opacity:.75;}
+  .toc-list .toc-sub a:hover{opacity:1;}
+  .toc-sep{border:none;border-top:1px solid var(--border2);margin:8px 6px;}
+  .content{flex:1;min-width:0;padding:48px 64px 96px 48px;max-width:var(--max-w);}
+  .chapter{margin-bottom:64px;scroll-margin-top:100px;}
+  .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:6px;}
+  .section{margin:32px 0;scroll-margin-top:100px;}
+  .section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:16px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}
+  code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  pre{background:var(--code-bg);padding:14px 16px;font-family:var(--font);font-size:13px;line-height:1.6;overflow-x:auto;margin:16px 0;border-left:3px solid var(--border2);}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}
+  .callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}
+  .callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}
+  .callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}
+  .callout.phi{background:var(--panel);border-left-color:var(--accent);font-style:italic;}
+  .callout.note{background:var(--callout-note-bg);border-left-color:var(--filter);}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .callout.tip .callout-label{color:var(--vault);}
+  .callout.warn .callout-label{color:var(--compute);}
+  .callout.key .callout-label{color:var(--working);}
+  .callout.phi .callout-label{color:var(--accent);}
+  .callout.note .callout-label{color:var(--filter);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}
+  .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .ref-table tr:last-child td{border-bottom:none;}
+  .ref-table td:first-child{font-family:var(--font);font-size:13px;color:var(--fg-dim);white-space:nowrap;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}
+  .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}
+  .ref-list{list-style:none;margin:0;padding:0;font-size:15px;line-height:1.6;}
+  .ref-list li{margin-bottom:8px;padding-left:2em;text-indent:-2em;}
+  .page-footer{max-width:1200px;margin:0 auto;padding:20px 64px 48px 320px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);border-top:1px solid var(--border2);display:flex;justify-content:space-between;}
+  @media(max-width:900px){.toc-sidebar{display:none;}.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}.page-footer{padding:20px 24px 48px;}}
+</style>
+</head>
+<body class="skin-og">
+
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title">
+      <div class="title-main">Knowledge Pack</div>
+      <div class="build-tag">v2.1 · 12 April 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+<nav class="toc-sidebar" id="toc">
+  <div class="toc-title">FWW(C) Knowledge Pack</div>
+  <ul class="toc-list">
+    <li><a href="#ch-abstract">About This Pack</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-what">1 · What FWW(C) Is</a>
+      <ul class="toc-sub">
+        <li><a href="#s-four-components">The Four Components</a></li>
+        <li><a href="#s-parenthetical">The Parenthetical</a></li>
+        <li><a href="#s-floor-ceiling">Floor and Ceiling</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-why">2 · Why It Works</a>
+      <ul class="toc-sub">
+        <li><a href="#s-incongruity">Incongruity &amp; Surprise</a></li>
+        <li><a href="#s-bvt">Benign Violation Theory</a></li>
+        <li><a href="#s-clt">Cognitive Load</a></li>
+        <li><a href="#s-play">Play as Foundation</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-contrast">3 · Contrast</a></li>
+    <li><a href="#ch-entropy">4 · Anti-Entropy</a></li>
+    <li><a href="#ch-beyond">5 · Beyond Documents</a></li>
+    <li><a href="#ch-failures">6 · Failure Modes</a>
+      <ul class="toc-sub">
+        <li><a href="#s-violation-no-benign">Violation Without Benign</a></li>
+        <li><a href="#s-benign-no-violation">Benign Without Violation</a></li>
+        <li><a href="#s-glitter">The Glitter Test</a></li>
+        <li><a href="#s-superiority">Superiority-Based Humor</a></li>
+        <li><a href="#s-forced">Forced Whimsy</a></li>
+        <li><a href="#s-over-formal">Over-Formalization</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-patterns">7 · The Pattern Registry</a>
+      <ul class="toc-sub">
+        <li><a href="#s-aside">The Aside</a></li>
+        <li><a href="#s-naming">The Naming</a></li>
+        <li><a href="#s-character">The Character Moment</a></li>
+        <li><a href="#s-metaphor">The Earned Metaphor</a></li>
+        <li><a href="#s-forward-ref">The Forward Reference</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-board">9 · Board Connection</a></li>
+    <li><a href="#ch-usage">10 · Using This Pack</a></li>
+    <li><a href="#ch-refs">11 · References</a></li>
+  </ul>
+</nav>
+
+<main class="content">
+<div class="abstract-box" id="ch-abstract">
+  <div class="abstract-label">About This Pack</div>
+  <p>FWW(C) — Fun, Whimsy, and Weird (and Chaos) — is Loop MMT's engagement ceiling, orthogonal to Fix by Design's failure floor. Where FBD asks "how do we make doing it wrong impossible," FWW(C) asks "how do we make doing it right feel like something you'd choose to do again."</p>
+  <p>This pack provides the theoretical foundations for FWW(C): why it works, what it is made of, how it fails, and where it applies. It draws on humor theory, cognitive load research, play theory, thermodynamics, information theory, and design principles to establish that FWW(C) is not decoration. It is a structural property of systems that sustain engagement over time.</p>
+  <p>The pack was produced because FWW(C) formalization had been deferred five times across Sessions 42–48. The consolidated report from April 7–10 called this "avoidance, not deferral." Session 49 stopped avoiding.</p>
+  <p><strong>v2 → v2.1 (Session 53 self-review):</strong> Removed three orphaned references (Freud, Spencer, Hu et al.), cleaned Section 9 production note, updated stale cross-reference to Forge amendment.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: WHAT FWW(C) IS                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-what">
+  <div class="chapter-number">Section 1</div>
+  <div class="chapter-title">What FWW(C) Is</div>
+
+  <p>FWW(C) is not a tone. It is not an instruction to "make it fun." It is a design principle: the deliberate introduction of contrast into otherwise uniform-register material so that the material remains engaging across its full length.</p>
+
+  <p>The key word is <em>contrast</em>. A document that is uniformly playful has the same engagement problem as a document that is uniformly dry — both flatten into a single register, and the reader's attention habituates. FWW(C) is what happens at the boundary between registers: the moment where a dense technical argument pauses for one sentence of perspective, where a formal protocol names itself something slightly absurd, where a knowledge pack about thermodynamics mentions a cat sitting on a document. Your brain is running a prediction model right now — it has been since the first sentence. Every time the next phrase matches what the model expected, attention thins. Every time it doesn't, attention spikes. By the time you reach Section 3, you will know the name of the mathematician who proved why.</p>
+
+  <p>FWW(C) was not invented by the methodology. It was recovered from the operator's native patterns during Session 35, when the board noticed that the most effective documents in the corpus shared a quality none of the standards had named. The naming made it visible. The formalization made it reproducible. But the pattern preceded both.</p>
+
+  <div class="section" id="s-four-components">
+    <div class="section-title">The Four Components</div>
+
+    <p><strong>Fun</strong> is the baseline. Does interacting with this artifact feel good? Not good in the sense of pleasant or easy — good in the sense of "I would choose to keep reading." Fun is the simplest and most dangerous of the four, because it is the easiest to fake. A smiley face in a margin is not fun. A protocol that makes you want to run it is fun.</p>
+
+    <p><strong>Whimsy</strong> is the unexpected turn. A phrase that doesn't belong and therefore does. An analogy drawn from a domain so far from the subject that the distance itself illuminates something. Whimsy is what humor theorists call incongruity — a violation of the reader's prediction about what comes next. The violation is the point. It forces the brain to re-engage with material it was beginning to process on autopilot.</p>
+
+    <p><strong>Weird</strong> is the uncomfortable edge. Where whimsy delights, weird unsettles — productively. The moment that makes you pause, the edge case that reframes the center, the question nobody asked that turns out to be the only question that matters. Weird is higher-risk than whimsy because it requires the reader to sit with discomfort rather than resolve it into a smile. When it works, it produces the deepest engagement of the four. When it fails, it produces confusion.</p>
+
+    <p><strong>Chaos</strong> is discussed below. Or possibly it isn't. That depends on whether you believe a parenthetical can hold something that refuses to be held.</p>
+  </div>
+
+  <div class="section" id="s-parenthetical">
+    <div class="section-title">The Parenthetical</div>
+
+    <p>Chaos is in parentheses for a reason. It operates under different rules.</p>
+
+    <p>Fun, Whimsy, and Weird are visible in the output. A reader can point to a sentence and say "that's the whimsy." Chaos is not visible. It is the internal orientation that allows the other three to exist — the willingness to follow a productive tangent, to let a protocol name itself something strange, to spend one sentence on something that has no business being there and is better for it.</p>
+
+    <p>The rule: Chaos is always present, always considered internally, never stated in the output. You do not label a moment as chaotic. You do not announce that you are being chaotic. The moment you name the chaos, you have domesticated it into whimsy. Chaos is the thing that keeps whimsy from becoming a formula.</p>
+
+    <p>Operationally, (C) is the awareness that rigidity kills. Not randomness — the disciplined refusal to let a system become so orderly that it stops being alive. A methodology with FWW but no (C) will eventually reduce fun to a checklist, whimsy to a template, and weird to a scheduled disruption. The parenthetical prevents that. It is the only structural element in the methodology that works by refusing to be structural.</p>
+
+    <div class="callout key">
+      <div class="callout-label">Key Concept</div>
+      <p>The parenthetical is not optional. It is not a lesser version of Chaos. It is a structural constraint: Chaos operates only when unnamed. The parentheses are not punctuation — they are a containment protocol.</p>
+    </div>
+  </div>
+
+  <div class="section" id="s-floor-ceiling">
+    <div class="section-title">Floor and Ceiling</div>
+
+    <p>Loop MMT operates between two bounds. Fix by Design sets the failure floor — the level below which a document cannot fall because the failure modes have been made structurally impossible. FWW(C) sets the engagement ceiling — the level above which a document becomes actively compelling rather than merely correct.</p>
+
+    <p>The two are orthogonal. A document can have perfect FBD compliance and zero FWW(C) — correct, complete, and nobody will read it twice. A document can have brilliant FWW(C) and broken FBD — engaging, memorable, and wrong. Neither substitutes for the other. The goal is both: a document that cannot fail <em>and</em> that people choose to engage with. The architectural equivalent is a building that meets code and also makes you want to walk through the door.</p>
+
+    <p>The relationship is captured in the Writing Standards v5 budget table, which assigns FWW(C) density by document type. The budget is a contrast specification: how much register variation does this document type need to sustain engagement across its length?</p>
+
+    <table class="ref-table">
+      <tr><th>Document Type</th><th>FWW(C) Budget</th><th>Rationale</th></tr>
+      <tr><td>Spec / Schema</td><td>0</td><td>Precision is the engagement mechanism</td></tr>
+      <tr><td>Protocol</td><td>2–4</td><td>Short, procedural; naming carries the load</td></tr>
+      <tr><td>Knowledge Pack</td><td>8–12</td><td>Dense, long; contrast sustains attention</td></tr>
+      <tr><td>Whitepaper / Narrative</td><td>12–16</td><td>Argument-driven; engagement is structural</td></tr>
+      <tr><td>Board Report / EOD</td><td>4–8</td><td>Operational; character voice provides natural FWW</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: WHY IT WORKS                                    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-why">
+  <div class="chapter-number">Section 2</div>
+  <div class="chapter-title">Why It Works</div>
+
+  <p>FWW(C) is not an aesthetic preference. Its mechanisms are well-established across humor theory, cognitive science, play theory, and information theory. Each domain explains a different piece — incongruity explains <em>what</em> happens in the reader's brain, BVT explains <em>when</em> it works, CLT explains <em>why</em> it helps, and play theory explains what it <em>is</em>. And critically, each domain predicts exactly how it fails. The predictions are testable. Some of them will be tested on you before this section ends.</p>
+
+  <div class="section" id="s-incongruity">
+    <div class="section-title">Incongruity &amp; Information-Theoretic Surprise</div>
+
+    <p>Incongruity theory — the dominant theory of humor since Kant (1790) and Schopenhauer (1844) — holds that humor arises from the perception of a mismatch between expectation and reality. The brain continuously predicts what comes next. When the prediction fails in a safe context, the result is humor, or more broadly, heightened attention.</p>
+
+    <p>This maps directly to Shannon's information theory (1948). The information content of a message is proportional to its unexpectedness. A fully predicted signal carries zero information; a surprising one carries maximum information. This is not metaphor — it is the same mathematical framework. When a dense technical document shifts register for one sentence, that sentence carries disproportionate information <em>for the reader's engagement system</em>. The brain is evolutionarily wired to attend to surprise: unexpected stimuli may be threats or opportunities. FWW(C) exploits this wiring.</p>
+
+    <p>Comedians use the rule of three: two items to establish a pattern, one to break it. The pattern-breaking item is funny because it violates the prediction. It is also the item the audience remembers. In a Knowledge Pack, the same mechanism operates when technical precision gives way to a single sentence of unexpected perspective. The reader was predicting more precision. The prediction fails. Attention spikes. Section 3 will show you what happens when a composer weaponizes this mechanism in a symphony — and what a mathematician born two centuries later proved about why it works.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">Phi</div>
+      <p>Incongruity IS information-theoretic surprise applied to cognitive pattern matching. The mechanism that makes jokes funny is the same mechanism that makes FWW(C) moments attention-holding. Same math, different domain.</p>
+    </div>
+  </div>
+
+  <div class="section" id="s-bvt">
+    <div class="section-title">Benign Violation Theory</div>
+
+    <p>McGraw and Warren (2010), building on Veatch (1998), proposed three conditions for humor: a situation is a violation (it threatens how the world ought to be), the situation is simultaneously benign (safe, acceptable), and both perceptions occur at once. Play fighting and tickling are the archetypal benign violations — physically threatening but harmless.</p>
+
+    <p>BVT is the most precise explanation of why FWW(C) works in technical documents. The "violation" is the register shift: play appearing in a serious context. The "benign" is the surrounding rigor that establishes the document as trustworthy. If the document has already demonstrated precision and structural integrity, a moment of whimsy is a benign violation — it breaks the expected register without breaking trust. If the document has <em>not</em> established rigor, the same moment is a pure violation. The reader doesn't laugh. The reader worries.</p>
+
+    <p>This is why FBD and FWW(C) are not just orthogonal but <em>mutually dependent</em>. FBD establishes the benign context. FWW(C) introduces the violation. Without FBD, the violation is not benign. Without FWW(C), there is no violation to engage. They need each other the way a trapeze artist needs both the wire and the net — the wire is the act; the net is what makes the audience able to watch.</p>
+
+    <p>BVT has a temperature dependence. The same violation that reads as playful in a design document reads as reckless in a safety protocol. Context sets the temperature. FBD is what keeps the methodology's temperature in the range where violations can be benign — and Section 4 will explain why that is a thermodynamic claim, not a metaphorical one.</p>
+
+    <p>BVT also predicts the failure modes with precision. Three mechanisms make violations benign: alternative norms (the reader accepts that this document operates in a different register), weak commitment to the violated norm (the reader doesn't strongly expect uniform seriousness), and psychological distance (the moment is brief enough not to feel threatening). FWW(C) that fails has typically lost all three — too long, too committed, or too close to something the reader takes seriously.</p>
+  </div>
+
+  <div class="section" id="s-clt">
+    <div class="section-title">Cognitive Load and Engagement</div>
+
+    <p>Cognitive Load Theory, introduced by Sweller (1988) and refined into its canonical three-type model by Sweller, van Merrienboer, and Paas (1998), distinguishes intrinsic load (the inherent complexity of the material), extraneous load (load caused by poor design), and germane load (productive processing effort that leads to learning). The standard CLT prescription: minimize extraneous, manage intrinsic, maximize germane.</p>
+
+    <p>FWW(C) appears to violate this prescription. A register shift is technically extraneous — not part of the subject matter. But Mayer (2014), in a brief but influential commentary on motivational design, complicated the picture: some elements that appear to add extraneous load actually enhance germane processing by increasing motivation. Skulmowski and Xu (2022) extended this with a cost-benefit framework for cognitive load in digital learning, arguing that design factors inducing task-irrelevant load may still promote motivation and learning — the concept of "desirable difficulty." The key insight is counterintuitive: a small increase in processing cost can yield a large increase in processing depth. The brain works harder, but it works <em>better</em>.</p>
+
+    <p>Wanzer, Frymier, and Irwin's Instructional Humor Processing Theory (2010) adds the critical distinction: humor related to content reduces extraneous load and enhances processing; humor unrelated to content adds extraneous load. IHPT maps precisely to FWW(C)'s central design constraint: FWW that illuminates content works. FWW that distracts from content fails. This is the sharpest blade in the pack. Every other principle is about placement and form. This one is about relevance. It is the difference between a joke that teaches you something about thermodynamics and a joke that happens to be near some thermodynamics.</p>
+
+    <p>Recent EEG research supports this at the neurological level. Content-related humor has been shown to increase beta oscillations in frontal and parietal regions (heightened processing motivation) and theta oscillations more broadly (deeper working memory engagement). The effect is not just affective — content-related humor changes the brain's processing mode.</p>
+
+    <div class="callout tip">
+      <div class="callout-label">Tip</div>
+      <p>The test for whether a FWW(C) moment belongs: does it illuminate the content, or interrupt it? If you removed the moment, would the reader understand the material less well, or just enjoy it less? If less well — it belongs. If just less enjoyment — it might still belong, but it's operating on thinner ice.</p>
+    </div>
+  </div>
+
+  <div class="section" id="s-play">
+    <div class="section-title">Play as Foundation</div>
+
+    <p>Some play is very serious indeed.</p>
+
+    <p>Huizinga wrote that in 1938, in a book called <em>Homo Ludens</em>, and it is the single sentence that most of play theory has spent the subsequent nine decades unpacking. His account of play can be distilled into five characteristics: it is free (voluntary), it is not "ordinary" life (it creates a bounded space), it is spatially and temporally contained, it creates order, and it is connected to no material interest. But the observation that matters for FWW(C) is the one that precedes the list: play is not the opposite of seriousness. It never was.</p>
+
+    <p>This is the deepest theoretical anchor for FWW(C). Play is not the opposite of serious work. It is the medium in which serious work becomes engaging. A methodology without play is not more rigorous. It is less alive.</p>
+
+    <p>Caillois (1961) extended Huizinga with a taxonomy: agôn (competition), alea (chance), mimicry (simulation), and ilinx (vertigo, productive disorientation). FWW(C) in Loop MMT maps primarily to mimicry (the board characters, the fictional setting carrying real deliberation) and ilinx (register shifts that momentarily disorient the reader before the ground firms up). Caillois also placed play on a continuum from paidia (free, spontaneous) to ludus (rule-governed). FWW(C) is ludus — structured play within a rule system. The rules make the play possible, not despite them but through them.</p>
+
+    <p>Groos (1896) offered a different lens: play as preparation. Young animals play-fight to develop survival skills. Applied to methodology: FWW(C) moments practice the cognitive flexibility that real-world problem-solving requires — the ability to hold multiple registers simultaneously, to shift perspectives without losing the thread, to find the unexpected connection that solves the problem nobody knew how to frame.</p>
+
+    <div class="callout key">
+      <div class="callout-label">Key Concept</div>
+      <p>Huizinga, Caillois, and Groos converge: play is not opposed to seriousness, structure, or utility. It is the generative medium from which all three emerge. FWW(C) is the methodology's recognition that this applies to its own documents and processes, not just to the domains it studies.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: CONTRAST                                        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-contrast">
+  <div class="chapter-number">Section 3</div>
+  <div class="chapter-title">Contrast as Universal Principle</div>
+
+  <p>Consider a corridor of identical doors. Twelve of them, evenly spaced, same color, same handle. You walk past them and you feel nothing — not oppressed, not engaged, just moving. Now put a window at the end. The corridor hasn't changed. Your experience of it has. The window is not information about the corridor. It is contrast against the corridor. And contrast is what makes the corridor navigable.</p>
+
+  <p>The mechanism underlying FWW(C) is this principle, applied to prose. It is not unique to humor or play. It is universal: contrast activates attention by interrupting monotony.</p>
+
+  <p>In visual design, contrast operates through color, scale, texture, and typography. A page of uniform gray text is harder to read than one with hierarchy — not because the gray text is illegible, but because the eye has no landmarks. Headers, pull quotes, callout boxes, whitespace: all function as contrast. The L21 format you are reading right now is a contrast specification — monospace for structural elements, sans-serif for body text, colored borders for callouts, dim chapter numbers against bold titles. The format practices the principle before the text mentions it.</p>
+
+  <p>In music, the principle is so fundamental it has its own vocabulary: dynamics, tempo changes, key modulations, instrumentation shifts. Haydn's "Surprise" Symphony places fortissimo chords in the middle of soft, repetitive sequences — the musical equivalent of a whimsy moment in a dense Knowledge Pack. The listener was predicting more of the same. The prediction fails. Attention returns. Haydn knew what Shannon would formalize two centuries later: surprise is information.</p>
+
+  <p>The critical tension from design literature: too much contrast creates chaos; too little creates monotony. The designer's job is to orchestrate contrast, not maximize it. Neuroaesthetic research confirms that excessive contrast increases cognitive load, raising heart rate and decision fatigue. Strategic harmony creates what designers call "visual breathing room."</p>
+
+  <p>This maps precisely to the FWW(C) budget table. The budget is not "how much fun to add." It is a contrast specification: how much register variation does this document type require to sustain engagement across its length? A specification needs zero because its engagement comes from precision. A Knowledge Pack needs significant contrast because it is long, dense, and the reader's attention will habituate without interruption.</p>
+
+  <div class="callout phi">
+    <div class="callout-label">Phi</div>
+    <p>Harmony is coherence. Monotony is repetition without variation. Chaos is variation without coherence. FWW(C) is the narrow corridor between monotony and chaos — where contrast serves comprehension rather than disrupting it. The window is not here. Keep walking.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: ANTI-ENTROPY                                    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-entropy">
+  <div class="chapter-number">Section 4</div>
+  <div class="chapter-title">FWW(C) as Anti-Entropy</div>
+
+  <p>What does a methodology look like when it's dying?</p>
+
+  <p>Not catastrophic failure — that's visible and fixable. The slow version. The version where every document is correct. Every protocol is followed. Every standard is met. And nobody reads any of it unless they have to. The documents accumulate. They are filed, referenced, and never opened twice. The methodology hasn't failed. It has cooled. In thermodynamic terms, it has reached equilibrium — and equilibrium, for a living system, is another word for death.</p>
+
+  <p>Schrödinger's <em>What is Life?</em> (1944) posed the question that defines the boundary between physics and biology: how do living systems maintain order against the universal tendency toward disorder? His answer: living systems feed on negative entropy. They are open systems that maintain local order by exporting entropy to their environment — no violation of the second law, which applies to closed systems.</p>
+
+  <p>Bailly, Longo, and Montévil (2011) extended this with the concept of anti-entropy: not just the maintenance of order (negentropy), but the capacity to generate organizational novelties. A living organism produces entropy by transforming energy, sustains its organization by renewing it, and — the third function — generates organizational novelties that increase its own complexity. The third function is what distinguishes a living system from a crystal. Both are ordered. Only one invents new forms of order. A crystal is the methodology with perfect compliance and no engagement. A living cell is the methodology that reads its own documents and writes new ones because it wants to.</p>
+
+  <p>FWW(C) is the anti-entropic mechanism. It prevents the methodology's documents from converging on lifeless compliance — the textual equivalent of heat death. A document with FWW(C) generates the reader's engagement as a byproduct of being read, rather than requiring engagement as an input the reader must supply. This is the thermodynamic reading of floor-and-ceiling: FBD maintains structural order (negentropy), while FWW(C) generates organizational novelty within that order (anti-entropy).</p>
+
+  <p>The temperature dependence from Section 2 resolves here. A system at thermal equilibrium has uniform temperature — no gradients, no flow, no capacity for work. Register variation is a temperature gradient in the document. The high-register moments are hot. The technical baseline is cool. Energy flows from high to low, and the flow is the reading experience. A document at uniform register — all hot or all cool — is at equilibrium. Nothing moves. The prediction model Section 1 described has nothing to predict.</p>
+
+  <p>Brillouin (1953) connected information theory to thermodynamics directly: information <em>is</em> negentropy — a reduction in uncertainty. Simon (1969) applied this to organizational contexts: progress depends on extracting redundancy and strengthening patterns. Knowledge Packs are negentropic artifacts — they compress disordered research into organized, reusable knowledge structures. FWW(C) ensures these structures remain alive: readable, engaging, memorable. A Knowledge Pack that nobody reads has returned to entropy regardless of how well-organized its contents are.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Key Concept</div>
+    <p>The methodology is an open system. Fresh instances import energy (new context, new problems). The operator imports judgment (corrections, decisions, direction). FWW(C) ensures the outputs remain engaging enough to be loaded, read, and used — completing the thermodynamic cycle. Without FWW(C), artifacts accumulate but cease to circulate, which is entropy by another name.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: BEYOND DOCUMENTS                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-beyond">
+  <div class="chapter-number">Section 5</div>
+  <div class="chapter-title">FWW(C) Beyond Documents</div>
+
+  <p>A board meets for the first time in a new session. Eleven characters, freshly reconstructed from document descriptions, no memory of yesterday. Before the agenda, before the work, someone asks a question that has nothing to do with what's scheduled. The room answers. For ninety seconds, the board is alive — not because the question produced information, but because the question produced <em>presence</em>. Then the agenda begins, and the presence carries forward into the work.</p>
+
+  <p>That is FWW(C) applied to process design. It applies everywhere a human looks, reads, or participates. Documents, processes, interfaces, interactions. Not internal data structures. Not machine-to-machine plumbing. Every surface where a person's prediction model is running.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: FAILURE MODES                                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-failures">
+  <div class="chapter-number">Section 6</div>
+  <div class="chapter-title">The Failure Modes</div>
+
+  <p>A document about engagement was written by an instance that understood the theory perfectly and applied none of it. The document was correct, verified, well-structured. It described FWW(C) at a high level, cited nineteen sources, and read like an academic survey — uniform register from first paragraph to last. Then the board read it, and someone asked: "Does this pack demonstrate the principle it teaches?" The answer was no. Not because the theory was wrong, but because knowing how play works is not the same as playing.</p>
+
+  <p>That actually happened, during the production of this pack. The first version passed the Glitter Test trivially — not because the engagement was legitimate, but because there was almost no engagement to test. The second version fixed the register but left the walls where they were. This version moved the walls. Three firings of the same pack, each one teaching its producers something the theory alone could not — which is itself a failure mode. Call it the Knowledge-Practice Gap: you can explain a principle with perfect accuracy and still not be able to execute it until you've failed at it.</p>
+
+  <div class="section" id="s-violation-no-benign">
+    <div class="section-title">Violation Without Benign</div>
+    <p>BVT predicts: if the violation is not perceived as benign, humor fails and the reaction is negative. In FWW(C) terms: a joke that undermines the document's credibility is a pure violation. The reader doesn't laugh — the reader loses trust. This happens when the FWW moment touches something the reader takes seriously, or when the document hasn't established enough rigor to make the register shift feel safe. The fix is structural: FBD first, then FWW. Never the reverse.</p>
+  </div>
+
+  <div class="section" id="s-benign-no-violation">
+    <div class="section-title">Benign Without Violation</div>
+    <p>If there is no violation — if the entire document is playful — there is no contrast and therefore no engagement mechanism. Uniform play is as flat as uniform seriousness. The reader habituates to the playful register and stops attending to it. The budget table prevents this — it caps FWW(C) density by document type so that the serious register always occupies more space than the playful one.</p>
+  </div>
+
+  <div class="section" id="s-glitter">
+    <div class="section-title">The Glitter Test</div>
+    <p>Named in Session 49. The question: "Is engagement substituting for rigor?" A document can be so well-written, so engaging, so full of well-placed FWW(C) that the reader — or the reviewer — fails to notice that the content is thin. The glitter catches the light and you stop checking whether the structure underneath is sound. This is FWW(C)'s most dangerous failure mode because it is invisible from inside the engagement.</p>
+    <p>The Glitter Test fires at Convergence Gate during self-review. Its FBD control is FBD-GT1. It asks one question: "If I stripped every FWW(C) moment from this document and read what remained, would the content stand on its own?" If yes, the glitter is legitimate. If no, the glitter is covering a defect.</p>
+  </div>
+
+  <div class="section" id="s-superiority">
+    <div class="section-title">Superiority-Based Humor</div>
+    <p>The oldest theory of humor — Plato, Aristotle, Hobbes — holds that humor arises from recognizing supremacy over others. Hobbes called it "sudden glory." This is the one humor mechanism FWW(C) explicitly excludes. Humor that mocks the reader, the competitor, the previous instance, or anyone holding the document corrodes trust rather than building it. The test: who is the butt of the joke? If the answer is anyone other than the document itself or its author, the humor is superiority-based and does not belong.</p>
+  </div>
+
+  <div class="section" id="s-forced">
+    <div class="section-title">Forced Whimsy</div>
+    <p>The reader can always tell. A FWW(C) moment that exists because the budget says there should be one, rather than because the moment earned it, reads as performative. Forced whimsy is worse than no whimsy because it signals the author is following a formula rather than thinking about the reader. The budget is a minimum and a maximum, not a quota. If the material doesn't afford a natural FWW(C) moment, the correct response is to write the section without one.</p>
+  </div>
+
+  <div class="section" id="s-over-formal">
+    <div class="section-title">Over-Formalization</div>
+    <p>The observation from Session 35: "FWW as a checklist becomes compliance." The moment FWW(C) is reduced to a box-check — "does this section have a fun moment? ✓" — it stops being FWW(C) and becomes process overhead. The formalization must be light enough to guide without constraining. The budget table specifies ranges (8–12 for Knowledge Packs), not counts. The Four Corners check asks "is FWW(C) present and effective," not "does this section contain exactly one whimsical element." The formalization prevents absence, not prescribes form.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">Warning</div>
+    <p>This Knowledge Pack is itself a formalization of FWW(C). If reading it makes FWW(C) feel like a technical requirement rather than a design instinct, the pack has partially failed. The theoretical foundations explain why the instinct works — not to replace the instinct with a procedure. The first draft of this pack made exactly this mistake. The second corrected the register. This version moved the walls. The corrections are the proof that formalization alone does not produce the thing it formalizes.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: PATTERN REGISTRY                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-patterns">
+  <div class="chapter-number">Section 7</div>
+  <div class="chapter-title">The Pattern Registry</div>
+
+  <p>FWW(C) is not a single technique. It is a family of named patterns, each with its own mechanism, failure mode, and natural habitat. This section defines the registry framework and provides initial examples from the corpus. The full Pattern Registry is a companion document that will grow as the corpus grows.</p>
+
+  <p>Each pattern follows a standard format:</p>
+
+  <table class="ref-table">
+    <tr><th>Field</th><th>Purpose</th></tr>
+    <tr><td>Name</td><td>The pattern's identifier — itself an FWW(C) act</td></tr>
+    <tr><td>Example</td><td>A concrete instance from the corpus</td></tr>
+    <tr><td>Source Context</td><td>Where the example occurred and what surrounded it</td></tr>
+    <tr><td>Why It Landed</td><td>Which theoretical mechanism the pattern activates</td></tr>
+    <tr><td>Failure Mode</td><td>How this pattern fails when misapplied</td></tr>
+    <tr><td>Frequency</td><td>How often the pattern appears in the corpus</td></tr>
+  </table>
+
+  <div class="section" id="s-aside">
+    <div class="section-title">The Aside</div>
+    <p><strong>Definition:</strong> One sentence of perspective embedded in dense argument. The sentence steps back from technical detail to observe something about the detail itself — its strangeness, its implications, its accidental beauty. You have encountered several in this pack already; the one about Haydn knowing what Shannon would formalize two centuries later is an example.</p>
+    <p><strong>Mechanism:</strong> Incongruity/surprise. The reader's prediction model is running in "technical argument" mode. The Aside briefly shifts to "human observation" mode. The shift is the information.</p>
+    <p><strong>Failure mode:</strong> Too long becomes a digression. Too clever becomes showing off. One sentence is usually right. Two is risky. Three is a digression.</p>
+    <p><strong>Frequency:</strong> High — the most common FWW(C) pattern in the corpus.</p>
+  </div>
+
+  <div class="section" id="s-naming">
+    <div class="section-title">The Naming</div>
+    <p><strong>Definition:</strong> Giving a protocol, pattern, or concept a name that carries engagement by itself. "The Forge" instead of "Protocol Production Pipeline." "The Glitter Test" instead of "Adversarial Engagement-Rigor Check." "Shea's Walk" instead of "Productive Deviation Pattern." Even "the textual equivalent of heat death" — which appears in Section 4 of this pack — is a Naming, though it wears no capital letters.</p>
+    <p><strong>Mechanism:</strong> Play (Huizinga). The name creates a bounded imaginative space. It signals that this protocol exists in a world where things have names that matter, not just labels that classify. Names also aid retrieval — "The Forge" is more memorable than "Protocol Production Pipeline v1" from the same cognitive effort.</p>
+    <p><strong>Failure mode:</strong> The name that tries too hard. A name should arrive with the feeling of inevitability — "of course that's what it's called." A name that feels forced is worse than a descriptive label because it promises play and delivers performance.</p>
+    <p><strong>Frequency:</strong> High — 30+ named protocols, concepts, and patterns in the corpus.</p>
+  </div>
+
+  <div class="section" id="s-character">
+    <div class="section-title">The Character Moment</div>
+    <p><strong>Definition:</strong> A board member being distinctively themselves in a way that carries content. Ed adjusting his glasses before delivering a verdict. Leroy sitting on the document that passed review. Wes grinning at a constraint he's about to productively violate.</p>
+    <p><strong>Mechanism:</strong> Mimicry (Caillois). The fictional characters create a play-space in which real deliberation occurs. The Character Moment reminds the reader that this play-space is inhabited — the characters have consistent habits, and those habits carry meaning.</p>
+    <p><strong>Failure mode:</strong> A character acting cute in the middle of a critical finding breaks the benign condition — the violation is no longer safe because the stakes are too high for play. Note also: Character Moments belong in board outputs, not in standalone Knowledge Packs. A KP must be self-contained — it should not require the reader to know who Ed is to understand the content.</p>
+    <p><strong>Frequency:</strong> Medium — concentrated in board deliberation outputs, sparse in standalone documents.</p>
+  </div>
+
+  <div class="section" id="s-metaphor">
+    <div class="section-title">The Earned Metaphor</div>
+    <p><strong>Definition:</strong> An analogy drawn from a domain far enough from the subject that the distance itself illuminates something. Not decorative comparison but structural insight: the analogy reveals a shared pattern that neither domain would have surfaced alone. The trapeze artist in Section 2 — wire as the act, net as the trust — is an Earned Metaphor because removing it removes access to the structural relationship between FBD and BVT, not just a visual flourish.</p>
+    <p><strong>Mechanism:</strong> Cognitive load (germane processing). The reader holds two domains simultaneously, increasing effort — but the effort is germane because the structural parallel <em>is</em> the insight. The metaphor doesn't illustrate the concept. It <em>is</em> the concept, viewed from a different angle.</p>
+    <p><strong>Failure mode:</strong> The metaphor that's decorative rather than structural. If you can remove it and the reader loses nothing except color, it was decoration. If the reader loses access to the insight, it was earned.</p>
+    <p><strong>Frequency:</strong> Medium — most often in Knowledge Packs and whitepapers where conceptual density is highest.</p>
+  </div>
+
+  <div class="section" id="s-forward-ref">
+    <div class="section-title">The Forward Reference</div>
+    <p><strong>Definition:</strong> Telling the reader something is coming before it arrives. Not a table-of-contents entry — a promise embedded in prose that creates anticipation across sections. "Section 3 will show you what happens when a composer weaponizes this" is a Forward Reference. The reader's prediction model, which would otherwise idle between sections, stays active because it has an open promise to track.</p>
+    <p><strong>Mechanism:</strong> Prediction model engagement (incongruity theory + information theory). An open promise is unresolved tension. The reader carries it forward as an active prediction. When the promise lands, the resolution is a micro-surprise — the reader verifies the prediction and attention spikes. When it doesn't land, the reader notices the absence, which is also attention.</p>
+    <p><strong>Failure mode:</strong> The broken promise. A Forward Reference to something that never arrives is worse than no reference — it is a contract violation. The reader trusted the document to deliver and it didn't. Trust damage. Every Forward Reference must resolve. This pack contains several. Count them if you like — but notice that the counting itself is keeping your prediction model running.</p>
+    <p><strong>Frequency:</strong> Low — introduced in v2 of this pack. High deployment density risks turning the document into a trailer for itself. One or two per Knowledge Pack. Never in protocols.</p>
+  </div>
+</div>
+
+<hr>
+<p style="text-align:center;font-style:italic;color:var(--fg-dim);">There is no Section 8.</p>
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: BOARD CONNECTION                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-board">
+  <div class="chapter-number">Section 9</div>
+  <div class="chapter-title">Board Connection</div>
+
+  <p>FWW(C) connects to the existing Knowledge Pack corpus through multiple edges. The following candidates were identified during the Session 49 RCR. Full verification against KP content is deferred to the Pattern Registry companion document, where each edge will be tested against the pruning criterion: does the connected KP's framework predict something about FWW(C) that this pack's own analysis doesn't already cover?</p>
+
+  <table class="ref-table">
+    <tr><th>Connected KP</th><th>Edge Type</th><th>Connection</th></tr>
+    <tr><td>Information Theory</td><td>Foundational</td><td>Register shifts as maximum Shannon entropy — maximally unexpected in context. The Information Theory KP provides the formal framework; this pack applies it to engagement.</td></tr>
+    <tr><td>Dramaturgy</td><td>Structural</td><td>Timing, beats, contrast, audience management. FWW(C) placement follows the rhythm of reader attention, placing contrast where density peaks. Dramaturgy KP's pacing treatment maps directly to budget calibration.</td></tr>
+    <tr><td>Cognitive Bias &amp; Metacognition</td><td>Mechanistic</td><td>FWW(C) exploits the brain's bias toward novelty to counteract habituation. The CB&amp;M KP covers attentional mechanisms; this pack applies them as design tools.</td></tr>
+    <tr><td>Good Design</td><td>Principled</td><td>Delight as design principle. FWW(C) implements what Dieter Rams meant by "making a product useful" — not just functional but engaging enough that people choose to use it.</td></tr>
+    <tr><td>Chaos Theory</td><td>Analogical</td><td>The (C) maps to the creative edge between order and chaos — organized enough to function, disordered enough to adapt. The Chaos Theory KP provides the formal vocabulary for this edge.</td></tr>
+    <tr><td>Communication Pragmatics</td><td>Mechanistic</td><td>FWW(C) systematically violates Grice's maxim of manner to enhance engagement. The Pragmatics KP's treatment of implicature explains why expectation violations carry meaning rather than noise.</td></tr>
+    <tr><td>Rhetoric &amp; Argumentation</td><td>Tactical</td><td>Kairos — the right moment for the right word. FWW(C) placement is a kairos problem: the whimsical moment must arrive when attention needs it, not when the schedule prescribes it.</td></tr>
+    <tr><td>Game Theory</td><td>Strategic</td><td>Mixed strategies as anti-predictability. A pure strategy is exploitable because it's predictable. A document with predictable register is "exploitable" by habituation. Register variation is the mixed strategy that prevents attention from settling.</td></tr>
+  </table>
+
+  <div class="callout note">
+    <div class="callout-label">Note</div>
+    <p>Eight candidates. The pruning test: does the connected KP's framework predict something about FWW(C) that this pack's own analysis doesn't already cover? If yes, the edge is structural. If it restates the same insight in different vocabulary, it is decorative and gets cut.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: USING THIS PACK                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-usage">
+  <div class="chapter-number">Section 10</div>
+  <div class="chapter-title">Using This Pack</div>
+
+  <p>Load this pack when producing any human-facing deliverable, alongside Writing Standards v5. The Writing Standards specify <em>where</em> and <em>how much</em> FWW(C) to use (budget table, placement rules, Four Corners). This pack explains <em>why</em> — the mechanisms that make it work, the failure modes that make it fail, and the pattern vocabulary for recognizing what you're doing when you do it well.</p>
+
+  <p>Also useful when designing new protocols (load alongside The Forge — the FWW Design Check (Forge v1 Amendment 1, FBD-FG4) originates from this pack's framework), when reviewing documents at Convergence Gate (the Glitter Test originates here), and when evaluating whether a process or interface is engaging or merely functional.</p>
+
+  <p>Do not load this pack for specifications, schemas, or machine-facing artifacts. Those surfaces have a FWW(C) budget of zero — their engagement comes from precision, not contrast.</p>
+
+  <div class="callout tip">
+    <div class="callout-label">Tip</div>
+    <p>If you find yourself thinking "this document needs more FWW(C)," stop. Ask instead: "where is the reader's attention most likely to habituate?" That is where contrast belongs. FWW(C) is not added uniformly — it is placed where density peaks, where the reader is most likely to process on autopilot, where the prediction model needs interruption. The placement is the craft.</p>
+  </div>
+
+  <p>The prediction model that Section 1 named has been running through every section of this pack. It tracked a thread about temperature from Section 2 to Section 4. It followed a promise about a mathematician and a composer from Section 2 to Section 3. It noticed that Section 5 was short and wondered why. Every time it tracked, followed, or wondered — that was FWW(C) working. The window is here.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 11: REFERENCES                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="chapter" id="ch-refs">
+  <div class="chapter-number">Section 11</div>
+  <div class="chapter-title">References</div>
+
+  <ol class="ref-list">
+    <li>Bailly, F., Longo, G., &amp; Montévil, M. (2011). A 2-dimensional geometry for biological time. <em>Progress in Biophysics and Molecular Biology</em>, 106(3), 474–484.</li>
+    <li>Brillouin, L. (1953). Negentropy principle of information. <em>Journal of Applied Physics</em>, 24(9), 1152–1163.</li>
+    <li>Caillois, R. (1961). <em>Man, Play, and Games</em>. Trans. Meyer Barash. New York: Free Press.</li>
+    <li>Groos, K. (1896). <em>The Play of Animals</em>. Trans. E.L. Baldwin. New York: Appleton.</li>
+    <li>Huizinga, J. (1938/1955). <em>Homo Ludens: A Study of the Play-Element in Culture</em>. Boston: Beacon Press.</li>
+    <li>Kant, I. (1790). <em>Critique of Judgment</em>. Trans. J.H. Bernard.</li>
+    <li>Mayer, R.E. (2014). Incorporating motivation into multimedia learning. <em>Learning and Instruction</em>, 29, 171–173.</li>
+    <li>McGraw, A.P. &amp; Warren, C. (2010). Benign violations: Making immoral behavior funny. <em>Psychological Science</em>, 21, 1141–1149.</li>
+    <li>Schrödinger, E. (1944). <em>What is Life?</em> Cambridge: Cambridge University Press.</li>
+    <li>Shannon, C. (1948). A mathematical theory of communication. <em>Bell System Technical Journal</em>, 27, 379–423, 623–656.</li>
+    <li>Simon, H.A. (1969). <em>The Sciences of the Artificial</em>. Cambridge, MA: MIT Press.</li>
+    <li>Skulmowski, A. &amp; Xu, K.M. (2022). Understanding cognitive load in digital and online learning: A new perspective on extraneous cognitive load. <em>Educational Psychology Review</em>, 34, 171–196.</li>
+    <li>Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. <em>Cognitive Science</em>, 12(2), 257–285.</li>
+    <li>Sweller, J., van Merrienboer, J.J.G., &amp; Paas, F. (1998). Cognitive architecture and instructional design. <em>Educational Psychology Review</em>, 10(3), 251–296.</li>
+    <li>Veatch, T.C. (1998). A theory of humor. <em>Humor: International Journal of Humor Research</em>, 11(2), 161–215.</li>
+    <li>Wanzer, M.B., Frymier, A.B., &amp; Irwin, J. (2010). An explanation of the relationship between instructor humor and student learning. <em>Communication Education</em>, 59(1), 1–18.</li>
+  </ol>
+</div>
+
+</main>
+</div>
+
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>FWW(C) Knowledge Pack · v2.1</span>
+  <span>© 2026 Shea Gunther · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script>
+function setSkin(id){
+  document.body.className='skin-'+id;
+  try{localStorage.setItem('loop-skin',id);}catch(e){}
+  document.querySelectorAll('.skin-btn').forEach(b=>
+    b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  let s='og';
+  try{s=localStorage.getItem('loop-skin')||'og';}catch(e){}
+  setSkin(s);
+  const targets=document.querySelectorAll('.chapter,.section[id]');
+  const links=document.querySelectorAll('.toc-list a');
+  const ob=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        let id=e.target.id;
+        links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+      }
+    });
+  },{rootMargin:'-80px 0px -60% 0px'});
+  targets.forEach(t=>ob.observe(t));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Coaching Hex for Kids Knowledge Pack · v1</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--font:'Courier New','Consolas',monospace;--max-w:860px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--callout-note-bg:#f0f0f4;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}.logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}.logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}.header-right{display:flex;align-items:center;gap:16px;}.doc-title{text-align:right;}.doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}.doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}.skin-group{display:flex;align-items:center;gap:5px;}.skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;}.skin-btn:hover{border-color:var(--fg);color:var(--fg);}.skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .body-wrap{display:flex;max-width:1160px;margin:0 auto;}.toc-sidebar{width:248px;flex-shrink:0;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto;padding:24px 0 24px 24px;border-right:1px solid var(--border2);font-family:var(--font);}.toc-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}.toc-list{list-style:none;}.toc-list li{margin-bottom:1px;}.toc-list a{font-size:11px;color:var(--fg-dim);text-decoration:none;display:block;padding:3px 6px;border-left:2px solid transparent;}.toc-list a:hover{color:var(--fg);border-left-color:var(--border);}.toc-list a.active{color:var(--fg);border-left-color:var(--accent);}.toc-sep{border:none;border-top:1px solid var(--border2);margin:5px 6px;}
+  .content{flex:1;min-width:0;padding:48px 48px 96px 40px;max-width:var(--max-w);}.chapter{margin-bottom:56px;scroll-margin-top:84px;}.chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}.chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:16px;}.section{margin:28px 0;scroll-margin-top:84px;}.section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:12px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}.callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}.callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}.callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}.callout.note{background:var(--callout-note-bg);border-left-color:var(--border);}.callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}.callout.key .callout-label{color:var(--working);}.callout.tip .callout-label{color:var(--vault);}.callout.warn .callout-label{color:var(--compute);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}.ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}.ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}.ref-table tr:last-child td{border-bottom:none;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}.abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}.page-footer{max-width:1160px;margin:0 auto;padding:20px 48px 48px 292px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);display:flex;justify-content:space-between;}
+  @media(max-width:860px){.toc-sidebar{display:none;}.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}.page-footer{padding:20px 24px 48px;}}
+</style></head>
+<body class="skin-og">
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group"><span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span><button class="skin-btn active" onclick="setSkin('og')">OG</button><button class="skin-btn" onclick="setSkin('winamp')">Winamp</button><button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button></div>
+    <div class="doc-title"><div class="title-main">Coaching Hex for Kids Knowledge Pack</div><div class="build-tag">v1 · 8 April 2026</div></div>
+  </div>
+</div>
+<div class="body-wrap">
+<nav class="toc-sidebar"><div class="toc-title">Contents</div><ul class="toc-list">
+  <li><a href="#ch-abstract">About</a></li><hr class="toc-sep">
+  <li><a href="#ch-why">1 · Why Coach Hex to Kids?</a></li>
+  <li><a href="#ch-spirit">2 · Spirit of the Game</a></li>
+  <li><a href="#ch-inclusion">3 · Building an Inclusive Team</a></li>
+  <li><a href="#ch-rules">4 · The Rules Kids Need to Know</a></li>
+  <li><a href="#ch-development">5 · How Kids Learn</a></li>
+  <li><a href="#ch-throws">6 · Teaching Throws and Catches</a></li>
+  <li><a href="#ch-progression">7 · Teaching Hex</a></li>
+  <li><a href="#ch-practice">8 · Practice Plans &amp; Game Day</a></li>
+  <li><a href="#ch-refs">References</a></li>
+</ul></nav>
+<main class="content">
+
+
+<!-- ══ ABSTRACT ══ -->
+<div class="abstract-box" id="ch-abstract">
+  <div class="abstract-label">About This Document</div>
+  <p style="margin-bottom:8px;">This is a coaching guide for teaching Hexagon Offense to young players between the ages of 7 and 12. It is written for coaches — not for the kids themselves. If you need the tactical details of Hex adapted for 5-on-5 youth play, read the <em>Hex for Five Knowledge Pack</em> first. This document assumes you have that tactical foundation and focuses on how to deliver it to children.</p>
+  <p style="margin-bottom:8px;">Beyond Hex strategy, this pack covers three areas that matter at least as much as any play design: Spirit of the Game, equity and inclusion, and rule knowledge. Ultimate is self-officiated. There are no referees. That means your players need to understand the rules, resolve their own disputes, and treat opponents with respect — skills that matter far beyond the field. Coaching those skills deliberately, rather than hoping kids absorb them by osmosis, is part of the job.</p>
+  <p style="margin-bottom:0;">Coaching commentary throughout comes from Dara Tehrani, a former handler for San Francisco Fury and current youth coach. Dara played seven seasons at the elite club level, won two national championships, and represented the United States at the World Championships twice. After retiring from competitive play, she moved into youth coaching and has worked with players as young as seven.</p>
+</div>
+
+
+<!-- ══ 1: WHY COACH HEX TO KIDS? ══ -->
+<div class="chapter" id="ch-why">
+  <div class="chapter-number">Chapter 1</div>
+  <div class="chapter-title">Why Coach Hex to Kids?</div>
+
+  <div class="section"><div class="section-title">What Hex Is (Briefly)</div>
+  <p>Hexagon Offense — Hex — is an offense built on triangles instead of lines. Players spread across the field in overlapping triangles and pass the disc to whoever is open. There are no fixed handler or cutter roles. Everyone throws, everyone cuts, everyone is involved on every play. The disc moves to the open player, and the shape moves with it.</p>
+  <p>Hex was created by Felix Shardlow in Brighton, England, in 2012. It has since spread to teams on every continent. For the full tactical breakdown adapted for 5-on-5 youth play — positions, shape, movement decision tree, defense — see the <em>Hex for Five Knowledge Pack</em>. This document does not repeat that content. It teaches you how to coach it.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Why Hex Works for Young Players</div>
+  <p>Traditional offenses — vertical stack, horizontal stack, side stack — were designed for adults. They require players to stand still in a line and wait for a precisely timed cut. Most of the team is inactive most of the time. For an 8-year-old, standing in a line waiting for your turn is not a game. It's a punishment.</p>
+  <p>Hex is different in ways that align naturally with how kids play:</p>
+  <ul>
+    <li><strong>Everyone is always involved.</strong> There is no standing in a line. Every player is part of the shape, and the shape requires everyone to read and react. Kids who feel involved stay engaged. Kids who stand around lose interest and stop coming to practice.</li>
+    <li><strong>The decisions are simple.</strong> The Hex decision tree boils down to: Is someone open? Throw to them. Then run. That's a decision a 7-year-old can make. The sophistication comes from repetition, not complexity.</li>
+    <li><strong>Triangles are intuitive geometry.</strong> "Stand so you make a triangle with two teammates" is a concept kids grasp immediately. You can walk onto a field with cones and have kids forming triangles in two minutes.</li>
+    <li><strong>There are no specialized roles to learn.</strong> Nobody has to be "the handler" or "the deep cutter." Every player does every job. This means your least experienced player gets the same decision-making reps as your most experienced one.</li>
+    <li><strong>Mistakes are recoverable.</strong> In a stack offense, one bad cut can blow up the entire play. In Hex, if one triangle breaks, the other triangles still exist. Kids make mistakes constantly — Hex absorbs those mistakes better than rigid systems.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">What This Pack Covers</div>
+  <p>This pack covers the coaching side of youth Hex. Specifically:</p>
+  <ul>
+    <li>Spirit of the Game — what it is, how to teach it to young players, and why it matters more than winning</li>
+    <li>Equity, diversity, and inclusion — how to build a team where every kid belongs</li>
+    <li>Rule knowledge — the rules kids need to know, when to introduce them, and a full glossary</li>
+    <li>Developmental context — what to expect from 7-year-olds vs. 12-year-olds and how to adjust</li>
+    <li>Teaching throwing and catching — the fundamental skills that Hex assumes but kids need to build</li>
+    <li>The coaching progression for introducing Hex concepts</li>
+    <li>Practice plans and game day management</li>
+  </ul>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    I started coaching youth after I retired from Fury. The first thing I learned is that kids don't care about your offense. They care about whether practice is fun, whether they get to throw, and whether they feel like they belong. Hex happens to be an offense that makes all three of those things easier. That's why I use it. Not because it's tactically sophisticated — because it's fun and fair.
+  </div>
+</div>
+
+
+<!-- ══ 2: SPIRIT OF THE GAME ══ -->
+<div class="chapter" id="ch-spirit">
+  <div class="chapter-number">Chapter 2</div>
+  <div class="chapter-title">Spirit of the Game</div>
+
+  <div class="section"><div class="section-title">What Spirit Means</div>
+  <p>Ultimate is self-officiated. There are no referees on the field. Players make their own calls, resolve their own disputes, and are expected to be honest even when it costs them a point. This system is governed by a set of principles called Spirit of the Game.</p>
+  <p>The USA Ultimate Official Rules define Spirit of the Game through three core tenets:</p>
+  <ol>
+    <li><strong>Mutual respect among competitors.</strong> You treat your opponents the way you want to be treated — even when the game is close, even when you disagree about a call, even when you're frustrated.</li>
+    <li><strong>Adherence to the agreed-upon rules.</strong> Every player is responsible for knowing and following the rules. You don't cheat. You don't make calls you know are wrong. You don't exploit your opponents' ignorance of the rules.</li>
+    <li><strong>The basic joy of play.</strong> The game is supposed to be fun. Competitive play is encouraged, but never at the expense of respect, honesty, or enjoyment.</li>
+  </ol>
+  <p>These three tenets are not suggestions. They are written directly into Rule 2 of the Official Rules of Ultimate. Spirit is not separate from the rules — it is the foundation the rules are built on.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Why Spirit Matters More with Kids</div>
+  <p>When adults play ultimate, they bring years of experience with conflict resolution, emotional regulation, and social norms. They can (usually) disagree about a foul call without it becoming personal. Kids are still building those skills. A disputed call between two 9-year-olds can become a shouting match or tears in seconds.</p>
+  <p>This is not a problem. It is an opportunity. Ultimate's self-officiation model is one of the best frameworks in youth sports for teaching kids how to advocate for themselves, listen to opposing viewpoints, and resolve disagreements fairly. But it only works if you, the coach, teach it deliberately.</p>
+  <p>Do not assume kids will absorb Spirit by watching. Teach it the way you teach throwing: with explicit instruction, practice, and feedback.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Teaching Spirit to Young Players</div>
+  <p>Here is what works:</p>
+  <ul>
+    <li><strong>Model it yourself.</strong> How you talk to opposing coaches, how you respond when your team gets a bad call, how you handle a loss — your players are watching all of it. If you yell at the other team, your players learn that yelling is acceptable. If you calmly discuss a disputed call, they learn that too.</li>
+    <li><strong>Name it explicitly.</strong> Don't just say "be a good sport." Say "Spirit of the Game means we make honest calls, we listen to the other team, and we play hard but fair." Give it a name. Make it a thing your team talks about regularly.</li>
+    <li><strong>Practice making calls.</strong> In scrimmages, stop play when a foul happens and walk the players through the call process. "What did you see? What do you think happened? How do we resolve this?" Do this early and often. The first ten times will be slow. By the twentieth, kids will be resolving calls on their own.</li>
+    <li><strong>Celebrate spirit moments.</strong> When a player retracts a call because they realized they were wrong, or when a player on the other team makes an honest call against their own interest, point it out. "Did you see what she just did? That's spirit." Make it something worth aspiring to.</li>
+    <li><strong>Run spirit circles.</strong> After every game — win or lose — gather both teams together. Each team shares one thing they appreciated about the other team's spirit and one thing their own team could improve. Keep it short (2-3 minutes). Keep it positive. This is the single most effective tool for building spirit culture.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Spirit Discussion Prompts</div>
+  <p>Use these questions with your team. Pick one per practice or game. Don't lecture — ask, listen, and discuss.</p>
+  <table class="ref-table">
+    <tr><th>Age Group</th><th>Prompt</th></tr>
+    <tr><td><strong>Ages 7–9</strong></td><td>What does it mean to be honest during a game? Can you think of a time when being honest was hard?</td></tr>
+    <tr><td><strong>Ages 7–9</strong></td><td>What should you do if you and someone on the other team disagree about what happened?</td></tr>
+    <tr><td><strong>Ages 7–9</strong></td><td>How does it feel when someone on the other team says "nice throw" or "good catch"?</td></tr>
+    <tr><td><strong>Ages 10–12</strong></td><td>Have you ever made a call you weren't sure about? What happened? What would you do differently?</td></tr>
+    <tr><td><strong>Ages 10–12</strong></td><td>Why do you think ultimate doesn't use referees? What are the advantages? What's hard about it?</td></tr>
+    <tr><td><strong>Ages 10–12</strong></td><td>What's the difference between playing hard and playing unfairly? Where is the line?</td></tr>
+    <tr><td><strong>All ages</strong></td><td>What was the best example of Spirit of the Game you saw today?</td></tr>
+    <tr><td><strong>All ages</strong></td><td>If someone on the other team is upset about a call, what can you do to help?</td></tr>
+  </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    With 8-year-olds, Spirit of the Game looks like this: a kid catches the disc, takes three steps, and you gently say "that's a travel — remember, when you catch it, you stop." And the kid says "oh, sorry" and hands it back. That's it. No drama. No penalty. Just a correction and a do-over. If you build that habit early — honest mistakes get honest corrections — you're setting up a player who will self-officiate with integrity for the rest of their career.
+  </div>
+</div>
+
+
+<!-- ══ 3: BUILDING AN INCLUSIVE TEAM ══ -->
+<div class="chapter" id="ch-inclusion">
+  <div class="chapter-number">Chapter 3</div>
+  <div class="chapter-title">Building an Inclusive Team</div>
+
+  <div class="section"><div class="section-title">Why This Chapter Exists</div>
+  <p>USA Ultimate has publicly acknowledged that Spirit of the Game, while one of the sport's greatest strengths, can also be an entry point for bias. Players of color have reported being called for fouls more often than white players for the same behaviors. The spirit scoring system has been revised specifically to address these concerns. The organization has stated that equity, diversity, and inclusion are critical to the integrity of the sport.</p>
+  <p>As a youth coach, you are shaping how kids experience ultimate from the beginning. The patterns you establish — who gets playing time, whose voice gets heard, what "good spirit" looks like on your team — will define these players' relationship with the sport for years. This chapter gives you concrete actions.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Equal Opportunity on the Field</div>
+  <p>At the youth level, equal playing time is not optional. Every kid on your roster should play roughly the same amount. The temptation to play your best players more in tight games is real. Resist it. The 9-year-old who sits on the sideline for most of a tournament weekend will not come back next season. You are building a sport, not chasing trophies.</p>
+  <p>Practical techniques:</p>
+  <ul>
+    <li><strong>Rotate lines systematically.</strong> Don't rely on memory or gut feel. Write it down. Track who has played and who hasn't.</li>
+    <li><strong>Use all-touch rules in scrimmages.</strong> "You can't score until everyone on your team has touched the disc at least once." This forces the ball-dominant players to involve everyone and gives quieter players a role in every point.</li>
+    <li><strong>Mix up lines deliberately.</strong> Don't let kids self-sort into groups of friends or by perceived skill level. Pair experienced players with newer ones. Mix genders. Rotate who plays with whom.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Bias in Calls</div>
+  <p>Kids learn bias from the world around them. A coach who is aware of this can intervene early.</p>
+  <p>Watch for patterns: Are certain players getting called for fouls more often than others for similar contact? Are some players' calls being dismissed or overridden more frequently? Are spirit scores after games reflecting actual play or reflecting assumptions about who plays with "good spirit"?</p>
+  <p>You don't need to accuse anyone of being biased. You do need to create a team culture where calls are based on what happened, not on who did it. Teach your players to describe the action ("you hit my arm while I was throwing") rather than characterize the person ("you're being rough"). Action-based language is more accurate and less likely to be filtered through bias.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Gender Inclusion</div>
+  <p>USA Ultimate's Gender Inclusion Policy allows athletes to compete in the division where they feel most comfortable and safe based on their gender identity. At the youth level, mixed play is the norm — boys, girls, and nonbinary players on the same field.</p>
+  <p>What this means for coaches:</p>
+  <ul>
+    <li>Use inclusive language. "Everyone" and "players" instead of "guys" or "boys and girls."</li>
+    <li>Don't separate by gender for drills or scrimmages unless there is a specific safety or developmental reason.</li>
+    <li>Watch for patterns where certain players are frozen out of the offense. If your team's boys only throw to other boys, that's a coaching problem, not a player problem. Address it structurally — use constraints like "your next throw must go to someone of a different gender" or all-touch rules.</li>
+    <li>If a player or parent raises a question about gender inclusion, refer to USA Ultimate's published policy. You don't need to have all the answers. You need to know where the answers are.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Lowering Access Barriers</div>
+  <p>Ultimate is one of the cheapest sports to play — all you need is a disc and a field. But barriers still exist: registration fees, travel costs, equipment, transportation to practice. These barriers disproportionately affect families from lower-income backgrounds and communities of color.</p>
+  <p>What you can do:</p>
+  <ul>
+    <li>Keep costs as low as possible. Provide team discs rather than asking each family to buy one.</li>
+    <li>Offer scholarship spots or sliding-scale fees. USA Ultimate's Play It Forward program provides membership and financial assistance for youth from underserved communities.</li>
+    <li>Choose practice locations accessible by public transit when possible.</li>
+    <li>Organize carpools. A kid who can't get a ride to practice is a kid who doesn't play.</li>
+    <li>Don't assume every family has money for tournament travel. If your team goes to a tournament, build fundraising into the plan rather than passing costs directly to families.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Inclusive Coaching Practices</div>
+  <table class="ref-table">
+    <tr><th>Practice</th><th>What It Looks Like</th></tr>
+    <tr><td><strong>Equal playing time</strong></td><td>Track minutes or points played. Rotate systematically, not by feel.</td></tr>
+    <tr><td><strong>All-touch rules</strong></td><td>Every player touches the disc before a point can be scored (scrimmage constraint).</td></tr>
+    <tr><td><strong>Mixed lines</strong></td><td>Deliberately mix genders, experience levels, and friend groups on every line.</td></tr>
+    <tr><td><strong>Action-based calls</strong></td><td>Teach players to describe what happened ("you hit my arm") not characterize the person.</td></tr>
+    <tr><td><strong>Celebrate diverse strengths</strong></td><td>Recognize effort, improvement, and spirit — not just athletic performance.</td></tr>
+    <tr><td><strong>Pronoun awareness</strong></td><td>Ask players what name and pronouns they use. Correct mistakes without making it a big deal.</td></tr>
+    <tr><td><strong>Financial accessibility</strong></td><td>Scholarship spots, provided equipment, organized carpools, fundraising for travel.</td></tr>
+    <tr><td><strong>Spirit circles with both teams</strong></td><td>Post-game circles build respect across team lines and expose players to different team cultures.</td></tr>
+  </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    When I played for Fury, our team was more diverse than most in the women's division, and I saw firsthand how spirit scoring could be filtered through bias. Players on teams that looked or played differently from the norm sometimes got lower spirit scores for the same behaviors. At the youth level, you have a chance to set the default before those biases calcify. The kids on your team right now are going to be the spirit captains and tournament directors of the future. What you model matters.
+  </div>
+</div>
+
+
+<!-- ══ 4: THE RULES KIDS NEED TO KNOW ══ -->
+<div class="chapter" id="ch-rules">
+  <div class="chapter-number">Chapter 4</div>
+  <div class="chapter-title">The Rules Kids Need to Know</div>
+
+  <div class="section"><div class="section-title">Why Rule Knowledge Matters</div>
+  <p>In most youth sports, the referee handles the rules. Players can get away with not knowing why a whistle blew — they just accept the outcome and keep playing. Ultimate doesn't work that way. Every player on the field is simultaneously a player and an official. If your players don't know the rules, they can't make calls, can't respond to calls against them, and can't participate in the self-officiation process that defines the sport.</p>
+  <p>Rule knowledge is not a nice-to-have. It is a core skill, equal in importance to throwing and catching. The USA Ultimate Official Rules state it directly: "All players are responsible for knowing, administering, and adhering to the rules."</p>
+  </div>
+
+  <div class="section"><div class="section-title">How to Teach Rules Progressively</div>
+  <p>Do not hand a 7-year-old a rulebook. Introduce rules in layers, starting with the essentials and adding complexity as players demonstrate readiness.</p>
+  <table class="ref-table">
+    <tr><th>Phase</th><th>When</th><th>Rules to Introduce</th></tr>
+    <tr><td><strong>Day 1</strong></td><td>First practice</td><td>Score by catching in the endzone. Can't run with the disc. Disc goes to the other team when it hits the ground. No contact.</td></tr>
+    <tr><td><strong>Week 1–2</strong></td><td>First few sessions</td><td>The pull. Pivot foot. The stall count (simplified). Turnovers. In-bounds and out-of-bounds.</td></tr>
+    <tr><td><strong>Week 3–4</strong></td><td>Once basics are solid</td><td>Travels. Fouls (contact). The check (restarting play after a stoppage). How to make a call ("I call travel").</td></tr>
+    <tr><td><strong>Mid-season</strong></td><td>When ready</td><td>Marking violations (too close, straddling, wrapping). Picks. Contested vs. uncontested calls.</td></tr>
+    <tr><td><strong>As needed</strong></td><td>Game situations</td><td>Brick mark. Offsides. Specific call resolutions. Dangerous play.</td></tr>
+  </table>
+  <p>The best way to teach rules is in context. When something happens during a scrimmage that involves a rule they haven't learned yet, stop play, explain the rule, demonstrate the resolution, and then continue. Rules taught in the moment they become relevant stick far better than rules taught in a classroom.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Youth Adaptations</div>
+  <p>The USA Ultimate Official Rules include a Youth Rules Adaptations appendix (Appendix E in the 2026-2027 rules; Appendix D in the 2024-2025 edition), which provides recommended modifications for younger players. These are not mandatory for recreational play, but they make the game more appropriate for developing bodies and skills. Key adaptations for ages 7–12:</p>
+  <ul>
+    <li><strong>Smaller fields.</strong> A full-size ultimate field is 70 yards by 40 yards with 25-yard endzones. For ages 7–12, scale it down. A common youth setup is 50 yards by 25 yards with 15-yard endzones, though even smaller is fine for the youngest players.</li>
+    <li><strong>Fewer players.</strong> 5-on-5 is standard for youth and is what the Hex for Five pack is built around. For beginners under age 9, 4-on-4 or even 3-on-3 can work better — less crowding, simpler reads.</li>
+    <li><strong>Lighter discs.</strong> The standard 175-gram disc is too heavy for most kids under 10. Use a 145-gram disc like the Discraft J-Star. It's easier to grip and throw for small hands.</li>
+    <li><strong>Shorter or no stall count.</strong> The standard stall count is 10 seconds. For young beginners, either eliminate the stall count entirely or extend it to 15. Kids need time to look up, find a receiver, and make a decision. Pressuring them with a fast count teaches panic, not good decision-making.</li>
+    <li><strong>Extended time between points.</strong> Give kids more time to sub, hydrate, and recover. Young bodies overheat faster and tire more quickly.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Rules Glossary for Young Players</div>
+  <p>This glossary covers every rule and term a player aged 7–12 should know by the end of a season. Use it as a reference when teaching. The definitions are written to be read aloud to kids — plain language, no jargon.</p>
+
+  <table class="ref-table">
+    <tr><th>Term</th><th>Category</th><th>What It Means</th></tr>
+    <tr><td><strong>Field</strong></td><td>Setup</td><td>The rectangular playing area. It has two endzones at each end and a central zone in the middle. Sidelines mark the edges.</td></tr>
+    <tr><td><strong>Endzone</strong></td><td>Setup</td><td>The scoring area at each end of the field. You score by catching the disc in the endzone you're attacking.</td></tr>
+    <tr><td><strong>Pull</strong></td><td>Setup</td><td>The throw that starts each point. The defense throws the disc to the offense, like a kickoff in football. Both teams start on their own goal line.</td></tr>
+    <tr><td><strong>Brick</strong></td><td>Setup</td><td>If the pull goes out of bounds, the offense can start from the "brick mark" — a spot near the middle of the field. The receiver signals by raising a hand and calling "brick."</td></tr>
+    <tr><td><strong>Check</strong></td><td>Setup</td><td>How you restart play after a stoppage (like a foul call or timeout). The defender taps the disc, or the thrower touches the disc to the ground, and play resumes.</td></tr>
+    <tr><td><strong>Thrower</strong></td><td>Movement</td><td>The player holding the disc. The thrower cannot run. They must keep one foot planted (the pivot foot) and can only move the other foot to change angle.</td></tr>
+    <tr><td><strong>Pivot foot</strong></td><td>Movement</td><td>After catching the disc, one foot stays planted on the ground. You can move the other foot, but the pivot foot stays put. This is the same concept as basketball.</td></tr>
+    <tr><td><strong>Travel</strong></td><td>Movement</td><td>Moving your pivot foot or running with the disc after catching it. If someone calls "travel," play stops, the disc goes back to where the travel happened, and play restarts with a check.</td></tr>
+    <tr><td><strong>Stall count</strong></td><td>Movement</td><td>The defender guarding the thrower counts out loud: "stalling one, two, three..." up to ten. If they reach ten before the thrower releases the disc, it's a turnover. The count must be at a steady pace — about one number per second.</td></tr>
+    <tr><td><strong>Marker</strong></td><td>Movement</td><td>The defender guarding the thrower. The marker is the one who counts the stall. The marker must give the thrower space — the official distance is about 3 meters (roughly one arm's length plus a disc). In youth play, enforcing this loosely is fine for beginners.</td></tr>
+    <tr><td><strong>Turnover</strong></td><td>Possession</td><td>When the offense loses the disc. Turnovers happen when: a throw hits the ground, goes out of bounds, is caught by a defender (interception), the stall count reaches ten, or the thrower drops the disc.</td></tr>
+    <tr><td><strong>Incomplete pass</strong></td><td>Possession</td><td>A throw that isn't caught — it hits the ground, goes out of bounds, or is knocked down. Immediate turnover.</td></tr>
+    <tr><td><strong>Interception</strong></td><td>Possession</td><td>When a defender catches a throw intended for an offensive player. Immediate turnover. The defender's team is now on offense.</td></tr>
+    <tr><td><strong>Goal</strong></td><td>Scoring</td><td>Scored when an offensive player catches the disc in the endzone they're attacking. The catch must be completed (controlled) in the endzone.</td></tr>
+    <tr><td><strong>Foul</strong></td><td>Calls</td><td>Non-incidental contact between players. Ultimate is a non-contact sport. If contact affects the play, the player who was fouled calls "foul." If the call is agreed upon (uncontested), the fouled player gets the disc or the play result stands depending on the situation.</td></tr>
+    <tr><td><strong>Violation</strong></td><td>Calls</td><td>A rule infraction that isn't a foul — like a travel, a marking violation (standing too close, reaching over), or an offsides on the pull. Call "violation" and name what happened.</td></tr>
+    <tr><td><strong>Contest</strong></td><td>Calls</td><td>When the player who was called disagrees with the call. "Contested!" means the two players don't agree. The disc goes back to the thrower and the stall count resets. Play continues.</td></tr>
+    <tr><td><strong>Uncontested</strong></td><td>Calls</td><td>When the player who was called agrees with the call. The resolution specified by the rules takes effect.</td></tr>
+    <tr><td><strong>Non-contact</strong></td><td>Safety</td><td>Ultimate is a non-contact sport. Players must actively avoid contact. Incidental contact happens and is fine. Deliberate or reckless contact is a foul and a Spirit of the Game violation.</td></tr>
+    <tr><td><strong>Dangerous play</strong></td><td>Safety</td><td>Any play that creates a significant risk of injury. Under current rules, contact generally must have occurred for this call to apply. Safety always comes first.</td></tr>
+    <tr><td><strong>Spirit of the Game</strong></td><td>Spirit</td><td>The set of principles that governs fair play. Three core ideas: mutual respect, follow the rules, and enjoy playing. Written into the official rules — not just a suggestion.</td></tr>
+    <tr><td><strong>Spirit captain</strong></td><td>Spirit</td><td>A player on each team designated to address spirit-related issues with opponents, teammates, coaches, and officials. At youth level, this role can rotate so every player practices it.</td></tr>
+    <tr><td><strong>Spirit circle</strong></td><td>Spirit</td><td>A gathering of both teams after a game to discuss spirit. Each team shares an appreciation and a suggestion. Keeps the conversation going.</td></tr>
+    <tr><td><strong>Self-officiation</strong></td><td>Spirit</td><td>Players make their own calls and resolve their own disputes. There are no referees in standard ultimate. This is the default — not an alternative format.</td></tr>
+  </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    When I coach young kids and a foul happens, I don't just blow a whistle and hand the disc over. I walk them through it. "What happened? Did you feel contact? Where? Okay, that's a foul. How do you call it? Say 'foul' loud enough for everyone to hear. Good. Now what happens?" They're not just learning a rule — they're learning how to use their voice on the field. That skill travels.
+  </div>
+</div>
+
+
+<!-- ══ 5: HOW KIDS LEARN ══ -->
+<div class="chapter" id="ch-development">
+  <div class="chapter-number">Chapter 5</div>
+  <div class="chapter-title">How Kids Learn (Ages 7–12)</div>
+
+  <div class="section"><div class="section-title">Two Developmental Bands</div>
+  <p>There is a wide gap between a 7-year-old and a 12-year-old. Coaching both with the same approach does not work. The table below outlines what to expect at each stage and how to adjust your coaching.</p>
+
+  <table class="ref-table">
+    <tr><th>Dimension</th><th>Ages 7–9</th><th>Ages 10–12</th></tr>
+    <tr><td><strong>Attention span</strong></td><td>5–10 minutes for instruction. After that, they need to move. Explanations should be under 60 seconds.</td><td>10–15 minutes. Can handle longer tactical discussions, but still learn best through play.</td></tr>
+    <tr><td><strong>Motor skills</strong></td><td>Still developing coordination. Throwing accuracy is inconsistent. Catching is unreliable. Footwork is clumsy. This is normal.</td><td>Coordination improving rapidly. Can develop consistent throwing mechanics. Catching becomes reliable with practice.</td></tr>
+    <tr><td><strong>Spatial awareness</strong></td><td>Struggle to see the whole field. Tend to cluster around the disc. The concept of "spacing" is abstract.</td><td>Starting to read the field. Can begin to understand shape maintenance. Spatial reasoning develops quickly at this age.</td></tr>
+    <tr><td><strong>Social development</strong></td><td>Ego-centric. "Fair" means "fair to me." Sharing and taking turns require active coaching. Friendships are forming.</td><td>Growing capacity for empathy. Can understand fairness as a two-way concept. Peer relationships are increasingly important.</td></tr>
+    <tr><td><strong>Rule comprehension</strong></td><td>Can learn simple rules (scoring, turnovers, no contact). Struggle with conditional rules ("if X, then Y"). Need rules repeated frequently.</td><td>Can learn the full set of basic rules. Can understand contested calls and conditional resolutions. Ready for self-officiation with guidance.</td></tr>
+    <tr><td><strong>Competition</strong></td><td>Most kids this age care about playing, not winning. Scoreboard pressure comes from adults, not kids. Keep it playful.</td><td>Competition becomes more meaningful. Kids start caring about outcomes. Channel this toward effort and improvement, not results.</td></tr>
+    <tr><td><strong>What motivates them</strong></td><td>Fun. Novelty. Getting to throw. Feeling included. Snacks.</td><td>Improvement. Belonging. Feeling competent. Being trusted with responsibility.</td></tr>
+  </table>
+  </div>
+
+  <div class="section"><div class="section-title">Play-Based Learning</div>
+  <p>Kids aged 7–12 learn motor skills and tactical concepts primarily through play, not through drills or lectures. This is not a philosophical position — it's how developing nervous systems work. A game of 3v3 keep-away teaches spacing, quick decisions, and throwing under pressure more effectively than any cone drill.</p>
+  <p>This doesn't mean structure is bad. It means structure should be embedded in games rather than separated from them. Instead of "run this drill for 10 minutes, then scrimmage," try "play this game that requires you to use the skill I'm teaching." The Hex for Five pack's play progression (2v2 → 3v3 → 4v4 → 5v5) is designed exactly this way — each step is a game, not a drill.</p>
+  </div>
+
+  <div class="section"><div class="section-title">What Not to Expect</div>
+  <p>Some things young players are not developmentally ready for, regardless of athletic talent:</p>
+  <ul>
+    <li><strong>Perfect shape maintenance.</strong> The kite will collapse constantly. This is fine. Rebuilding the shape after it breaks is the skill they're learning.</li>
+    <li><strong>Consistent throws.</strong> A 9-year-old will throw beautiful backhands one minute and bounce the disc three feet in front of them the next. Repetition over weeks and months builds consistency. Correction in the moment builds anxiety.</li>
+    <li><strong>Sophisticated reads.</strong> "Read the defender's hips and cut to the open side" is beyond most players under 10. Simplify: "If your defender is in front of you, go the other way."</li>
+    <li><strong>Emotional regulation during disputes.</strong> A contested call between 8-year-olds will sometimes end in tears or anger. That's not a failure — it's a teaching moment. Walk them through the resolution calmly.</li>
+  </ul>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">Don't Rush Them</div>
+    The biggest mistake coaches make with young players is coaching them like small adults. A 10-year-old is not a miniature high school player. Their bodies, brains, and social skills are developing on their own timeline. Meet them where they are. If your 8-year-olds can throw a backhand 10 yards to a stationary target, that's excellent. If your team of 7-year-olds played an entire point without anyone running with the disc, that's a win. Adjust your expectations to the reality of the age group.
+  </div>
+</div>
+
+
+<!-- ══ 6: TEACHING THROWS AND CATCHES ══ -->
+<div class="chapter" id="ch-throws">
+  <div class="chapter-number">Chapter 6</div>
+  <div class="chapter-title">Teaching Throws and Catches</div>
+
+  <div class="section"><div class="section-title">Why This Chapter Is Here</div>
+  <p>The Hex for Five pack assumes players can throw and catch. With ages 7–12, that assumption doesn't hold. Many of your players will be picking up a disc for the first time. Hex doesn't work if nobody can complete a pass — the triangles are meaningless if every throw hits the ground. Build the fundamentals first.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Start with the Backhand</div>
+  <p>The backhand is the most natural throw for young players. It's intuitive, requires less wrist strength than a forehand, and is easier to control. Teach it first.</p>
+  <p>Key points for coaching the backhand to kids:</p>
+  <ul>
+    <li><strong>Grip:</strong> Four fingers curled under the rim, thumb on top. The rim should sit against the pad where the fingers meet the palm. For small hands, three fingers under the rim is fine.</li>
+    <li><strong>Spin:</strong> Spin is what makes the disc fly flat. Emphasize snapping the wrist on release. A good cue: "Flick your wrist like you're snapping a towel." If the disc wobbles, they need more spin.</li>
+    <li><strong>Step:</strong> Step toward the target with the lead foot. Throwing across the body (not just with the arm) generates power without requiring arm strength that kids don't have yet.</li>
+    <li><strong>Release point:</strong> Release flat, aimed at the partner's chest. If the disc nose-dives, the front edge was angled down. If it floats up, the front edge was angled up.</li>
+  </ul>
+  <p>Start with partners standing 5 yards apart. Increase distance only when throws are consistently flat and catchable.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Pancake Catch</div>
+  <p>The pancake catch — clapping two open hands together to trap the disc between them — is the most reliable catch for beginners. It's the first catch to teach because it requires no timing of a rim grab and works at any height between waist and head.</p>
+  <p>Coaching cues:</p>
+  <ul>
+    <li>Hands open wide, one on top, one on bottom.</li>
+    <li>Watch the disc all the way into your hands. Don't look away.</li>
+    <li>Clap it. You should hear a "clap" when you catch. If there's no clap, the hands weren't positioned correctly.</li>
+    <li>Catch it away from your body, with arms extended. Catching against the chest is a common beginner habit — it means the hands aren't out early enough.</li>
+  </ul>
+  <p>Many young kids are afraid of the disc. It's a hard, spinning object flying at them. Start with very short, soft throws. Build confidence before building distance.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Adding the Forehand</div>
+  <p>The forehand (flick) is harder for young players because it relies on wrist snap and a grip that feels unnatural at first. Most kids under 9 will struggle with it. Introduce it around age 10, or whenever backhand mechanics are solid.</p>
+  <p>Key coaching points:</p>
+  <ul>
+    <li><strong>Grip:</strong> Middle finger along the inside rim, index finger beside it or slightly spread. Thumb on top. This feels weird — let them experiment until it's comfortable.</li>
+    <li><strong>Wrist snap:</strong> The forehand is almost entirely wrist. The arm barely moves. Cue: "Keep your elbow still and just flick your wrist." An exaggerated wrist snap is better than an arm throw.</li>
+    <li><strong>Low release:</strong> The release point is lower than the backhand — roughly hip height. If kids throw forehands up high, the disc will turn over and crash.</li>
+  </ul>
+  <p>Don't force it. If a player is 8 and can't throw a forehand, that's completely normal. A reliable backhand is more valuable than a shaky forehand.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Throw and Catch Progression</div>
+  <table class="ref-table">
+    <tr><th>Stage</th><th>Typical Age</th><th>Focus</th></tr>
+    <tr><td><strong>1 — Grip &amp; spin</strong></td><td>7–8</td><td>Backhand grip. Wrist snap. Short distance (5 yards). Pancake catch. Goal: flat throws that reach the partner.</td></tr>
+    <tr><td><strong>2 — Accuracy</strong></td><td>8–9</td><td>Extend to 10 yards. Throw to partner's chest. Catch away from body. Introduce pivoting after catch.</td></tr>
+    <tr><td><strong>3 — Moving targets</strong></td><td>9–10</td><td>Throw to a partner who is jogging. Lead passes. Catching on the move. Introduce rim catches for low and high discs.</td></tr>
+    <tr><td><strong>4 — Forehand intro</strong></td><td>10–11</td><td>Forehand grip and wrist snap. Short distance first. Continue developing backhand range and accuracy.</td></tr>
+    <tr><td><strong>5 — Game throws</strong></td><td>11–12</td><td>Throwing with a mark. Faking. Break throws (around the defender). Both throws at 15+ yards. Catching contested discs.</td></tr>
+  </table>
+  <p>These ages are rough guides. Some 8-year-olds will be at Stage 3. Some 11-year-olds will still be at Stage 2. Match the stage to the player, not the birthday.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Disc Selection</div>
+  <p>The standard ultimate disc weighs 175 grams. For players under 10, this is too heavy. A lighter disc is easier to grip, easier to throw with spin, and less intimidating to catch.</p>
+  <ul>
+    <li><strong>Ages 7–9:</strong> Use a 145-gram disc. The Discraft J-Star is the standard youth disc. It's designed for smaller hands and lighter arms.</li>
+    <li><strong>Ages 10–12:</strong> Transition to 175-gram when grip strength and throwing mechanics allow. Some 10-year-olds are ready; some 12-year-olds still prefer the lighter disc. Follow the player's comfort.</li>
+  </ul>
+  </div>
+</div>
+
+
+<!-- ══ 7: TEACHING HEX ══ -->
+<div class="chapter" id="ch-progression">
+  <div class="chapter-number">Chapter 7</div>
+  <div class="chapter-title">Teaching Hex — The Coaching Progression</div>
+
+  <div class="section"><div class="section-title">The Play Progression</div>
+  <p>Felix Shardlow's recommended approach for teaching Hex is a play progression: start small and add complexity. This is exactly how you should introduce it to young players. The progression from the Hex for Five pack is:</p>
+
+  <table class="ref-table">
+    <tr><th>Stage</th><th>Format</th><th>Focus</th><th>Coaching Notes</th></tr>
+    <tr><td><strong>1</strong></td><td>2v2</td><td>Take the open pass</td><td>Narrow mini-field. No shape teaching. Just: "throw to whoever is open." Let them discover that the lateral pass works when the defender takes away the forward pass. Ask questions: "Why did that pass work?" Don't lecture.</td></tr>
+    <tr><td><strong>2</strong></td><td>3v3</td><td>Make triangles</td><td>Slightly wider field. Set up the triangle with cones first. "Stand at the cones. Can everyone throw to two teammates? Good. Now play and try to keep the triangle." This is the first time they experience shape as a concept.</td></tr>
+    <tr><td><strong>3</strong></td><td>4v4</td><td>Don't crowd the disc + the hat</td><td>Introduce the hat: "One person stays in the middle and connects the front players to the back players." Teach the rule of not crowding: "Only three players should be close to the thrower. If you're the fourth, you're too close — move away."</td></tr>
+    <tr><td><strong>4</strong></td><td>5v5</td><td>Full kite shape + throw-and-go</td><td>Set up the kite with cones. Walk through all five positions. Then play. When the shape breaks down (it will), freeze the play: "Everyone stop. Look around. Where should the hat be? Who's behind the disc? Fix it." Then continue.</td></tr>
+  </table>
+
+  <p>Spend at least one full practice at each stage before moving to the next. If your players are 7–8, spend two or three practices at each stage. There's no rush. Each stage builds the foundation for the next.</p>
+  </div>
+
+  <div class="section"><div class="section-title">The Freeze-and-Fix Method</div>
+  <p>This is the single most effective coaching tool for teaching Hex to young players. During a scrimmage, when you see the shape break down badly, blow a whistle or yell "Freeze!" Every player stops where they are.</p>
+  <p>Then:</p>
+  <ol>
+    <li>Ask the players what they see. "Where's the hat? Is anyone behind the disc? How many people are near the thrower?"</li>
+    <li>Let them identify the problem. Don't tell them — ask them. If they can't see it, point it out, but always ask first.</li>
+    <li>Let them reposition. "Okay, fix it. Move to where you should be." Watch them figure it out.</li>
+    <li>Resume play from the frozen position with a check.</li>
+  </ol>
+  <p>Early in the season, you'll be freezing every 30 seconds. By mid-season, the freezes will drop to a few per scrimmage. By end of season, the players will start fixing the shape themselves before you even call it.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Focused Scrimmage Constraints</div>
+  <p>Rather than just playing regular scrimmages, add constraints that force specific Hex behaviors:</p>
+  <ul>
+    <li><strong>All-touch:</strong> You can't score until every player on your team has touched the disc. Forces involvement.</li>
+    <li><strong>Count completions:</strong> Instead of scoring in the endzone, count consecutive completions. Team with the most in a row wins. Rewards possession and short passes — exactly what Hex rewards.</li>
+    <li><strong>No huck:</strong> No throws longer than 15 yards. Forces short, quick passing — the core of Hex movement.</li>
+    <li><strong>Throw-and-go mandatory:</strong> After every throw, the thrower must take at least five steps. Builds the give-and-go habit.</li>
+    <li><strong>Shape bonus:</strong> Award a bonus point any time the coach sees good shape maintenance after a completed pass. Kids will start thinking about shape.</li>
+  </ul>
+  </div>
+
+  <div class="section"><div class="section-title">Common Coaching Mistakes</div>
+  <table class="ref-table">
+    <tr><th>Mistake</th><th>Why It Happens</th><th>What to Do Instead</th></tr>
+    <tr><td><strong>Over-explaining</strong></td><td>You understand Hex deeply and want to transfer all of it at once. Kids can't absorb a 5-minute explanation of the decision tree.</td><td>One concept per session. Explain in 30 seconds or less. Then play. Let the game teach.</td></tr>
+    <tr><td><strong>Correcting too much</strong></td><td>You see 10 things wrong on every point. If you correct all of them, players become afraid to make mistakes.</td><td>Pick one focus per practice. Let the other nine things go. Next practice, pick another one.</td></tr>
+    <tr><td><strong>Teaching defense too early</strong></td><td>You want a complete game. But if kids can't throw or maintain shape on offense, adding defense is just adding chaos.</td><td>Spend the first 3-4 weeks on offense and fundamentals. Introduce Flex defense only when the offense can function.</td></tr>
+    <tr><td><strong>Running drills instead of games</strong></td><td>Drills feel structured and productive. Games feel chaotic. But games teach faster than drills for this age group.</td><td>Convert every drill into a game. Add points, competition, or constraints. "Drill" is a dirty word for ages 7-12.</td></tr>
+    <tr><td><strong>Not enough scrimmage time</strong></td><td>You spend 45 minutes on drills and fundamentals, leaving 10 minutes for a scrimmage at the end.</td><td>Flip it. 10-15 minutes of warm-up and skills, then 30-45 minutes of game play with teaching embedded.</td></tr>
+  </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    The best coaching advice I ever got about working with kids: "Coach less." Not less preparation — less intervention. Set up the game, give them the focus, and then shut up and watch. Only stop play when something needs to be fixed right now. The rest of the time, take notes and address it between points or at the end of practice. Kids who are constantly being interrupted learn to wait for instructions. Kids who are left to play learn to make decisions.
+  </div>
+</div>
+
+
+<!-- ══ 8: PRACTICE PLANS & GAME DAY ══ -->
+<div class="chapter" id="ch-practice">
+  <div class="chapter-number">Chapter 8</div>
+  <div class="chapter-title">Practice Plans &amp; Game Day</div>
+
+  <div class="section"><div class="section-title">Practice Structure</div>
+  <p>A good youth practice follows a simple arc: warm up, build a skill, play, cool down. Here's the framework for both 60-minute and 90-minute sessions:</p>
+
+  <table class="ref-table">
+    <tr><th>Block</th><th>60-Minute Session</th><th>90-Minute Session</th></tr>
+    <tr><td><strong>Warm-up</strong></td><td>10 min — throwing pairs + movement game (tag, relay, keep-away)</td><td>15 min — throwing pairs + two movement games</td></tr>
+    <tr><td><strong>Skill focus</strong></td><td>10 min — one skill introduced or practiced through a small-sided game</td><td>15 min — skill game + brief teaching moment (under 2 min explanation)</td></tr>
+    <tr><td><strong>Scrimmage</strong></td><td>30 min — focused scrimmage with one constraint. Freeze-and-fix as needed.</td><td>45 min — scrimmage with constraint (first 20 min), then open scrimmage (25 min)</td></tr>
+    <tr><td><strong>Cool-down</strong></td><td>10 min — stretch, spirit discussion prompt, team huddle</td><td>15 min — stretch, spirit discussion, shout-outs for effort and spirit</td></tr>
+  </table>
+  <p>The scrimmage is the main event. Everything else supports it. If you're running short on time, cut the skill focus, not the scrimmage.</p>
+  </div>
+
+  <div class="section"><div class="section-title">Sample First Practice (New Team)</div>
+  <p>This is for a team of complete beginners, ages 8–10, who have never played ultimate. 90-minute session.</p>
+  <ol>
+    <li><strong>0–15 min:</strong> Introductions. Name game (throw the disc to someone and say their name). This builds names + throwing reps at the same time.</li>
+    <li><strong>15–25 min:</strong> Throwing pairs. Teach the backhand grip and pancake catch. Partners 5 yards apart. Just throw back and forth. Walk around and help with grips.</li>
+    <li><strong>25–35 min:</strong> Disc tag. One player with the disc tries to tag others by touching them with it (no throwing at people). Tagged players get a disc and join the taggers. Builds movement and disc awareness. Not an ultimate drill — just fun.</li>
+    <li><strong>35–45 min:</strong> Teach the basic rules. Under 2 minutes: "Score by catching in the endzone. Can't run with it. If it hits the ground, other team gets it. No pushing or grabbing." That's it for day one.</li>
+    <li><strong>45–80 min:</strong> Scrimmage. 4v4 or 5v5 on a small field. Stop play frequently to teach in context. When a turnover happens, explain it. When a goal is scored, celebrate. When someone travels, gently correct. Let them play through most mistakes.</li>
+    <li><strong>80–90 min:</strong> Cool down. Stretch. Ask: "What was the most fun thing about today? What was confusing?" Spirit discussion: "In ultimate, there are no referees. We call our own fouls. That means we have to be honest. What does that mean to you?" End with a team cheer.</li>
+  </ol>
+  </div>
+
+  <div class="section"><div class="section-title">Sample Mid-Season Practice (Hex Shape Work)</div>
+  <p>For a team that has been playing for 4–6 weeks and is ready to focus on shape. Ages 9–11. 90-minute session.</p>
+  <ol>
+    <li><strong>0–15 min:</strong> Warm-up. Throwing pairs (5 min), then 3v3 keep-away on a small box (10 min). Emphasize: "If you're open, call for it. If you have the disc, throw to whoever is open."</li>
+    <li><strong>15–25 min:</strong> Triangle rotation drill. Three players in a triangle, 8 yards apart. Player A throws to Player B, then cuts. Player C fills the vacated space. Rotate. With a defender if ready. Focus: "After you throw, move."</li>
+    <li><strong>25–35 min:</strong> Set up the kite shape with cones. Walk through all five positions. Each player stands in a spot. Ask: "Who can I throw to from here? Who is in the hat? What happens if I throw to the near forward — where does everyone move?" Physical walkthrough, not lecture.</li>
+    <li><strong>35–75 min:</strong> 5v5 scrimmage. First 15 min: no-huck constraint (forces short passes and shape). Freeze-and-fix when shape breaks. Next 25 min: open scrimmage, shape bonus points (coach awards a bonus point for good shape after a completion).</li>
+    <li><strong>75–90 min:</strong> Cool down. Stretch. Spirit prompt: "Did anyone make a call today? What happened? How did you resolve it?" Shout-outs: one for effort, one for spirit, one for improvement.</li>
+  </ol>
+  </div>
+
+  <div class="section"><div class="section-title">Seasonal Arc</div>
+  <table class="ref-table">
+    <tr><th>Phase</th><th>Weeks</th><th>Focus</th></tr>
+    <tr><td><strong>Early season</strong></td><td>1–3</td><td>Fundamentals and fun. Throwing, catching, basic rules. Small-sided games. Build team culture and spirit habits. No tactical teaching yet.</td></tr>
+    <tr><td><strong>Building phase</strong></td><td>4–6</td><td>Introduce Hex concepts through the play progression. 2v2 → 3v3 → 4v4 → 5v5. One new concept per week. Teach defense basics (marking, force).</td></tr>
+    <tr><td><strong>Mid-season</strong></td><td>7–9</td><td>Shape work. Kite positioning. Freeze-and-fix in scrimmages. Introduce give-and-go and throw-and-go as habits. Flex defense basics.</td></tr>
+    <tr><td><strong>Late season</strong></td><td>10–12</td><td>Game play emphasis. Longer scrimmages. Practice tournament formats. Spirit circles after every scrimmage. Celebrate growth over the season.</td></tr>
+  </table>
+  </div>
+
+  <div class="section"><div class="section-title">Game Day</div>
+  <p>Tournament and game day coaching for youth ultimate is different from practice.</p>
+  <ul>
+    <li><strong>Substitution fairness.</strong> Track playing time. Rotate lines systematically. Every kid plays roughly the same amount, regardless of score or game situation. Write it down — don't trust your memory in the moment.</li>
+    <li><strong>Sideline behavior.</strong> Model what you want from your players. Don't yell instructions during play — it overrides the decision-making you've been building in practice. Between points, keep it to one instruction max. Save detailed feedback for halftime and after the game.</li>
+    <li><strong>Spirit circles.</strong> After every game, both teams gather. Each team shares one appreciation and one suggestion. Keep it to 2-3 minutes. If your opponent doesn't know what a spirit circle is, explain it and invite them. Most teams are happy to participate.</li>
+    <li><strong>After a loss.</strong> Do not start with "here's what we need to fix." Start with what went well. Ask the players what they're proud of. Acknowledge the loss without dwelling on it. Then, if appropriate, identify one thing to work on. One. Not five.</li>
+    <li><strong>After a win.</strong> Do not let your team gloat. Celebrate with your team, then immediately shift to respect for the opponent. "They played hard. What did you notice about their game that was good?" Winning with humility is a Spirit of the Game skill.</li>
+  </ul>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-label">Dara's Take</div>
+    My first-practice ritual with every new youth team: I ask each kid to tell me their name, their favorite non-sport thing (a book, a game, a food, whatever), and one thing they hope to learn this season. Then I share mine. It takes 10 minutes and it tells me more about my team than any tryout ever could. By the end of that circle, every kid knows that their coach sees them as a person, not just a player. That's where team culture starts.
+  </div>
+</div>
+
+
+<!-- ══ REFERENCES ══ -->
+<div class="chapter" id="ch-refs">
+  <div class="chapter-number">References</div>
+  <div class="chapter-title">References</div>
+
+  <table class="ref-table">
+    <tr><th>#</th><th>Source</th></tr>
+    <tr><td>1</td><td>USA Ultimate. "Official Rules of Ultimate 2024-2025." Including Appendix D: Youth Rules Adaptations. <em>usaultimate.org/rules/</em></td></tr>
+    <tr><td>2</td><td>USA Ultimate. "Official Rules of Ultimate 2026-2027." Including Appendix E: Youth Rules Adaptations. <em>usaultimate.org/rules/</em></td></tr>
+    <tr><td>3</td><td>USA Ultimate. "Spirit of the Game." <em>usaultimate.org/spirit-of-the-game/</em></td></tr>
+    <tr><td>4</td><td>USA Ultimate. "Equity, Diversity &amp; Inclusion." <em>usaultimate.org/equity-diversity-inclusion/</em></td></tr>
+    <tr><td>5</td><td>USA Ultimate. "EDI &amp; Spirit of the Game." <em>usaultimate.org/equity-diversity-inclusion/spirit-of-the-game/</em></td></tr>
+    <tr><td>6</td><td>USA Ultimate. "2026 Youth Guidelines." <em>usaultimate.org/2026-youth-guidelines/</em></td></tr>
+    <tr><td>7</td><td>USA Ultimate. "Teaching Ultimate: An Educator's Guide." 2011. <em>usaultimate.org</em></td></tr>
+    <tr><td>8</td><td>Youth Ultimate. "Coach!" Resources for coaching youth ultimate. <em>youthultimate.net/coach/</em></td></tr>
+    <tr><td>9</td><td>Shardlow, Felix. "Hexagon Offence v2.34." Hive Ultimate, 2021. <em>hiveultimate.com</em></td></tr>
+    <tr><td>10</td><td>Gunther, Shea / Loop MMT. "Hex for Five Knowledge Pack v1." 8 April 2026.</td></tr>
+    <tr><td>11</td><td>The Ultimate Foundation. "About Ultimate." <em>theultimatefoundation.org/about/</em></td></tr>
+    <tr><td>12</td><td>USA Ultimate. "EDI FAQs." <em>usaultimate.org/equity-diversity-inclusion/faqs/</em></td></tr>
+  </table>
+
+  <div class="callout note">
+    <div class="callout-label">Operator Note</div>
+    <p>This document is a coaching companion to the Hex for Five Knowledge Pack. The tactical content (positions, shape, movement decision tree, defense) lives in that pack and is not reproduced here. The coaching guidance — Spirit of the Game, inclusion practices, developmental considerations, teaching progressions, practice plans — is original to this document, informed by USA Ultimate's published rules, guidelines, and EDI resources. Strategic commentary from Dara Tehrani reflects the perspective of a Loop MMT Advisory Board member and is written in character. The youth rules adaptation details reflect the 2024-2025 and 2026-2027 rule sets; coaches should verify current adaptations against the most recent edition of the Official Rules of Ultimate.</p>
+  </div>
+</div>
+
+
+</main>
+</div>
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>Coaching Hex for Kids Knowledge Pack · v1</span>
+  <span>© 2026 Shea Gunther · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script>
+function setSkin(id){document.body.className='skin-'+id;try{localStorage.setItem('loop-mmt-chk-skin',id);}catch(e){}document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));}
+document.addEventListener('DOMContentLoaded',()=>{
+  let s='og';try{s=localStorage.getItem('loop-mmt-chk-skin')||'og';}catch(e){}setSkin(s);
+  const ch=document.querySelectorAll('.chapter,.section[id]');
+  const tl=document.querySelectorAll('.toc-list a');
+  const ob=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;tl.forEach(l=>l.classList.remove('active'));const a=document.querySelector('.toc-list a[href="#'+id+'"]');if(a)a.classList.add('active');}});},{rootMargin:'-80px 0px -60% 0px'});
+  ch.forEach(c=>ob.observe(c));
+});
+</script>
+</body></html>
