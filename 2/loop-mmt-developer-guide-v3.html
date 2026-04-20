@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Developer Guide v3</title>
+<style>
+  :root {
+    --bg:           #e8eef4;
+    --panel:        #dce4ec;
+    --panel2:       #edf1f5;
+    --panel3:       #d4dce6;
+    --border:       #9ab0c4;
+    --border2:      #b0c4d4;
+    --fg:           #000000;
+    --fg-dim:       #507090;
+    --accent:       #1e3a6e;
+    --accent2:      #6030c0;
+    --working:      #1060b0;
+    --compute:      #b06000;
+    --vault:        #006830;
+    --filter:       #006888;
+    --signal:       #c01848;
+    --present:      #7040a0;
+    --workflow:     #2868b0;
+    --good-bg:      #eaf5ec;
+    --good-border:  #1a5c2a;
+    --warn-bg:      #fef8e0;
+    --warn-border:  #c08000;
+    --key-bg:       #eef0f8;
+    --key-border:   #1060b0;
+    --note-bg:      #f0f0f8;
+    --font:         'Courier New', Consolas, monospace;
+    --max-w:        860px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-size: 17px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    background: var(--panel);
+    border-bottom: 2px solid var(--border);
+    padding: 24px 48px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo { font-family: var(--font); letter-spacing: 6px; font-size: 18px; font-weight: bold; }
+  .logo-sub { font-family: var(--font); font-size: 10px; letter-spacing: 3px; color: var(--fg-dim); margin-top: 3px; }
+  .doc-title { text-align: right; }
+  .doc-title .title-main { font-family: var(--font); font-size: 11px; letter-spacing: 3px; color: var(--fg-dim); text-transform: uppercase; }
+  .doc-title .build-tag { font-family: var(--font); font-size: 10px; color: var(--fg-dim); margin-top: 3px; }
+
+  /* ── LAYOUT ── */
+  .body-wrap { display: flex; max-width: 1200px; margin: 0 auto; }
+
+  .toc-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 72px;
+    height: calc(100vh - 72px);
+    overflow-y: auto;
+    padding: 28px 0 28px 28px;
+    border-right: 1px solid var(--border2);
+    font-family: var(--font);
+  }
+  .toc-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 14px; }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 1px; }
+  .toc-list a {
+    font-size: 11px;
+    letter-spacing: .3px;
+    color: var(--fg-dim);
+    text-decoration: none;
+    display: block;
+    padding: 3px 6px;
+    border-left: 2px solid transparent;
+    transition: color .1s, border-color .1s;
+  }
+  .toc-list a:hover { color: var(--fg); border-left-color: var(--border); }
+  .toc-list a.active { color: var(--fg); border-left-color: var(--accent2); }
+  .toc-sub { list-style: none; padding-left: 10px; }
+  .toc-sub a { font-size: 10px; opacity: .8; }
+  .toc-sub a:hover { opacity: 1; }
+  .toc-sep { border: none; border-top: 1px solid var(--border2); margin: 6px 6px; }
+
+  .content { flex: 1; min-width: 0; padding: 48px 64px 96px 48px; max-width: var(--max-w); }
+
+  /* ── TYPOGRAPHY ── */
+  .chapter { margin-bottom: 64px; scroll-margin-top: 90px; }
+  .chapter-number { font-family: var(--font); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 6px; }
+  .chapter-title { font-family: var(--font); font-size: 22px; font-weight: bold; letter-spacing: 1px; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+  .section { margin: 28px 0; scroll-margin-top: 90px; }
+  .section-title { font-family: var(--font); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--fg-dim); border-bottom: 1px solid var(--border2); padding-bottom: 5px; margin-bottom: 14px; }
+
+  p { margin-bottom: 14px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  ul, ol { margin: 0 0 14px 24px; }
+  li { margin-bottom: 6px; }
+
+  code {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--compute);
+  }
+
+  pre {
+    background: var(--panel);
+    border-left: 3px solid var(--border2);
+    padding: 14px 18px;
+    font-family: var(--font);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  hr.rule { border: none; border-top: 1px solid var(--border2); margin: 36px 0; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-left: 4px solid var(--border);
+    padding: 12px 18px;
+    background: var(--panel2);
+    margin: 20px 0;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .callout.tip  { background: var(--good-bg);  border-left-color: var(--vault); }
+  .callout.warn { background: var(--warn-bg);  border-left-color: var(--compute); }
+  .callout.key  { background: var(--key-bg);   border-left-color: var(--working); }
+  .callout.note { background: var(--note-bg);  border-left-color: var(--accent2); }
+  .callout-label {
+    font-family: var(--font);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 6px;
+  }
+  .callout.tip .callout-label  { color: var(--vault); }
+  .callout.warn .callout-label { color: var(--compute); }
+  .callout.key .callout-label  { color: var(--working); }
+  .callout.note .callout-label { color: var(--accent2); }
+
+  /* ── TABLES ── */
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 16px 0; line-height: 1.5; }
+  .ref-table th { font-family: var(--font); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--fg-dim); text-align: left; padding: 7px 10px; border-bottom: 2px solid var(--border); background: var(--panel); }
+  .ref-table td { padding: 7px 10px; border-bottom: 1px solid var(--border2); vertical-align: top; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table td:first-child { font-family: var(--font); font-size: 13px; color: var(--fg-dim); }
+
+  /* ── ABSTRACT ── */
+  .abstract-box { background: var(--panel2); border: 1px solid var(--border); padding: 24px 28px; margin-bottom: 48px; line-height: 1.72; }
+  .abstract-label { font-family: var(--font); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 12px; }
+
+  /* ── PHASE HEADER ── */
+  .phase-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    font-family: var(--font);
+  }
+  .phase-eyebrow { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; opacity: .7; margin-bottom: 6px; }
+  .phase-name { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+  .phase-desc { font-size: 13px; opacity: .85; margin-top: 6px; }
+
+  /* ── STEP SEQUENCE ── */
+  .step-seq { display: flex; flex-direction: column; gap: 2px; margin: 20px 0; }
+  .step-item { display: flex; gap: 16px; padding: 12px 16px; background: var(--panel); border: 1px solid var(--border2); }
+  .step-num { font-family: var(--font); font-size: 13px; font-weight: bold; color: var(--accent2); min-width: 28px; flex-shrink: 0; padding-top: 1px; }
+  .step-body { flex: 1; }
+  .step-title { font-family: var(--font); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 4px; }
+  .step-desc { font-size: 15px; line-height: 1.6; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow { background: var(--panel); border: 1px solid var(--border2); padding: 18px; font-family: var(--font); font-size: 13px; text-align: center; letter-spacing: 1px; margin: 20px 0; }
+  .flow .arrow { color: var(--fg-dim); margin: 0 8px; }
+
+  /* ── ROLE CARD ── */
+  .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .role-card { background: var(--panel); border: 1px solid var(--border2); padding: 14px 18px; }
+  .role-card.full { grid-column: 1 / -1; border-color: var(--accent); }
+  .role-name { font-family: var(--font); font-size: 12px; font-weight: bold; letter-spacing: 1px; margin-bottom: 8px; color: var(--accent); }
+  .role-desc { font-size: 14px; line-height: 1.55; }
+
+  /* ── LOOP TYPE BADGES ── */
+  .loop-badge { display: inline-block; padding: 2px 8px; font-family: var(--font); font-size: 11px; font-weight: bold; letter-spacing: 1px; margin: 2px; }
+  .loop-working  { background: var(--working);  color: #fff; }
+  .loop-vault    { background: var(--vault);    color: #fff; }
+  .loop-compute  { background: var(--compute);  color: #fff; }
+  .loop-filter   { background: var(--filter);   color: #fff; }
+  .loop-signal   { background: var(--signal);   color: #fff; }
+  .loop-present  { background: var(--present);  color: #fff; }
+  .loop-workflow { background: var(--workflow);  color: #fff; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; margin: 16px 0; padding: 0; }
+  .checklist li { padding: 7px 12px; border-bottom: 1px solid var(--border2); font-size: 15px; display: flex; gap: 10px; align-items: flex-start; }
+  .checklist li::before { content: '□'; font-family: var(--font); color: var(--fg-dim); flex-shrink: 0; margin-top: 2px; }
+  .checklist li:last-child { border-bottom: none; }
+
+  /* ── PAGE FOOTER ── */
+  .page-footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 64px 48px 308px;
+    font-family: var(--font);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--fg-dim);
+    border-top: 1px solid var(--border2);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media(max-width: 900px) {
+    .toc-sidebar { display: none; }
+    .content { padding: 32px 24px 64px; }
+    .page-header { padding: 18px 24px; }
+    .page-footer { padding: 20px 24px; }
+    .role-grid { grid-template-columns: 1fr; }
+    .role-card.full { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <div class="logo">LOOP MMT™</div>
+    <div class="logo-sub">Multi-Module Theory</div>
+  </div>
+  <div class="doc-title">
+    <div class="title-main">Developer Guide</div>
+    <div class="build-tag">v3 · 1 April 2026</div>
+  </div>
+</div>
+
+<div class="body-wrap">
+<nav class="toc-sidebar">
+  <div class="toc-title">Contents</div>
+  <ul class="toc-list">
+    <li><a href="#ch-abstract">About This Guide</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-foundation">1 · The Foundation</a>
+      <ul class="toc-sub">
+        <li><a href="#s-mental-model">The Mental Model</a></li>
+        <li><a href="#s-loops">Seven Loop Types</a></li>
+        <li><a href="#s-buses">The Bus System</a></li>
+        <li><a href="#s-ten-practices">The Ten Practices</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-roles">2 · The Five Roles</a></li>
+    <li><a href="#ch-session-cycle">3 · The Session Cycle</a>
+      <ul class="toc-sub">
+        <li><a href="#s-talk-first">Talk-First Protocol</a></li>
+        <li><a href="#s-session-id">Session Identity</a></li>
+      </ul>
+    </li>
+    <hr class="toc-sep">
+    <li><a href="#ch-phase0">4 · Phase 0 — Specification</a>
+      <ul class="toc-sub">
+        <li><a href="#s-p0-steps">The Ten Steps</a></li>
+        <li><a href="#s-p0-complete">Completion Criteria</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-phase1">5 · Phase 1 — Infrastructure</a></li>
+    <li><a href="#ch-phase2">6 · Phase 2 — Build</a>
+      <ul class="toc-sub">
+        <li><a href="#s-loading-packs">Loading Packs</a></li>
+        <li><a href="#s-parallel">Running Parallel Work</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-phase3">7 · Phase 3 — Integration</a></li>
+    <li><a href="#ch-phase4">8 · Phase 4 — Verification</a></li>
+    <li><a href="#ch-phase5">9 · Phase 5 — Ship</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-coordinator">10 · Working the Coordinator</a>
+      <ul class="toc-sub">
+        <li><a href="#s-coord-open">Opening &amp; Restarting</a></li>
+        <li><a href="#s-ledger">The Event Ledger</a></li>
+        <li><a href="#s-decision-queue">Decision Queue</a></li>
+        <li><a href="#s-circuit-breaker">Circuit Breaker</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-integrator">11 · Working the Integrator</a></li>
+    <li><a href="#ch-auditor">12 · Working the Auditor</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-routing">13 · The Operator's Routing Role</a></li>
+    <li><a href="#ch-doc-hygiene">14 · Document Hygiene</a></li>
+    <li><a href="#ch-failure-modes">15 · Failure Modes</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-scaling">16 · Methodology Scaling</a></li>
+    <li><a href="#ch-context-budget">17 · Context Budget</a></li>
+    <li><a href="#ch-quick-ref">18 · Quick Reference</a></li>
+  </ul>
+</nav>
+
+<main class="content">
+
+<!-- ══ ABSTRACT ══ -->
+<div class="abstract-box" id="ch-abstract">
+  <div class="abstract-label">About This Guide</div>
+  <p>This is the deep-dive reference for developing a Loop MMT™ project. It complements the Interaction Guide — the IG defines how sessions work, the Developer Guide goes deeper on phases, roles, and operational procedures. If the IG is the operating manual, this is the technical companion you open when you need more detail on a specific phase, role, or failure mode.</p>
+  <p>For the session cycle, handoff format, conversation types, and loading guidance, see the Interaction Guide. For the document registry and dependency graph, see Standard §17. This guide assumes those documents are available and focuses on what they do not cover: phase walkthroughs with completion criteria, deep operational guidance for each role, the Operator's routing workflow, document hygiene procedures, and failure modes unique to multi-conversation coordination.</p>
+  <p style="margin-bottom:0;">This guide is v2 and pre-dates a completed real project — it will be updated after the Butcher Constellation run produces lived experience.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 1: THE FOUNDATION                                         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-foundation">
+  <div class="chapter-number">Section 1</div>
+  <div class="chapter-title">The Foundation</div>
+
+  <div class="section" id="s-mental-model">
+    <div class="section-title">The Mental Model</div>
+    <p>A Loop MMT application is a <strong>constellation</strong> — a set of independent processing loops connected by typed message buses. No loop touches another directly. They communicate only by publishing and subscribing to packets on the buses. Every data path is explicit. Every transfer is observable. Every failure is contained.</p>
+    <p>The development process mirrors this architecture. AI conversations are loops. Documents are the bus. The Operator routes between them. Just as the application's loops are isolated and communicate through declared contracts, the AI conversations are isolated and communicate through documents the Operator carries. The same discipline that makes the runtime safe makes the development process auditable.</p>
+
+    <div class="callout key">
+      <div class="callout-label">The Core Constraint</div>
+      The AI forgets everything when a conversation ends. Documents are the only thing that survives. The Operator's job — above all else — is to ensure that no important decision, architectural choice, or status update lives only in a conversation. Everything that matters goes in a document before the session closes.
+    </div>
+  </div>
+
+  <div class="section" id="s-loops">
+    <div class="section-title">The Seven Loop Types</div>
+    <p>Every loop in a constellation is one of seven types. The type determines what capabilities it receives, what buses it can access, and what it is allowed to do. Types are enforced structurally through JavaScript closures — a loop cannot access capabilities it was not given, and it has no way to acquire them at runtime.</p>
+    <table class="ref-table">
+      <tr><th>Type</th><th>Receives</th><th>Does</th></tr>
+      <tr>
+        <td><span class="loop-badge loop-working">Working</span></td>
+        <td><code>bus</code> only</td>
+        <td>The entry point for all external inputs (user forms, API calls, Clock, Inlet). Ingests, validates structure, emits to bus. Does not compute, store, or render.</td>
+      </tr>
+      <tr>
+        <td><span class="loop-badge loop-vault">Vault</span></td>
+        <td><code>bus</code> + <code>db</code></td>
+        <td>All database operations. Creates, reads, updates, archives records. The only loop type with database access. Handles schema migrations on startup.</td>
+      </tr>
+      <tr>
+        <td><span class="loop-badge loop-compute">Compute</span></td>
+        <td><code>bus</code> + <code>config</code></td>
+        <td>Pure calculation. Price computation, report generation, formatted document production. No database access, no side effects beyond emitting results.</td>
+      </tr>
+      <tr>
+        <td><span class="loop-badge loop-filter">Filter</span></td>
+        <td><code>bus</code> only</td>
+        <td>Validation, transformation, enrichment. Takes a packet, returns a modified or rejected version. No storage, no computation beyond field manipulation.</td>
+      </tr>
+      <tr>
+        <td><span class="loop-badge loop-signal">Signal</span></td>
+        <td><code>bus</code> + <code>notifier</code></td>
+        <td>Outbound communications — email, SMS, print, push notifications. One conversation type: send a message to an external recipient. Never stores state, never returns data to the system.</td>
+      </tr>
+      <tr>
+        <td><span class="loop-badge loop-present">Presentation</span></td>
+        <td><code>bus</code> + <code>dom</code></td>
+        <td>Renders the UI. Subscribes to state updates, manages DOM, serves the human interface. Cannot write to the database. Can only request operations by publishing to the bus.</td>
+      </tr>
+      <tr>
+        <td><span class="loop-badge loop-workflow">Workflow</span></td>
+        <td><code>bus</code> + <code>wf</code></td>
+        <td>Orchestrates multi-step operations using declared pipeline specs. Manages idempotency, step sequencing, failure recovery. Never executes steps — it coordinates other loops to execute them.</td>
+      </tr>
+    </table>
+
+    <div class="callout note">
+      <div class="callout-label">The Closure Wall</div>
+      Capability enforcement is structural, not policy-based. A Compute Loop that doesn't have <code>db</code> in its closure cannot query the database — there is no function call to make. This is not a convention you can forget to follow. It is an architectural constraint that holds regardless of what any individual session decides.
+    </div>
+  </div>
+
+  <div class="section" id="s-buses">
+    <div class="section-title">The Bus System</div>
+    <p>Four named buses handle all inter-loop communication. Every packet travels on exactly one bus. The bus it travels on is declared in the routing table — not decided at runtime.</p>
+    <table class="ref-table">
+      <tr><th>Bus</th><th>Carries</th></tr>
+      <tr><td><code>DATA</code></td><td>Application data flow — intake, validation, processing, results.</td></tr>
+      <tr><td><code>VAULT</code></td><td>Persistence operations and their responses — fetch requests, record results.</td></tr>
+      <tr><td><code>SIGNAL</code></td><td>Outbound communication events — notifications, alerts, print jobs.</td></tr>
+      <tr><td><code>SYNC</code></td><td>Cross-device and real-time coordination — system events, heartbeats, config updates.</td></tr>
+    </table>
+    <p>Buses support <strong>scoped subscriptions</strong> (a Presentation Loop subscribes only to packets relevant to its view), <strong>authoritative loop designation</strong> (one loop owns a packet type — if two loops try to handle the same packet, this resolves the conflict), and extensible query types. Additional buses beyond the standard four can be declared in the Constellation Spec when a project needs them.</p>
+  </div>
+
+  <div class="section" id="s-ten-practices">
+    <div class="section-title">The Ten Practices</div>
+    <p>These are the operating principles of Loop MMT development. They are not suggestions — they encode the lessons of 320+ builds that shaped this methodology.</p>
+    <ol>
+      <li><strong>Read before you write.</strong> Load the relevant spec, contracts, and coding standards before building anything. The AI cannot know what it was not given.</li>
+      <li><strong>Talk first, code second.</strong> Every build starts with a conversation about what is about to be built. The code phase begins only when both parties agree on exactly what will be produced.</li>
+      <li><strong>Plan in phases, deliver in builds.</strong> Work is structured into phases with defined completion criteria. Each phase produces concrete deliverables that can be verified before the next phase begins.</li>
+      <li><strong>The Verification Gantry is a fixed gate.</strong> Tests are not optional and not skippable. A deliverable is not done until it passes. There are no exceptions.</li>
+      <li><strong>Code is the persistence layer for architecture.</strong> If an architectural decision was made in a conversation but not reflected in a document or the code, it will be lost. Architecture lives in artifacts, not in chat history.</li>
+      <li><strong>The Operator owns decisions; pushback is a deliverable.</strong> The AI's job is to surface problems, not to silently comply. When the AI identifies a conflict or risk, saying so is part of the work. The Operator then decides — but the AI flags it first.</li>
+      <li><strong>Documentation is part of the product.</strong> The handoff document, the decision log, the event ledger — these are not overhead. They are what makes the project recoverable and the codebase maintainable.</li>
+      <li><strong>Verify against source, not memory.</strong> When the AI needs to check a field name, a routing entry, or a contract — it reads the document. It does not rely on what it remembers from earlier in the session. Memory drifts. Documents don't.</li>
+      <li><strong>Design around the memory boundary.</strong> Every session ends with a clean state transfer. Never rely on context that will not survive the session close.</li>
+      <li><strong>This method is not a shortcut.</strong> Loop MMT produces better software more reliably, and the structure that feels like overhead upfront is what prevents the debugging and re-implementation cycles that consume far more time later. Phase 0 takes time. It pays back many times over.</li>
+    </ol>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 2: THE FIVE ROLES                                         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-roles">
+  <div class="chapter-number">Section 2</div>
+  <div class="chapter-title">The Five Roles</div>
+
+  <p>Five roles participate in a Loop MMT project. One is human. Four are AI conversations. Each holds different information, operates under different constraints, and does different work. They do not communicate with each other — only with you.</p>
+
+  <div class="role-grid">
+    <div class="role-card full">
+      <div class="role-name">Operator — You</div>
+      <div class="role-desc">You make all architectural decisions. You evaluate quality. You approve spec changes. You route documents between conversations. You work the decision queue. You do not write code, and you do not maintain project documents mechanically — the Coordinator handles that. What you cannot delegate: judgment about whether something is the right thing to build, and ownership of anything that affects the architecture.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Coordinator</div>
+      <div class="role-desc">Maintains the event ledger, tracks module status, triages Integrator findings, surfaces decisions to the Operator, and prepares routing manifests. Manages <em>flow</em>. Does not write code, verify code, or make architectural decisions. The Coordinator is your project logistics layer — it tracks what is happening and prepares the information packages you need to act.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Integrator</div>
+      <div class="role-desc">Holds the full Constellation Spec, the contract registry, and the routing table. Verifies deliverables against the spec — does code match the contracts? Do subscriptions match the routing table? Reports mismatches with category and confidence tags. Does not write code, modify implementations, or make decisions. Manages <em>correctness</em>.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Auditor</div>
+      <div class="role-desc">Receives documents fresh each check cycle — holds no state between cycles. Runs mechanical reconciliation checks comparing documents that should agree. Produces pass/fail reports with specific discrepancies. Does not recommend corrective action, hold state, or communicate with any other role. Manages <em>consistency</em> across the document set.</div>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Module Workers</div>
+      <div class="role-desc">Hold only their scoped loading pack. Build the code for their assigned module(s). Cannot see other modules, cannot modify the spec, cannot communicate with other worker conversations. Their context is exactly what they need and nothing more. Multiple module conversations run in parallel during Phase 2.</div>
+    </div>
+  </div>
+
+  <div class="callout note">
+    <div class="callout-label">Why Separate Roles</div>
+    Combining the Coordinator and Integrator in a single conversation would create a conflict of interest — the entity tracking schedule would also be deciding whether deliverables pass. Combining the Auditor with either would allow the checked entity to influence its own audit. Separation is structural, not organizational. Each role sees exactly what it needs and nothing that would compromise its function.
+  </div>
+
+  <p>The Auditor Operating Instructions define the reconciliation check suite, report format, loading protocol, and boundary constraints. The Auditor role is available at phase gates and on-demand when the Operator needs a consistency check across the document set.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 3: THE SESSION CYCLE                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-session-cycle">
+  <div class="chapter-number">Section 3</div>
+  <div class="chapter-title">The Session Cycle</div>
+
+  <p>Every interaction between the Operator and the AI follows a six-step cycle: Establish State → Talk → Build → Verify → Deliver → Handoff. This is the atomic unit of work in Loop MMT. It applies to every conversation type without exception. The content changes by phase and role. The shape does not.</p>
+
+  <p>For the full six-step walkthrough, see Interaction Guide §4. For the handoff document format, template, and worked examples, see the Handoff Standard. This section covers what those documents do not: the talk-first protocol in detail and the session identity system.</p>
+
+  <div class="section" id="s-talk-first">
+    <div class="section-title">The Talk-First Protocol</div>
+    <p>Talk-first is not optional. It prevents the most common and most expensive failure mode: the AI implementing a reasonable interpretation of an ambiguous request, delivering it, and the Operator discovering it wasn't what they wanted. The more complex the task, the more expensive the skip.</p>
+
+    <table class="ref-table">
+      <tr><th>Step</th><th>Who</th><th>What Happens</th></tr>
+      <tr><td>1</td><td>Operator</td><td>States the objective. What needs to be built and why.</td></tr>
+      <tr><td>2</td><td>AI</td><td>Describes its understanding of the problem and the scope of the work.</td></tr>
+      <tr><td>3</td><td>Operator</td><td>Corrects, refines, or confirms. Narrows scope if needed.</td></tr>
+      <tr><td>4</td><td>AI</td><td>Proposes implementation approach — strategy, not code. "I will build X by doing Y, using Z pattern."</td></tr>
+      <tr><td>5</td><td>Operator</td><td>Approves or pushes back. Raises concerns. Asks about alternatives.</td></tr>
+      <tr><td>6</td><td>AI</td><td>Identifies edge cases, conflicts with existing code, and open questions.</td></tr>
+      <tr><td>7</td><td>Operator</td><td>Resolves edge cases and open questions. Makes design decisions.</td></tr>
+    </table>
+
+    <p>The talk phase scales with complexity. A simple bug fix with a known cause might be two messages. A new Workflow Loop with multiple failure strategies and cross-module dependencies might be twenty messages of design discussion. Calibrate to the task. The principle is the same at any scale: don't build until you know what you're building.</p>
+  </div>
+
+  <div class="section" id="s-session-id">
+    <div class="section-title">Session Identity</div>
+    <p>Every conversation carries a session ID that encodes role, date, time, and sequence. Format: <code>ROLE-YYYYMMDD-HHMM-SEQ</code></p>
+    <table class="ref-table">
+      <tr><th>Prefix</th><th>Role</th><th>Example</th></tr>
+      <tr><td><code>SPEC</code></td><td>Specification (Phase 0)</td><td><code>SPEC-20260401-0900-A</code></td></tr>
+      <tr><td><code>COORD</code></td><td>Coordinator</td><td><code>COORD-20260408-0800-A</code></td></tr>
+      <tr><td><code>MOD-xxx</code></td><td>Module Worker</td><td><code>MOD-AUTH-20260412-1530-A</code></td></tr>
+      <tr><td><code>INTG</code></td><td>Integrator</td><td><code>INTG-20260413-0900-A</code></td></tr>
+      <tr><td><code>AUDIT</code></td><td>Auditor</td><td><code>AUDIT-20260415-1400-A</code></td></tr>
+      <tr><td><code>BUG</code></td><td>Bug Fix</td><td><code>BUG-20260420-1100-A</code></td></tr>
+    </table>
+    <p>Session IDs sort chronologically. Every event ledger entry carries the session ID that produced it. Cross-session references use the fully qualified form: <code>COORD-20260408-0800-A:E-047</code> means event 47 from that Coordinator session. This enables full traceability — any event can be traced backward to its cause and forward to its consequences.</p>
+    <p>Use the sequence letter (A, B, C…) to distinguish multiple sessions of the same role on the same day. The first session of the day is always A.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 4: PHASE 0 — SPECIFICATION                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-phase0">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 0</div>
+    <div class="phase-name">Specification</div>
+    <div class="phase-desc">No code is written. Everything is documents. The purpose is to produce a spec precise enough that code can be written against it and verified against it.</div>
+  </div>
+
+  <p>Phase 0 is a single conversation — or multiple sessions of the same conversation type — between the Operator and the AI. Load the Standard (relevant sections), the Glossary, and the Coding Standards. Describe the application. Let the AI ask questions. Don't describe architecture in your opening — describe the problem. Architecture comes from the conversation.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Phase 0 Can Run Indefinitely</div>
+    If every answer opens new questions, Phase 0 never ends. When the same category of question recurs without resolution, name it as an open decision and move forward. Phase 0 produces a buildable spec — not a perfect one. Decisions that don't affect the architecture can be deferred to Phase 5.
+  </div>
+
+  <div class="section" id="s-p0-steps">
+    <div class="section-title">The Ten Steps of Phase 0</div>
+
+    <div class="step-seq">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Describe the Application</div>
+          <div class="step-desc">Tell the AI what the software needs to accomplish. Who uses it. What problems it solves. What the primary workflows are. Not how it should be built — what it needs to do. The AI will ask questions. Answer them. This is the talk phase at the project level.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Identify the Loops</div>
+          <div class="step-desc">Which loop types are needed and what each one does. Every external input needs a Working Loop. Every database table needs a Vault Loop. Every validation or transformation needs a Filter or Compute Loop. Every notification needs a Signal Loop. Every UI view needs a Presentation Loop. Every multi-step operation needs a Workflow Loop. The question is which ones this project needs and how many of each.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Define the Buses</div>
+          <div class="step-desc">The four standard buses (DATA, VAULT, SIGNAL, SYNC) cover most projects. Decide whether additional buses are needed. If in doubt, start with the standard four — adding buses mid-project is a spec change that cascades through loading packs.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Build the Routing Table</div>
+          <div class="step-desc">Every legal data path in the system is declared. If a movement isn't in the routing table, it doesn't happen. For each entry: the packet type, the source loop, the destination loop (or subscription), and the bus it travels on. This is where the architecture becomes concrete. Expect this step to take the most time.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Define the Packet Contracts</div>
+          <div class="step-desc">Every packet type the system can carry gets a registered contract: field names, field types, required vs. optional, validation rules, PII declarations. The Integrator will verify every module deliverable against these contracts exactly. Imprecision here becomes mismatches in Phase 2.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title">Write the Pipeline Specs</div>
+          <div class="step-desc">Every multi-step operation needs a pipeline spec: the steps, their order, dependencies, timeouts, and failure strategies. Failure strategies use exactly five words: <code>abort</code>, <code>retry</code>, <code>skip</code>, <code>compensate</code>, <code>escalate</code>. No other vocabulary. For each step in each pipeline, one of these five words is the declared failure behavior.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <div class="step-title">Settle Architecture-Affecting Decisions</div>
+          <div class="step-desc">Any business logic question that shapes a loop or a route must be answered before Phase 1. Payment models, status state machines, role definitions, concurrency strategies, retention policies. Decisions that don't affect the architecture can be deferred. Do not start Phase 1 with open architectural questions.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <div class="step-title">Produce the Constellation Spec</div>
+          <div class="step-desc">All of the above assembled into a single document. This is the master reference for the project. Every conversation from Phase 1 onward derives its context from this document. The AI drafts it; you review and approve. Approval is reflected by the version number increment.</div>
+        </div>
+      </div>
+
+      <p style="margin:16px 0 16px 0; padding:0 0 0 48px;">The Phase 0 Specification conversation produces two kinds of output. The architecture — loops, buses, routes, contracts, pipelines — goes in the Constellation Spec. The reasoning behind specific design decisions — why this approach, what was rejected, what constraints drove the choice — goes in Technical Design Documents. The spec declares what the system is. The TDD records why it is that way. Both are produced during Phase 0. The spec is the authority that module conversations and the Integrator verify against. The TDD is the reasoning that future sessions load when they need to understand a design choice. If a TDD's decision affects the spec, both must be updated — a decision that lives only in a TDD is a decision the Integrator will never know about.</p>
+
+      <div class="step-item">
+        <div class="step-num">9</div>
+        <div class="step-body">
+          <div class="step-title">Produce the Action Plan</div>
+          <div class="step-desc">Based on the Constellation Spec: how many phases, how many parallel conversations in Phase 2, what each conversation builds, what the dependencies are between conversations, and the delivery criteria for each phase. This becomes the Coordinator's operational map.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">10</div>
+        <div class="step-body">
+          <div class="step-title">Extract the Conversation Loading Packs</div>
+          <div class="step-desc">One pack per planned conversation. Each pack is a version-pinned slice of the document stack — the Coding Standards, the bus API reference, the routing entries for that conversation's scope, the contracts for packets it emits or consumes. Test each pack for context fit: can it be loaded alongside the code that will be written without exceeding context limits? If not, split the conversation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="s-p0-complete">
+    <div class="section-title">Phase 0 Completion Criteria</div>
+    <p>Phase 0 is done when all five of the following are true. If any are missing, Phase 1 cannot start.</p>
+    <ul class="checklist">
+      <li>The Constellation Spec exists and is internally consistent — no routing table entry references a loop that isn't declared, no packet type appears in a contract that isn't in the routing table.</li>
+      <li>The Action Plan exists with phases defined and conversation assignments made.</li>
+      <li>The Conversation Loading Packs are extracted, version-pinned, and tested for context fit.</li>
+      <li>All architecture-affecting decisions are settled and recorded.</li>
+      <li>The Coordinator conversation is opened, loaded with the Phase 0 outputs, and has confirmed its initialization.</li>
+    </ul>
+    <p>The Coordinator takes custody of project state from the moment it initializes. From Phase 1 onward, the Coordinator is the single source of project status truth. Not your memory. Not a chat log. The Coordinator's ledger.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 5: PHASE 1 — INFRASTRUCTURE                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-phase1">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 1</div>
+    <div class="phase-name">Infrastructure</div>
+    <div class="phase-desc">One conversation. Builds the foundation everything else depends on. No modules until infrastructure passes.</div>
+  </div>
+
+  <p>Phase 1 is a single infrastructure conversation. Unlike Phase 2 module conversations, it receives the full Constellation Spec because infrastructure is deeply interdependent — the bus system, gates, workflow engine, and initializer all need to understand the full topology. Module conversations in Phase 2 receive only their scoped loading pack. The infrastructure conversation needs the whole picture.</p>
+
+  <div class="section">
+    <div class="section-title">What Gets Built in Phase 1</div>
+    <ul>
+      <li><strong>The Bus System</strong> — DATA, VAULT, SIGNAL, SYNC buses, plus any project-specific buses declared in the spec.</li>
+      <li><strong>The Dependency Gate</strong> — Wraps every external dependency (database, auth provider, external APIs). Handles buffered mode when a dependency goes offline. Governs graceful degradation.</li>
+      <li><strong>The Auth Gate</strong> — Enforces the role-permission matrix declared in the Constellation Spec. Stamps every packet with the operator's role before it enters the working loops. Enforces permissions at the same architectural level as the closure wall.</li>
+      <li><strong>The Data Gate</strong> — Manages data lifecycle: retention periods, archive triggers, purge schedules. Declared in the spec and enforced structurally.</li>
+      <li><strong>The Workflow Engine</strong> — Supports all five failure vocabulary words (abort, retry, skip, compensate, escalate), idempotency key management, and cascade update logic.</li>
+      <li><strong>The Clock</strong> — Scheduled event emitter. Reads a schedule table from the spec and injects packets at declared times. Clock-emitted packets are indistinguishable from user-initiated packets once on the bus.</li>
+      <li><strong>The Constellation Initializer with Self-Verification</strong> — Verifies structural integrity before accepting any traffic: every declared loop is instantiated, every bus is active, every route has a live subscriber, every packet contract is loaded. If any check fails, the constellation does not start.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">What to Load</div>
+    <p>Infrastructure is the exception to the scoped-loading rule. Load the full Constellation Spec, the full Coding Standards, the full routing table, the full packet contract registry, and the test suite framework. Infrastructure needs to support everything — it cannot be built against a partial picture.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phase 1 Completion Criteria</div>
+    <ul class="checklist">
+      <li>All infrastructure components are built and individually tested.</li>
+      <li>The Constellation Initializer runs and passes self-verification against the full spec.</li>
+      <li>All gantry tests pass green.</li>
+      <li>The Auditor (or manual equivalent) has checked infrastructure against the spec — no routing mismatches, no contract violations, no naming violations.</li>
+      <li>The Coordinator has logged Phase 1 complete in the event ledger.</li>
+      <li>The handoff explicitly confirms readiness to begin Phase 2.</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">Do Not Begin Phase 2 Until Phase 1 Passes</div>
+    Module conversations in Phase 2 depend on infrastructure being correct. A bus system that doesn't fully implement the routing table will cause cascading failures across every module conversation. Infrastructure errors discovered mid-Phase 2 are expensive — they require every module conversation that touched the affected infrastructure to be re-evaluated.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 6: PHASE 2 — BUILD                                       -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-phase2">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 2</div>
+    <div class="phase-name">Build</div>
+    <div class="phase-desc">Multiple conversations in parallel. Each builds a scoped set of modules. The Coordinator tracks everything. The Integrator verifies deliverables as they arrive.</div>
+  </div>
+
+  <p>Phase 2 is where most of the code gets written. Multiple module conversations run in parallel — each builds a different piece of the system — without drifting apart. That isolation without drift is what the loading pack architecture is designed to produce.</p>
+
+  <div class="section" id="s-loading-packs">
+    <div class="section-title">Loading Packs</div>
+    <p>Each module conversation receives exactly its loading pack and nothing more. A loading pack contains:</p>
+    <ul>
+      <li>The Coding Standards (always)</li>
+      <li>The bus API reference</li>
+      <li>The routing table entries for this module's scope only — not the full routing table</li>
+      <li>The packet contracts for packets this module emits or consumes — not the full contract registry</li>
+      <li>The capability injection spec for this module's loop type(s)</li>
+      <li>Any relevant pipeline specs for workflows this module orchestrates</li>
+    </ul>
+    <p><strong>Not included:</strong> the full Constellation Spec, other modules' implementations, other modules' contracts, the full routing table. Context is finite. Loading more than a conversation needs does not help it — it slows the session and can introduce confusion.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">Loading Pack Version Pinning</div>
+      Each pack declares the exact version of every document it includes — not just "the Glossary" but which version. When a pinned document advances, the pack is stale. A session that opens with a stale pack will produce work built on shifted ground. The Coordinator tracks this through the ledger and flags stale packs. Always check the Coordinator's status before opening a module session.
+    </div>
+  </div>
+
+  <div class="section" id="s-parallel">
+    <div class="section-title">Running Parallel Work</div>
+    <p>The Action Plan assigns conversations to specific modules. The dependency graph in the Action Plan tells you which conversations can run in parallel and which must wait for others to complete. A module that publishes a packet type that another module subscribes to may need its contract finalized before the subscriber conversation can proceed — but the implementations themselves can usually run in parallel.</p>
+
+    <p><strong>Your role during Phase 2:</strong> Open module conversations in the order the Action Plan specifies. Deliver completed modules to the Integrator. Deliver Integrator findings to the Coordinator. Deliver Coordinator routing manifests to module conversations. Work the decision queue the Coordinator surfaces. You are the only communication path between all of these conversations.</p>
+
+    <p><strong>The session cycle for each module:</strong></p>
+    <ol>
+      <li>Open the conversation with its Loading Pack using the Module opening template from the Prompt Templates document.</li>
+      <li>Run the talk-first protocol before any code is written.</li>
+      <li>Build and verify (gantry green).</li>
+      <li>Deliver the versioned module code to the Integrator conversation.</li>
+      <li>The Integrator produces a verification report. Bring findings back to the Coordinator.</li>
+      <li>The Coordinator triages findings, prepares routing manifests for fixes, and logs status in the ledger.</li>
+      <li>Deliver routing manifests to the relevant module conversations for remediation.</li>
+      <li>Write the module handoff at session close.</li>
+    </ol>
+
+    <div class="callout key">
+      <div class="callout-label">The Integrator Is Not Optional</div>
+      Every module deliverable goes to the Integrator before it is considered accepted. The module conversation cannot see the full spec — it can only verify its own contracts. The Integrator can see conflicts between modules that neither module conversation can detect. Skipping Integrator verification means accepting deliverables that may contain cross-module contract violations that won't surface until Phase 3 integration, where they are much more expensive to fix.
+    </div>
+
+    <div class="section">
+      <div class="section-title">Bug Fix Conversations</div>
+      <p>When the Integrator identifies a defect, or when Operator testing finds one, a Bug Fix conversation handles it. One defect per conversation by default. If multiple bugs are found in the same module, assess whether they are related before combining them — unrelated bugs in a single session multiply risk.</p>
+      <p><strong>What to load:</strong> The module's loading pack at its current version, the bug report (from the Integrator finding ID, test failure log, or Operator observation), and the current module code. Nothing else.</p>
+      <p><strong>Critical constraint:</strong> Fix the defect without changing the module's public interface unless the Integrator has explicitly approved a contract change. Interface changes affect every module that subscribes to or publishes this module's packets — the Coordinator must log the change and flag all downstream loading packs as stale.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phase 2 Completion Criteria</div>
+    <ul class="checklist">
+      <li>All modules listed in the Action Plan are delivered and Integrator-verified.</li>
+      <li>No open Integrator findings remain unresolved.</li>
+      <li>All module gantry tests pass in isolation.</li>
+      <li>The Coordinator's module status index shows all modules at "Verified" status.</li>
+      <li>An Auditor check cycle has been run at Phase 2 close — all documents consistent.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 7: PHASE 3 — INTEGRATION                                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-phase3">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 3</div>
+    <div class="phase-name">Integration</div>
+    <div class="phase-desc">Assembly. All modules come together with the infrastructure and are tested as a system.</div>
+  </div>
+
+  <p>Phase 3 uses the Integrator conversation in its assembly mode — rather than verifying individual deliverables, it now orchestrates the full assembly and end-to-end scenario testing. The Coordinator tracks integration status.</p>
+
+  <div class="section">
+    <div class="section-title">What Happens in Phase 3</div>
+    <p><strong>Assembly.</strong> All module code is assembled with the infrastructure in a single codebase. The Constellation Initializer runs self-verification against the full assembled system. If the initializer doesn't pass, Phase 3 cannot proceed — a self-verification failure indicates a wiring error in the assembly itself, not just in a module.</p>
+
+    <p><strong>Scenario testing.</strong> The workflows defined in the Constellation Spec are exercised end-to-end. Not just "does the code run" but "does the system do what was designed." Take each workflow in the spec and trace it through the assembled constellation. Verify that packets travel the routes declared in the routing table. Verify that contract fields match what the spec declares. Verify that pipeline steps execute in the declared order with the declared failure behaviors.</p>
+
+    <p><strong>Failure injection.</strong> Deliberately inject failure conditions to verify the system degrades the way it was designed. If a Dependency Gate is supposed to buffer operations when the database goes offline, take the database offline and verify it buffers. If a Workflow Loop is supposed to compensate on a step failure, force that step to fail and verify compensation runs. Failure paths that aren't tested are unknown risks.</p>
+
+    <p><strong>Cross-module findings.</strong> Integration testing will surface issues that module-level testing couldn't — race conditions between loops, timing edge cases in Workflow Loop pipelines, Presentation Loop state management under concurrent updates. These go to the relevant module conversations for fixes, routed through the Coordinator.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phase 3 Completion Criteria</div>
+    <ul class="checklist">
+      <li>Constellation Initializer passes self-verification on the fully assembled system.</li>
+      <li>All primary workflows from the Constellation Spec pass end-to-end testing.</li>
+      <li>All declared failure modes have been injected and verified.</li>
+      <li>No open integration findings remain unresolved.</li>
+      <li>The Coordinator's event ledger shows all integration findings resolved or explicitly deferred with Operator acknowledgment.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 8: PHASE 4 — VERIFICATION                                -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-phase4">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 4</div>
+    <div class="phase-name">Verification</div>
+    <div class="phase-desc">The full verification gantry runs. Every test, every contract, every routing entry, every constraint — against the final integrated codebase. This gate is fixed. It does not negotiate.</div>
+  </div>
+
+  <p>Phase 4 is not another round of testing — it is the final pass of the complete verification suite against the fully integrated codebase. Everything that was checked module-by-module in Phase 2 is now checked against the whole system.</p>
+
+  <div class="section">
+    <div class="section-title">The Verification Gantry</div>
+    <p>The gantry checks:</p>
+    <ul>
+      <li>All tests pass (the full test suite, not just module-level tests)</li>
+      <li>All packet contracts match their declared schemas exactly</li>
+      <li>All routing table entries have live subscribers</li>
+      <li>All capability constraints are satisfied (no loop uses capabilities it wasn't given)</li>
+      <li>All naming follows the prefix taxonomy from the Coding Standards</li>
+      <li>All factory signatures match the capability injection table</li>
+      <li>The Constellation Initializer self-verification passes on the final build</li>
+    </ul>
+    <p>Phase 4 is done when the gantry is green. Not when it's mostly green. Not when the failing tests are "just edge cases." There are no exceptions, no skips, no deferrals. A failing gantry means Phase 4 is not done. Fix the failures and run it again.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">The Gantry Is the Gate</div>
+      The methodology has exactly one hard gate. This is it. The previous phases all have completion criteria and Auditor checkpoints, but they involve judgment — is the spec good enough, are the decisions settled enough, is the integration testing thorough enough? The gantry is not judgment. It either passes or it doesn't. A green gantry is the only acceptable exit condition from Phase 4.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">When the Gantry Fails</div>
+    <p>Failures at this stage are either integration failures (something that worked in isolation fails in the assembled system) or regression failures (a fix in Phase 3 broke something that was passing). Route failures through the Coordinator to the appropriate Bug Fix conversation. Gantry failures at Phase 4 are expected — address them systematically, one conversation per defect.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phase 4 Completion Criteria</div>
+    <ul class="checklist">
+      <li>Full gantry green — every test, every check, every constraint.</li>
+      <li>Final Auditor reconciliation check complete — all documents consistent with the final codebase.</li>
+      <li>The Decision Log is complete — every decision made during the project is recorded with rationale.</li>
+      <li>The Coordinator has produced a Phase 4 completion status to the event ledger.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 9: PHASE 5 — SHIP                                       -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-phase5">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 5</div>
+    <div class="phase-name">Ship</div>
+    <div class="phase-desc">UI refinement, performance work, documentation completion, cosmetic deferred items. No architectural changes. The project ends with a complete, auditable archive.</div>
+  </div>
+
+  <p>Phase 5 is deliberate finishing work, not a continuation of Phase 4. The gantry is green. The architecture is settled. Phase 5 is where the product gets the attention that was deferred to keep earlier phases moving.</p>
+
+  <div class="section">
+    <div class="section-title">What Happens in Phase 5</div>
+    <p><strong>UI refinement.</strong> Presentation Loop polish — visual alignment, responsive behavior, accessibility improvements, error state messaging. No architectural changes: the Presentation Loop emits to and subscribes from the bus the same way it did when the gantry passed. Cosmetic changes only.</p>
+    <p><strong>Performance work.</strong> If performance issues were observed during Phase 3 or 4 testing and deferred, address them now. Profiling, query optimization, subscription debouncing. All changes go through the full session cycle — talk-first, gantry-verified.</p>
+    <p><strong>Documentation completion.</strong> Inline code comments, README updates, any operational documentation the system needs. The methodology's documentation is already complete (the event ledger, the decision log, the Constellation Spec). This is the application-facing documentation.</p>
+    <p><strong>Final archive production.</strong> The Coordinator produces the project archive: the complete event ledger in its final state, all materialized views (progress dashboard, decision log, session log, dependency graph), and the final Constellation Spec. This archive is the complete, auditable record of what was built and every decision that shaped it. Store it with the codebase.</p>
+  </div>
+
+  <div class="callout key">
+    <div class="callout-label">No Architectural Changes in Phase 5</div>
+    Phase 5 is not the place to reconsider the routing table, add a new loop type, or change a packet contract. If a Phase 5 change requires touching the spec, it is not a Phase 5 change — it is a new development cycle. Log it, schedule it, and start Phase 0 for that work separately. The current ship stays clean.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phase 5 Completion Criteria</div>
+    <ul class="checklist">
+      <li>All deferred cosmetic and performance items are resolved or explicitly accepted as known limitations.</li>
+      <li>Application documentation is complete.</li>
+      <li>The project archive is produced and stored.</li>
+      <li>The Coordinator has produced the final event ledger artifact and all materialized views.</li>
+      <li>The constellation initializer self-verification passes on the final shipped build.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 10: WORKING THE COORDINATOR                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-coordinator">
+  <div class="chapter-number">Section 10</div>
+  <div class="chapter-title">Working the Coordinator</div>
+
+  <p>The Coordinator is your project logistics layer. It does not make architectural decisions. It does not write code. It does not verify code. What it does: maintains the event ledger, tracks module status, triages Integrator findings, prepares routing manifests, surfaces decisions to you in a priority-ordered queue, and manages document dependencies. Every significant thing that happens in the project is an event in the Coordinator's ledger.</p>
+
+  <div class="section" id="s-coord-open">
+    <div class="section-title">Opening a Fresh Coordinator</div>
+    <p>The Coordinator opens once — at the end of Phase 0, after the Constellation Spec, Action Plan, and Loading Packs are finalized. Use the COORD opening template from the Prompt Templates document. Load:</p>
+    <ul>
+      <li>Coordinator Operating Instructions (current version per registry)</li>
+      <li>Action Plan vX (current)</li>
+      <li>Constellation Spec — module list, routing summary, contract registry (not the full implementation detail sections)</li>
+      <li>Loading Pack templates for all planned module conversations</li>
+    </ul>
+    <p>The Coordinator confirms its session ID, initializes the event ledger, builds its initial module status index, and reports its operational parameters (auto-routing threshold, verbosity level). Do not proceed until initialization is confirmed.</p>
+
+    <div class="section">
+      <div class="section-title">Restarting the Coordinator</div>
+      <p>The Coordinator's conversation will eventually hit context limits and need to restart. When this happens:</p>
+      <ol>
+        <li>Before the current session closes, instruct the Coordinator to produce a State Export — the complete serialized state needed to reconstruct the session from scratch.</li>
+        <li>Open a new COORD conversation with the Coordinator Operating Instructions and the State Export only. The State Export contains everything else. Do not reload the Action Plan or Constellation Spec separately — the State Export already incorporates the relevant summaries.</li>
+        <li>The new session initializes from the State Export and confirms the reconstructed state before accepting new events.</li>
+      </ol>
+      <p>The most recent State Export is the recovery point for any Coordinator failure. Produce one before every context-limit restart and before any operation you want to be able to roll back to.</p>
+    </div>
+  </div>
+
+  <div class="section" id="s-ledger">
+    <div class="section-title">The Event Ledger</div>
+    <p>The event ledger is append-only. Nothing in it is ever edited. If a status was recorded incorrectly, the correction is a new event — both the original and the correction remain. Every event carries:</p>
+    <ul>
+      <li>A sequential ID</li>
+      <li>A timestamp</li>
+      <li>An event type</li>
+      <li>The session ID that produced it</li>
+      <li>A payload</li>
+      <li>A <code>triggered-by</code> reference tracing the causal chain</li>
+    </ul>
+    <p>The Progress Dashboard, Decision Log, Session Log, Dependency Graph, and Routing History are all materialized views derived from the ledger. They are convenient summaries. The ledger is the source of truth. When a materialized view conflicts with the ledger, the ledger is correct.</p>
+    <p>Cross-session references use the fully qualified form: <code>COORD-20260408-0800-A:E-047</code>. Use these when routing a finding or decision — the Coordinator needs the exact event reference, not a description.</p>
+  </div>
+
+  <div class="section" id="s-decision-queue">
+    <div class="section-title">The Decision Queue</div>
+    <p>Decisions requiring your attention are collected into a priority-ordered queue. The Coordinator surfaces them in minimal verbosity by default — you request more context on any item. Priority levels:</p>
+    <table class="ref-table">
+      <tr><th>Priority</th><th>What It Means</th></tr>
+      <tr><td><code>P1</code></td><td>Blocking other work. Resolve before proceeding with any dependent module conversations.</td></tr>
+      <tr><td><code>P2</code></td><td>Spec-affecting. Resolution will require a spec change and loading pack updates.</td></tr>
+      <tr><td><code>P3</code></td><td>Cross-module. Affects more than one conversation but not the spec itself.</td></tr>
+      <tr><td><code>P4</code></td><td>Module-scoped. Can be resolved within the relevant module conversation.</td></tr>
+    </table>
+    <p>Work the queue from P1 down. A P1 decision that stays unresolved blocks the project. P4 decisions can accumulate and be batched into a module session. The Coordinator never makes a decision — it presents options and context. You decide.</p>
+  </div>
+
+  <div class="section" id="s-circuit-breaker">
+    <div class="section-title">The Divergence Circuit Breaker</div>
+    <p>If a single Auditor check cycle produces three or more failures, routing pauses. The Coordinator stops routing findings, spec changes, and new deliverables. Module conversations actively building continue; the Coordinator queues incoming events instead of processing them.</p>
+    <p>When the circuit breaker trips: review the Auditor report, diagnose the root cause of the failures, fix the inconsistencies in the appropriate conversations, and release the pause. The Coordinator logs the trip and the release as separate ledger events. Do not release the pause without diagnosing the failures — the threshold exists because three simultaneous failures indicates a systemic problem, not isolated defects.</p>
+    <p>The threshold (default: 3) is calibrated per project. A project with very tight contracts and frequent Auditor cycles might warrant a higher threshold. A project running in first-time territory should keep it at 3.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 11: WORKING THE INTEGRATOR                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-integrator">
+  <div class="chapter-number">Section 11</div>
+  <div class="chapter-title">Working the Integrator</div>
+
+  <p>The Integrator holds the full Constellation Spec and verifies deliverables against it. Its output is a structured report with findings categorized by type and tagged with confidence levels. It does not write code. It does not make decisions. It reports mismatches.</p>
+
+  <div class="section">
+    <div class="section-title">What to Load</div>
+    <p>The Integrator needs the full picture to do its job. Load:</p>
+    <ul>
+      <li>Full Constellation Spec at its current version</li>
+      <li>The complete routing table</li>
+      <li>The complete packet contract registry</li>
+      <li>The module code being verified</li>
+      <li>The module's loading pack (so the Integrator can check that the module built against the right version)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Understanding Integrator Reports</div>
+    <p>Every finding carries two tags:</p>
+    <p><strong>Category:</strong></p>
+    <ul>
+      <li><code>mechanical</code> — a verifiable factual mismatch (field name doesn't match contract, subscription not in routing table, naming violates taxonomy)</li>
+      <li><code>judgment</code> — a concern that requires interpretation (implementation approach seems to violate a principle without a clean spec reference)</li>
+      <li><code>architectural</code> — something that affects the system beyond this module (a contract change that would break other modules, a routing gap)</li>
+    </ul>
+    <p><strong>Confidence:</strong></p>
+    <ul>
+      <li><code>high</code> — the Integrator is certain; there is a clear spec reference for the mismatch</li>
+      <li><code>low</code> — the Integrator is inferring; the spec is ambiguous on this point</li>
+    </ul>
+    <p>The Coordinator auto-routes <code>mechanical / high</code> findings to the relevant module conversation for remediation. All other categories go to you. When in doubt, the Coordinator escalates — false escalation costs you a decision-queue message; false auto-routing costs a module conversation building against wrong instructions.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">What the Integrator Does Not Do</div>
+    <p>The Integrator does not recommend corrective action. It reports mismatches. When you receive a finding, bring it to the appropriate conversation — the Coordinator tells you where. Do not ask the Integrator how to fix what it found. That decision belongs to you (for architectural findings) or to the module conversation (for mechanical findings).</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 12: WORKING THE AUDITOR                                  -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-auditor">
+  <div class="chapter-number">Section 12</div>
+  <div class="chapter-title">Working the Auditor</div>
+
+  <p>The Auditor runs intermittent reconciliation checks comparing documents that should agree. It holds no state between cycles — it receives documents fresh each time. Its job is to catch cross-document inconsistencies that accumulate between Coordinator operations: stale loading packs, undocumented spec changes, missing dependency entries, deliverables received but never verified.</p>
+
+  <div class="callout tip">
+    <div class="callout-label">Auditor Operating Instructions</div>
+    The Auditor Operating Instructions define the full reconciliation check suite, the report format, loading protocol, and boundary constraints. Load them into every Auditor conversation. The check suite is precise enough that any AI session loaded with it will run the checks identically.
+  </div>
+
+  <div class="section">
+    <div class="section-title">When to Run an Auditor Cycle</div>
+    <ul>
+      <li>At every phase gate transition (Phase 1 → 2, Phase 2 → 3, Phase 3 → 4)</li>
+      <li>After any spec change that affects multiple modules</li>
+      <li>After any period where multiple simultaneous module sessions were active</li>
+      <li>Any time the Coordinator's counts seem inconsistent with your own observation</li>
+      <li>On demand, when something feels off</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">What the Auditor Does Not Do</div>
+    <p>After the Auditor delivers its report, do not ask it what should be done about failures. Its job ends at "here are the mismatches." Take failures to the appropriate conversation — document inconsistencies go to the Coordinator, code mismatches go to the Integrator or the relevant module conversation. The Auditor's structural isolation from the other roles is what makes its checks reliable.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 13: THE OPERATOR'S ROUTING ROLE                          -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-routing">
+  <div class="chapter-number">Section 13</div>
+  <div class="chapter-title">The Operator's Routing Role</div>
+
+  <p>You are the only communication path between all conversations. Information does not flow directly from the Coordinator to a module conversation, or from the Integrator to the Coordinator. Every document, every finding, every routing manifest travels through you.</p>
+
+  <div class="section">
+    <div class="section-title">Routing Rules</div>
+    <p><strong>Information flows through documents, not descriptions.</strong> If something needs to move from one conversation to another, it moves as a document — a file, a spec update, a routing manifest. Not as a verbal summary you paraphrase from memory. Verbal routing degrades over multiple hops. Document routing does not.</p>
+    <p><strong>The Coordinator prepares; you deliver.</strong> The Coordinator produces routing manifests — packages telling you exactly what to deliver, to which conversation, with what context. Review the manifest. Deliver the package. Report back to the Coordinator that delivery is complete. If you modify a package before delivery, tell the Coordinator so the ledger stays accurate.</p>
+    <p><strong>If you route outside the manifest, report it.</strong> Sometimes you'll carry a finding verbally for a simple fix. That's acceptable for low-stakes mechanical issues. For anything structural, use the manifest. And always tell the Coordinator what you did outside the manifest — it cannot log what it does not know about.</p>
+    <p><strong>The Constellation Spec is the single source of truth.</strong> If a decision changes the spec, the Coordinator drafts the change and you approve it before it is applied. The Coordinator then rebuilds all affected loading packs. No module conversation should ever work against a stale spec — if one does, every deliverable it produces is built on shifted ground.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">A Typical Routing Day in Phase 2</div>
+    <ol>
+      <li>Open the Coordinator. Review the decision queue and routing manifests prepared since your last session.</li>
+      <li>Work P1 decisions first — anything blocking other work.</li>
+      <li>Deliver routing manifests to the relevant module conversations.</li>
+      <li>Collect module deliverables and bring them to the Integrator.</li>
+      <li>Bring Integrator reports back to the Coordinator for triage and ledger logging.</li>
+      <li>The Coordinator will have prepared new manifests based on the Integrator reports. Deliver those.</li>
+      <li>Close any sessions that have completed their work and write their handoffs.</li>
+      <li>Report back to the Coordinator on all deliveries made today.</li>
+    </ol>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 14: DOCUMENT HYGIENE                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-doc-hygiene">
+  <div class="chapter-number">Section 14</div>
+  <div class="chapter-title">Document Hygiene</div>
+
+  <p>With the Coordinator active, document hygiene is largely automatic — every document change is a ledger event, dependency propagation is structural, and the Document Registry updates itself. Your role is oversight: spot-checking that the Coordinator's picture matches reality.</p>
+
+  <div class="section">
+    <div class="section-title">Document Status Values</div>
+    <table class="ref-table">
+      <tr><th>Status</th><th>Meaning</th></tr>
+      <tr><td><code>Current</code></td><td>Approved, consistent with all dependencies. Safe to load.</td></tr>
+      <tr><td><code>Review Required</code></td><td>A dependency has changed since this document was last reviewed. Must be reviewed or explicitly acknowledged before loading into a conversation.</td></tr>
+      <tr><td><code>Draft</code></td><td>Produced by the AI but not yet reviewed and approved by you. A version increment = approval.</td></tr>
+      <tr><td><code>Archived</code></td><td>Retired. Superseded by a newer version or no longer needed.</td></tr>
+    </table>
+    <p>A <code>Review Required</code> document must be updated (returns to <code>Current</code>) or explicitly acknowledged as a known risk before loading into a session. There is no silent loading of stale documents — an AI operating on stale information cannot detect that it is stale.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Version Pinning</div>
+    <p>Every loading pack declares the exact version of every document it includes. "Load the Glossary" is not sufficient — the pack must specify which version. When a pinned document advances, the Coordinator flags the pack as stale. Open the Coordinator and request a loading pack refresh before opening any session that would use a stale pack.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Document Authorship Rule</div>
+    <p>The AI produces content. The Operator approves it. A version increment equals Operator approval. The AI does not unilaterally advance version numbers. A document the Operator has not reviewed is a Draft. This is not a formality — it is the mechanism that keeps you in the decision loop on every document that enters the project.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Spec Changes Mid-Project</div>
+    <p>Spec changes are unavoidable. Business requirements evolve. Design decisions get reversed when implementation reveals consequences. The methodology handles spec changes — it does not prevent them. The protocol:</p>
+    <ol>
+      <li>Bring the proposed change to the Coordinator.</li>
+      <li>The Coordinator identifies all downstream documents affected (loading packs, module status, dependency graph).</li>
+      <li>You approve the change.</li>
+      <li>The Coordinator applies the change as a ledger event and flags all downstream documents as <code>Review Required</code>.</li>
+      <li>Update or rebuild affected loading packs before any dependent module conversation proceeds.</li>
+      <li>Route a notification to all module conversations currently building against the changed sections.</li>
+    </ol>
+    <p>A spec change applied without going through this protocol means module conversations will produce deliverables against the old spec. The Integrator will catch it — but as a failed verification, not as a clean correction. Don't make the Integrator find spec drift; run the protocol and prevent it.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 16: FAILURE MODES                                        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 15: FAILURE MODES                                        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-failure-modes">
+  <div class="chapter-number">Section 15</div>
+  <div class="chapter-title">Failure Modes and Prevention</div>
+
+  <p>For the common failure modes that affect any AI-assisted session — Pattern Blindness, Scope Creep, Assumption Carrying, Context Starvation, and Context Bloat — see Interaction Guide §9. Those are session-level failures that every conversation type can experience.</p>
+
+  <p>This section covers three additional failure modes specific to multi-conversation coordination. These emerge only when running parallel conversations with a Coordinator, Integrator, and multiple module workers — which is why they live here rather than in the IG.</p>
+
+  <div class="section">
+    <div class="section-title">Coordinator Drift</div>
+    <p><strong>What it is:</strong> The Coordinator's internal state — module status index, ledger continuity, dependency graph — drifts from the actual project state as the session grows long.</p>
+    <p><strong>How it manifests:</strong> The Coordinator reports module status that doesn't match the deliverables you've seen. Routes a finding to a module that was already resolved. Produces a summary that misses a recent decision.</p>
+    <p><strong>Prevention:</strong> The Coordinator runs self-checks after every event. The Auditor's reconciliation cycle catches cross-document drift. Produce a State Export before approaching context limits — don't let the Coordinator run until it degrades. Spot-check the Coordinator's module counts against your own understanding periodically.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Infinite Phase 0</div>
+    <p><strong>What it is:</strong> Phase 0 continues indefinitely because every question the spec answers opens two more questions. The spec never reaches "precise enough to build against."</p>
+    <p><strong>How it manifests:</strong> Weeks of spec work, no code written, the spec document keeps getting revised. The AI is asking good questions that you can't answer yet.</p>
+    <p><strong>Prevention:</strong> When the same category of question recurs without resolution, name it as an open decision and defer it. Phase 0 produces a buildable spec — not a perfect one. Decisions that don't affect the architecture can wait. A spec that is 90% settled and has three clearly-named open decisions is ready to build against. A spec that is "almost done" with no named open decisions is not.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Cross-Conversation Contamination</div>
+    <p><strong>What it is:</strong> Information from one conversation bleeds into another through the Operator's description rather than through documents.</p>
+    <p><strong>How it manifests:</strong> The Operator tells a module conversation "the Integrator said to change the field name to X" — without the actual Integrator report. The module conversation makes the change based on the Operator's paraphrase. The paraphrase was slightly wrong. The resulting code doesn't match the contract.</p>
+    <p><strong>Prevention:</strong> Information travels as documents. The Integrator report goes to the module conversation intact, not as a verbal description. The Coordinator's routing manifest goes to the module conversation as a document. When in doubt, paste the source material rather than summarizing it.</p>
+  </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 16: METHODOLOGY SCALING                                   -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-scaling">
+  <div class="chapter-number">Section 16</div>
+  <div class="chapter-title">Methodology Scaling</div>
+
+  <p>The full methodology — Coordinator, Integrator, Auditor, multiple parallel module conversations, loading packs, event ledger — is designed for projects large enough to need it. Not every project is that large. Running the full process on a small project costs more in coordination overhead than it saves in prevented errors. Skipping roles that turn out to be necessary costs more in rework than in prevented overhead. This section provides guidance on when to scale down.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Pre-Build Estimates</div>
+    These thresholds are the Operator's best current judgment. No production project has been completed with the methodology yet. The Butcher Constellation build will produce real data on where the coordination overhead becomes net-positive. Expect these numbers to be revised.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Scaling by Project Size</div>
+
+    <table class="ref-table">
+      <tr><th>Project Size</th><th>Loops</th><th>Recommended Configuration</th></tr>
+      <tr>
+        <td>Small</td>
+        <td>1–4 loops</td>
+        <td>No Coordinator. No Auditor. No parallel module conversations. Run a single conversation per phase. Handoff documents serve as the state record. The Operator tracks status manually. The Integrator is still recommended if any two loops exchange packets — cross-module verification catches mismatches that in-conversation testing cannot.</td>
+      </tr>
+      <tr>
+        <td>Medium</td>
+        <td>5–10 loops</td>
+        <td>Coordinator recommended. Run it lightweight — the Operator may handle some routing manually and use the Coordinator primarily for ledger maintenance and status tracking. Auditor cycles at phase gates only (not mid-phase). Two to three parallel module conversations in Phase 2. The Integrator is required.</td>
+      </tr>
+      <tr>
+        <td>Large</td>
+        <td>11+ loops</td>
+        <td>Full methodology. Coordinator mandatory — the Operator cannot track status manually at this scale without losing information. Auditor cycles at phase gates and mid-Phase 2 at a cadence matching the project's velocity. Multiple parallel module conversations with scoped loading packs. The Integrator is required and will be busy.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Role-by-Role Optionality</div>
+
+    <p><strong>The Coordinator</strong> is optional below ~5 loops. Without it, the Operator maintains the event ledger manually — which in practice means handoff documents serve as the ledger and the Operator holds the status picture in their head. This works when the picture is small enough to hold. It stops working when you cannot remember which module is waiting on which decision without checking a document.</p>
+
+    <p><strong>The Integrator</strong> is required any time two or more module conversations run concurrently, regardless of project size. If any two conversations emit or subscribe to packet types that the other conversation also touches, cross-module verification is necessary. A project with a single conversation that builds all loops does not need an Integrator — the conversation can see its own contracts. The moment work splits into parallel conversations, the Integrator becomes necessary.</p>
+
+    <p><strong>The Auditor</strong> is optional for projects under ~8 loops if the Operator is disciplined about manual document checks at phase gates. For larger projects, the accumulated document drift between phase gates becomes difficult to catch manually, and the Auditor's mechanical check suite earns its overhead. The Auditor is always recommended at Phase 4 (final verification) regardless of project size.</p>
+
+    <p><strong>Loading Packs</strong> are always recommended, even for small projects. The cost of assembling a loading pack is low. The cost of a conversation operating on incomplete or wrong context is high. Even a two-loop project benefits from a clear declaration of what each conversation needs to see.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Butcher Constellation Decision</div>
+    <p>The Butcher Constellation is estimated at 8–12 loops. This places it in the medium range. The current plan is to run the full methodology — Coordinator, Integrator, Auditor at phase gates — with the explicit goal of measuring coordination overhead against project throughput. This is a deliberate choice to stress-test the full system on the first real project rather than to optimize for speed. The data from this run will calibrate the thresholds above.</p>
+  </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 17: CONTEXT BUDGET                                        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-context-budget">
+  <div class="chapter-number">Section 17</div>
+  <div class="chapter-title">Context Budget</div>
+
+  <p>Every conversation has a finite context window. Loading documents consumes part of it. The code produced during the session consumes the rest. If the loading pack is too large, there is not enough room for the work. If the loading pack is too small, the AI fills gaps with assumptions. This section provides rough estimates for budgeting context across conversation types.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Pre-Build Estimates</div>
+    These token counts are rough estimates based on the current corpus document sizes and typical code output volumes. Real numbers will come from the Butcher Constellation build. Update this section with measured data after the first project.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Loading Pack Component Sizes</div>
+    <p>Approximate token counts for each component commonly loaded into conversations. Measured against the current corpus documents. One token ≈ 4 characters of English text.</p>
+
+    <table class="ref-table">
+      <tr><th>Component</th><th>Approx. Tokens</th><th>Notes</th></tr>
+      <tr><td>Coding Standards</td><td>~4,000</td><td>Loaded in every code-producing conversation. Non-negotiable.</td></tr>
+      <tr><td>Glossary</td><td>~5,000</td><td>Loaded when terminology precision matters. Can be trimmed to relevant sections for module conversations.</td></tr>
+      <tr><td>Handoff Standard</td><td>~2,500</td><td>Loaded for reference. Can be omitted once AI has demonstrated correct handoff format.</td></tr>
+      <tr><td>Constellation Spec (full)</td><td>~8,000–15,000</td><td>Varies by project complexity. Only the Integrator and Infrastructure conversations need the full spec.</td></tr>
+      <tr><td>Constellation Spec (module slice)</td><td>~1,500–3,000</td><td>Routing entries + contracts for one module's scope. This is what goes in a loading pack.</td></tr>
+      <tr><td>Coordinator Operating Instructions</td><td>~6,000</td><td>Loaded only in Coordinator conversations.</td></tr>
+      <tr><td>Bus API reference</td><td>~1,000–2,000</td><td>Generated from infrastructure code. Size depends on bus count.</td></tr>
+      <tr><td>A typical handoff document</td><td>~800–1,500</td><td>Loaded when continuing a conversation from a previous session.</td></tr>
+      <tr><td>A typical TDD</td><td>~2,000–4,000</td><td>Loaded when a module conversation needs the design decisions from a TDD produced in Phase 0.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Budget by Conversation Type</div>
+    <p>Assuming a ~128,000-token context window (Claude Opus/Sonnet). The "available for work" column is what remains after loading for code output, conversation, and the session cycle.</p>
+
+    <table class="ref-table">
+      <tr><th>Conversation Type</th><th>Estimated Load</th><th>Available for Work</th></tr>
+      <tr><td>Specification (Phase 0)</td><td>~12,000–18,000</td><td>~110,000+. Phase 0 is conversation-heavy, not code-heavy. Context is rarely the constraint.</td></tr>
+      <tr><td>Infrastructure (Phase 1)</td><td>~18,000–25,000</td><td>~100,000+. Full spec loaded. Infrastructure code is substantial but context is rarely the binding constraint in a single session.</td></tr>
+      <tr><td>Module (Phase 2)</td><td>~8,000–14,000</td><td>~114,000+. Scoped loading pack keeps overhead low. This is where context budgeting matters most — module code grows across the session.</td></tr>
+      <tr><td>Integrator</td><td>~15,000–22,000</td><td>~106,000+. Full spec plus module code dropped in for review. Large modules may need context management.</td></tr>
+      <tr><td>Coordinator</td><td>~10,000–15,000</td><td>~113,000+. Operating Instructions plus project state. The ledger grows and eventually requires a restart from State Export.</td></tr>
+      <tr><td>Auditor</td><td>~25,000–40,000</td><td>~88,000+. Receives the full document set for comparison. The Auditor's high loading cost is the price of complete visibility.</td></tr>
+      <tr><td>Bug Fix</td><td>~8,000–12,000</td><td>~116,000+. Module loading pack plus current code plus bug report. Lean by design.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">When Context Gets Tight</div>
+    <p>If a module conversation is running low on context — the AI's responses are getting shorter, it's losing track of earlier decisions, or you're approaching the window limit — take these steps in order:</p>
+    <ol>
+      <li><strong>Write a handoff and restart.</strong> This is the primary mechanism. The handoff captures the current state. A fresh conversation with the loading pack plus the handoff picks up without loss. Most context pressure is resolved by restarting.</li>
+      <li><strong>Trim the loading pack.</strong> If the loading pack itself is consuming too much context, trim in this order: drop the Patterns Reference (consult it in a separate conversation if needed), drop the Glossary (the AI can ask about terms it's unsure of), trim the routing table to only the entries this module directly emits or consumes. Never drop the Coding Standards or the module's own contracts.</li>
+      <li><strong>Split the conversation.</strong> If a single module is too large to build in one conversation even after trimming, split it into sub-module conversations — each building a subset of the loops. This requires additional loading pack preparation and Integrator verification passes, but it keeps each conversation's context manageable.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Coordinator Context Problem</div>
+    <p>The Coordinator accumulates state throughout the project. Unlike module conversations, which produce a deliverable and end, the Coordinator runs continuously. Its context fills with the growing ledger, status updates, and routing history. The State Export mechanism (see §10) exists specifically for this: serialize the Coordinator's state, open a fresh conversation, load the State Export, and continue. Plan for Coordinator restarts — they are not failures, they are expected maintenance. A rough rule of thumb: produce a State Export every 30–40 events or when the Coordinator's responses start losing precision.</p>
+  </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 18: QUICK REFERENCE                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-quick-ref">
+  <div class="chapter-number">Section 18</div>
+  <div class="chapter-title">Quick Reference</div>
+
+  <div class="section">
+    <div class="section-title">The Six Phases</div>
+    <table class="ref-table">
+      <tr><th>Phase</th><th>Name</th><th>What Happens</th><th>Gate to Exit</th></tr>
+      <tr><td>0</td><td>Specification</td><td>Constellation Spec, Action Plan, Loading Packs, open Coordinator</td><td>5-point completion criteria (see §4)</td></tr>
+      <tr><td>1</td><td>Infrastructure</td><td>Bus system, gates, Workflow Engine, Clock, Initializer</td><td>Self-verification passes, gantry green</td></tr>
+      <tr><td>2</td><td>Build</td><td>Parallel module conversations, Integrator verification per deliverable</td><td>All modules Verified in Coordinator; Auditor check passes</td></tr>
+      <tr><td>3</td><td>Integration</td><td>Full assembly, scenario testing, failure injection</td><td>All workflows pass end-to-end; all failure modes verified</td></tr>
+      <tr><td>4</td><td>Verification</td><td>Full gantry on assembled codebase, final Auditor check</td><td>Gantry green. Non-negotiable.</td></tr>
+      <tr><td>5</td><td>Ship</td><td>Polish, performance, documentation, project archive</td><td>Archive produced; no open deferred items</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Prefix Taxonomy</div>
+    <table class="ref-table">
+      <tr><th>Prefix</th><th>Meaning</th><th>Examples</th></tr>
+      <tr><td><code>bus_</code></td><td>Bus instance</td><td><code>bus_data</code>, <code>bus_vault</code></td></tr>
+      <tr><td><code>loop_</code></td><td>Loop factory / instance</td><td><code>loop_pricingEngine</code></td></tr>
+      <tr><td><code>pkt_</code></td><td>Packet type constant</td><td><code>pkt_ORDER_CREATED</code></td></tr>
+      <tr><td><code>wf_</code></td><td>Workflow / pipeline</td><td><code>wf_cancelOrder</code></td></tr>
+      <tr><td><code>gate_</code></td><td>Dependency gate</td><td><code>gate_supabase</code></td></tr>
+      <tr><td><code>v_</code></td><td>State variable</td><td><code>v_orderStatus</code></td></tr>
+      <tr><td><code>f_</code></td><td>Pure function</td><td><code>f_calculatePrice</code></td></tr>
+      <tr><td><code>e_</code></td><td>DOM element</td><td><code>e_intakeForm</code></td></tr>
+      <tr><td><code>h_</code></td><td>Event handler</td><td><code>h_onIntakeSubmit</code></td></tr>
+      <tr><td><code>c_</code></td><td>Contract definition</td><td><code>c_orderCreated</code></td></tr>
+    </table>
+    <p>See the Coding Standards for full naming conventions and rules.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Loading Guide by Conversation Type</div>
+    <table class="ref-table">
+      <tr><th>Conversation</th><th>Always Load</th><th>Also Load</th></tr>
+      <tr><td>Specification (Phase 0)</td><td>Standard (relevant sections), Glossary, Coding Standards</td><td>Nothing else — the project description comes from you</td></tr>
+      <tr><td>Infrastructure (Phase 1)</td><td>Coding Standards, full Constellation Spec</td><td>Full routing table, full contract registry, test suite framework</td></tr>
+      <tr><td>Module (Phase 2) — new</td><td>Module's loading pack</td><td>Relevant TDDs from Phase 0 (see Interaction Guide §5 for TDD loading guidance)</td></tr>
+      <tr><td>Module (Phase 2) — continuing</td><td>Module's loading pack</td><td>Handoff from previous session, any updated contracts or routing entries since last session</td></tr>
+      <tr><td>Integrator</td><td>Full Constellation Spec, full routing table, full contract registry</td><td>Module code being verified, module's loading pack</td></tr>
+      <tr><td>Coordinator (fresh)</td><td>Coordinator Operating Instructions, Action Plan, Constellation Spec summary</td><td>Loading pack templates</td></tr>
+      <tr><td>Coordinator (restart)</td><td>Coordinator Operating Instructions, State Export</td><td>Nothing else — State Export contains everything</td></tr>
+      <tr><td>Auditor</td><td>Auditor Operating Instructions (when available), full current document set</td><td>Coordinator's dependency graph, Integrator's verification log</td></tr>
+      <tr><td>Bug Fix</td><td>Module's loading pack (current version), bug report, current module code</td><td>Nothing else</td></tr>
+    </table>
+    <p>For the full conversation type descriptions and behavioral guidance, see Interaction Guide §5 (Operator) and §15 (AI). For fill-in-the-blank templates, see Conversation Prompt Templates v3.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Questions to Ask at Every Session Start</div>
+    <ul>
+      <li>"What is the objective for this session?" — if not already clear</li>
+      <li>"Is there a handoff from the previous session?" — if this is a continuing conversation and one wasn't provided</li>
+      <li>"Are there any decisions from other conversations that affect this work?" — especially in module conversations</li>
+      <li>"Is the loading pack I provided current?" — check version pins against the Coordinator's document registry</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Questions to Ask Before Delivering</div>
+    <ul>
+      <li>"Should I write the handoff now?" — at the end of every session. Don't wait to be asked.</li>
+      <li>"Are there items to flag for the Integrator?" — if any cross-module issues were discovered</li>
+      <li>"Are there items for the Coordinator?" — any status changes, decisions, or findings that need to be logged</li>
+      <li>"Are the loading packs affected by anything decided in this session?" — if a contract or routing entry changed, loading packs may be stale</li>
+    </ul>
+  </div>
+
+  <div class="callout note">
+    <div class="callout-label">Cross-References</div>
+    For the five failure strategy words (abort, retry, continue, compensate, escalate), see the Glossary. For the five safety layers, see Standard §16. For the full document registry and dependency graph, see Standard §17. For the handoff template and worked example, see the Handoff Standard. This Quick Reference focuses on the tables that are unique to the Developer Guide or that are most frequently needed during active development.
+  </div>
+
+</div>
+
+</main>
+</div>
+
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>Developer Guide · v3</span>
+  <span>© 2026 <a href="/cdn-cgi/l/email-protection#aad9c2cfcbcddfc4dec2cfd8eacdc7cbc3c684c9c5c7" style="color:inherit;">Shea Gunther</a> · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.addEventListener('DOMContentLoaded', () => {
+  const chapters = document.querySelectorAll('.chapter, .section[id]');
+  const links = document.querySelectorAll('.toc-list a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector('.toc-list a[href="#' + id + '"]');

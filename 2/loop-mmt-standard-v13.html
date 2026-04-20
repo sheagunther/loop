@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Loop MMT™ Standard — v13</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--filter:#006888;--signal:#c01848;--present:#7040a0;--workflow:#2868b0;--bus-data:#6030c0;--bus-vault:#006830;--bus-signal:#c01848;--bus-sync:#1060b0;--font:'Courier New','Consolas',monospace;--max-w:820px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--callout-note-bg:#f0f0f8;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--filter:#00ddff;--signal:#ff4488;--present:#cc88ff;--workflow:#44aaff;--bus-data:#a060ff;--bus-vault:#33ff44;--bus-signal:#ff4488;--bus-sync:#44aaff;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--filter:#007898;--signal:#b01040;--present:#6030a0;--workflow:#1858a0;--bus-data:#5828b0;--bus-vault:#007030;--bus-signal:#b01040;--bus-sync:#0060c0;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}
+  .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .doc-title{text-align:right;}
+  .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}
+  .doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;}
+  .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;transition:border-color .1s,color .1s,background .1s;}
+  .skin-btn:hover{border-color:var(--fg);color:var(--fg);}
+  .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .body-wrap{display:flex;max-width:1200px;margin:0 auto;}
+  .toc-sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto;padding:32px 0 32px 32px;border-right:1px solid var(--border2);font-family:var(--font);}
+  .toc-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px;}
+  .toc-list{list-style:none;}
+  .toc-list li{margin-bottom:2px;}
+  .toc-list a{font-size:11px;letter-spacing:.5px;color:var(--fg-dim);text-decoration:none;display:block;padding:3px 6px;border-left:2px solid transparent;transition:color .1s,border-color .1s;}
+  .toc-list a:hover{color:var(--fg);border-left-color:var(--border);}
+  .toc-list a.active{color:var(--fg);border-left-color:var(--accent);}
+  .toc-list .toc-sub a{font-size:10px;padding-left:14px;opacity:.75;}
+  .toc-list .toc-sub a:hover{opacity:1;}
+  .toc-sep{border:none;border-top:1px solid var(--border2);margin:8px 6px;}
+  .content{flex:1;min-width:0;padding:48px 64px 96px 48px;max-width:var(--max-w);}
+  .chapter{margin-bottom:64px;scroll-margin-top:100px;}
+  .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:6px;}
+  .section{margin:32px 0;scroll-margin-top:100px;}
+  .section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:16px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}
+  code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  pre{background:var(--code-bg);padding:14px 16px;font-family:var(--font);font-size:13px;line-height:1.6;overflow-x:auto;margin:16px 0;border-left:3px solid var(--border2);}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}
+  .callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}
+  .callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}
+  .callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}
+  .callout.phi{background:var(--panel);border-left-color:var(--accent);font-style:italic;}
+  .callout.note{background:var(--callout-note-bg);border-left-color:var(--filter);}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .callout.tip .callout-label{color:var(--vault);}
+  .callout.warn .callout-label{color:var(--compute);}
+  .callout.key .callout-label{color:var(--working);}
+  .callout.phi .callout-label{color:var(--accent);}
+  .callout.note .callout-label{color:var(--filter);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}
+  .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .ref-table tr:last-child td{border-bottom:none;}
+  .ref-table td:first-child{font-family:var(--font);font-size:13px;color:var(--fg-dim);white-space:nowrap;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}
+  .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}
+  .page-footer{max-width:1200px;margin:0 auto;padding:20px 64px 48px 320px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);border-top:1px solid var(--border2);display:flex;justify-content:space-between;}
+  @media(max-width:900px){.toc-sidebar{display:none;}.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}.page-footer{padding:20px 24px 48px;}}
+</style>
+</head>
+<body class="skin-og">
+
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title"><div class="title-main">The Standard</div><div class="build-tag">v13 · 1 April 2026</div></div>
+  </div>
+</div>
+
+<div class="body-wrap">
+<nav class="toc-sidebar" id="toc">
+  <div class="toc-title">The Standard</div>
+  <ul class="toc-list">
+    <li><a href="#ch-abstract">Abstract</a></li>
+    <hr class="toc-sep">
+    <li><a href="#ch-origin">1 · Origin &amp; Principles</a></li>
+    <li><a href="#ch-loops">2 · Loop Types</a></li>
+    <li><a href="#ch-buses">3 · The Bus System</a>
+      <ul class="toc-sub">
+        <li><a href="#s-query-params">Query Parameters</a></li>
+        <li><a href="#s-scoped-sub">Scoped Subscription</a></li>
+        <li><a href="#s-authoritative">Authoritative Loop</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-gates">4 · Data Gates</a></li>
+    <li><a href="#ch-boundaries">5 · Boundary Enforcement</a></li>
+    <li><a href="#ch-workflows">6 · Workflows</a>
+      <ul class="toc-sub">
+        <li><a href="#s-idempotency">Idempotency</a></li>
+        <li><a href="#s-cascade-update">Cascade Update</a></li>
+        <li><a href="#s-failure-assignment">Failure Strategy Assignment</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-patterns">7 · Patterns</a>
+      <ul class="toc-sub">
+        <li><a href="#s-pat-arch">Architectural Patterns</a></li>
+        <li><a href="#s-pat-companion">Implementation Patterns</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-fault">8 · Fault Tolerance</a></li>
+    <li><a href="#ch-state">9 · State &amp; Persistence</a></li>
+    <li><a href="#ch-deps">10 · The Dependency Principle</a></li>
+    <li><a href="#ch-security">11 · Security &amp; Identity</a>
+      <ul class="toc-sub">
+        <li><a href="#s-auth-gate">The Auth Gate</a></li>
+        <li><a href="#s-sanitization">Input Sanitization</a></li>
+        <li><a href="#s-rate-limit">Rate Limiting</a></li>
+        <li><a href="#s-pii">PII Policy</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-infra">12 · Infrastructure Patterns</a>
+      <ul class="toc-sub">
+        <li><a href="#s-inlet">The Inlet</a></li>
+        <li><a href="#s-clock">The Clock</a></li>
+        <li><a href="#s-config">Configuration</a></li>
+        <li><a href="#s-docgen">Document Generation</a></li>
+        <li><a href="#s-operator-alerts">Operator Alerts</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-longevity">13 · Longevity &amp; Evolution</a>
+      <ul class="toc-sub">
+        <li><a href="#s-self-verify">Self-Verification</a></li>
+        <li><a href="#s-contract-version">Contract Versioning</a></li>
+        <li><a href="#s-schema-migration">Schema Migration</a></li>
+        <li><a href="#s-dep-sunset">Dependency Sunset</a></li>
+        <li><a href="#s-immortal">The Immortal Constellation</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-observatory">14 · The Observatory</a>
+      <ul class="toc-sub">
+        <li><a href="#s-constellation-map">Constellation Map</a></li>
+        <li><a href="#s-auditor">The Auditor</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-boundary-stmt">15 · Scope Boundary</a>
+      <ul class="toc-sub">
+        <li><a href="#s-performance">Performance Budget</a></li>
+        <li><a href="#s-future-extensions">Future Extensions</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-dev">16 · Development Methodology</a>
+      <ul class="toc-sub">
+        <li><a href="#s-role-taxonomy">Role Taxonomy</a></li>
+        <li><a href="#s-session-deliverables">Session Deliverables</a></li>
+        <li><a href="#s-session-identity">Session Identity</a></li>
+        <li><a href="#s-event-ledger">The Event Ledger</a></li>
+        <li><a href="#s-coordinator-integrator">Coordinator–Integrator Interface</a></li>
+        <li><a href="#s-auto-routing">Auto-Routing Protocol</a></li>
+        <li><a href="#s-safety-arch">Safety Architecture</a></li>
+        <li><a href="#s-circuit-breaker">Circuit Breaker</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-docs">17 · Document Stack</a>
+      <ul class="toc-sub">
+        <li><a href="#s-doc-registry">Document Registry</a></li>
+        <li><a href="#s-doc-dependencies">Document Dependencies</a></li>
+        <li><a href="#s-doc-pinning">Version Pinning</a></li>
+        <li><a href="#s-doc-authorship">Document Authorship</a></li>
+        <li><a href="#s-doc-hygiene">Document Hygiene Protocol</a></li>
+        <li><a href="#s-doc-stale">Stale Documents</a></li>
+      </ul>
+    </li>
+    <li><a href="#ch-coding">18 · Coding Standards</a></li>
+  </ul>
+</nav>
+
+<main class="content">
+
+<!-- ══ ABSTRACT ══ -->
+<div class="abstract-box" id="ch-abstract">
+  <div class="abstract-label">Abstract</div>
+  <p>Loop MMT™ (Multi-Module Theory) is a software architecture and development methodology for building production applications as a solo developer leading AI coding assistants. It is derived from Loop 2.1™, a browser-based manual flow computer refined across 329 builds, and carries forward that system's core discipline: every data path is explicit, every transfer is observable, every failure is contained, and the operator is always in control.</p>
+  <p>The architecture treats software as a constellation of independent processing loops connected by multiple typed buses. Seven loop types divide all responsibilities; boundaries between them are enforced structurally through JavaScript closures, not by convention. Multi-step operations are orchestrated by Workflow Loops using declared pipeline specs with a five-word failure vocabulary and idempotency guarantees. Data Gates govern lifecycle. Dependency Gates isolate external services with graceful degradation. The system is designed for longevity: self-verifying constellations, versioned contracts, automatic schema migrations, and dependency sunset protocols.</p>
+  <p style="margin-bottom:0;">The development methodology coordinates parallel AI conversations through six conversation types — Specification, Module, Integrator, Coordinator, Auditor, and Bug Fix — unified by an append-only event ledger. Document governance rides on the ledger: every document change is an event, every dependency is tracked, and staleness propagation is automatic. A five-layer safety architecture with a Divergence Circuit Breaker provides defense-in-depth for multi-role AI coordination.</p>
+</div>
+
+
+<!-- ══ 1: ORIGIN ══ -->
+<div class="chapter" id="ch-origin">
+  <div class="chapter-number">Section 1</div>
+  <div class="chapter-title">Origin and Principles</div>
+
+  <p>Loop MMT is derived from Loop 2.1 — a browser-based manual flow computer where the human operator replaces the stored program — and from the governance framework developed across 329 builds of that system. The architecture did not begin as theory. It was extracted from a working machine, tested by use, and formalized into nine principles:</p>
+
+  <p><strong>1. The Operator is always in control.</strong> The human developer is the architectural authority. The AI writes code; the human directs. When the system cannot decide, it escalates — it does not guess.</p>
+
+  <p><strong>2. All state is explicit.</strong> Data exists in exactly two places: on a bus or in a Vault. No ghost state.</p>
+
+  <p><strong>3. Every data path is declared.</strong> The routing table is a complete map of every legal data movement. No implicit routing.</p>
+
+  <p><strong>4. Boundaries are structural, not conventional.</strong> The closure wall enforces loop type constraints. The test suite verifies them.</p>
+
+  <p><strong>5. Failures are contained.</strong> Each loop and each bus is its own failure domain. The system degrades gracefully.</p>
+
+  <p><strong>6. The system is observable.</strong> Every bus transfer is traceable. Every workflow step is logged. Every error is an event on the bus.</p>
+
+  <p><strong>7. Dependencies are adopted deliberately.</strong> Build what you can. Adopt what you must. Isolate what you adopt. Wrap it in a gate.</p>
+
+  <p><strong>8. The source of truth survives the session.</strong> Architectural decisions are expressed in code, tests, and specifications — not in chat history.</p>
+
+  <p><strong>9. The system outlives its builders.</strong> A constellation carries its own blueprint, can verify itself against it, and can evolve without breaking. Software rot is a structural problem with a structural solution.</p>
+
+  <div class="callout phi">
+    <div class="callout-label">The Core Insight</div>
+    Build the constraints into the system. Let the system enforce them. An architectural decision baked into structure is a decision that will be respected by every future session, every future developer, and every future AI — without anyone having to remember it.
+  </div>
+</div>
+
+
+<!-- ══ 2: LOOP TYPES ══ -->
+<div class="chapter" id="ch-loops">
+  <div class="chapter-number">Section 2</div>
+  <div class="chapter-title">Loop Types</div>
+
+  <p>Every module in a Loop MMT constellation is one of seven types. The type is not a label — it determines what the module can access. A Compute Loop receives the bus and nothing else. A Vault Loop receives the bus and the database client. The closure wall (§5) enforces these boundaries at the language level: capabilities not passed to the factory function do not exist in the loop's scope. The type system is the mechanism by which the architecture prevents responsibility creep — a Compute Loop that gradually acquires database access, a Filter Loop that starts sending notifications. Each type has exactly the capabilities it needs and structurally cannot acquire more.</p>
+
+  <table class="ref-table">
+    <tr><th>Type</th><th>Role</th><th>Capabilities</th><th>L21 Analog</th></tr>
+    <tr><td>Working</td><td>Intake and routing. All external input enters here.</td><td><code>bus</code></td><td>Working Loop + Inject</td></tr>
+    <tr><td>Compute</td><td>Pure transformation. Same input → same output.</td><td><code>bus</code></td><td>ALU</td></tr>
+    <tr><td>Vault</td><td>Persistence. Only type that touches the storage layer.</td><td><code>bus</code>, <code>db</code></td><td>Memory Slots</td></tr>
+    <tr><td>Filter</td><td>Validation and inspection. Pass/reject/tag.</td><td><code>bus</code></td><td>Pattern Matchers, Threshold Gates</td></tr>
+    <tr><td>Signal</td><td>External output. Never blocks core pipeline.</td><td><code>bus</code>, <code>services</code></td><td>External Bus E</td></tr>
+    <tr><td>Presentation</td><td>The UI. Renders state, captures intent.</td><td><code>bus</code>, <code>document</code></td><td>Read Heads + Inject</td></tr>
+    <tr><td>Workflow</td><td>The Operator analog. Orchestrates multi-step operations.</td><td><code>bus</code></td><td>The Operator</td></tr>
+  </table>
+
+  <p>The <strong>Capabilities</strong> column is the complete list of what the factory function receives. The <code>bus</code> object passed to each type is itself a filtered view — only the channels that type is authorized to use. The L21 analogs are listed for derivation context; the L21 Technical Reference provides the full mapping for readers interested in the hardware lineage.</p>
+</div>
+
+
+<!-- ══ 3: BUS SYSTEM ══ -->
+<div class="chapter" id="ch-buses">
+  <div class="chapter-number">Section 3</div>
+  <div class="chapter-title">The Bus System</div>
+
+  <p>Multiple named buses, each independent with its own priority queue and contract validation. Push (event) and Pull (request-by-type, decoupled from provider). Packets are structured objects with type, bus, source, timestamp, payload, and hash. Contracts enforced at outbound and inbound gates. Three priority levels: <code>CRITICAL</code>, <code>STANDARD</code>, <code>DEFERRED</code>. The routing table declares every legal path. Buses support passive observers for the Observatory.</p>
+
+  <div class="section" id="s-query-params">
+    <div class="section-title">Query Parameters in Pull Requests</div>
+    <p>Pull requests can carry query parameters in their payload — filter conditions, sort orders, pagination, date ranges. The Vault Loop translates these into database queries. The packet contract for each <code>FETCH_*</code> type declares what filter parameters are supported. This is not a search engine — it is a structured query interface where the valid parameters are part of the contract.</p>
+  </div>
+
+  <div class="section" id="s-scoped-sub">
+    <div class="section-title">Scoped Subscription</div>
+    <p>A standard subscription receives all packets of a type. A Scoped Subscription adds a filter predicate evaluated at delivery time. The bus evaluates the predicate against each packet before delivering — packets that don't match are never delivered to that subscriber.</p>
+    <pre>// Standard — receives ALL MESSAGE_POSTED packets
+bus.data.on('MESSAGE_POSTED', handleMessage);
+
+// Scoped — receives only messages for channels I'm in
+bus.data.on('MESSAGE_POSTED', handleMessage, {
+  scope: { field: 'payload.channelId', in: myActiveChannelIds }
+});
+
+// Update scope at runtime — user joined a new channel
+bus.data.updateScope('MESSAGE_POSTED', handleMessage, {
+  field: 'payload.channelId',
+  in: [...myActiveChannelIds, newChannelId]
+});</pre>
+    <p>Scope operators: <code>equals</code> (exact match), <code>in</code> (match against a set), <code>not</code> (inverse), <code>exists</code> (field present), <code>predicate</code> (arbitrary function — use sparingly, opaque to Observatory). Scopes are dynamic — updatable at runtime as user context changes (join channel, switch tenant). For multi-tenant systems, scoped subscriptions are a security mechanism: the Auth Gate stamps packets with a <code>tenantId</code>, and the Presentation Loop's subscription is scoped to its own tenant. Defense in depth — routing table is the first barrier, scope is the second. Passive observers are not affected by scopes — they see all traffic. L21 analog: the Pattern Matcher mask that selects which bits to inspect.</p>
+  </div>
+
+  <div class="section" id="s-authoritative">
+    <div class="section-title">Authoritative Loop</div>
+    <p>The Constellation Spec can designate a loop as <strong>authoritative</strong> for a data domain. All mutations to that domain go through that loop in strict arrival order. No concurrent processing. The bus guarantees sequential delivery: the next packet is not delivered until the authoritative loop has emitted its response to the current one.</p>
+    <pre>const LOOPS = {
+  'compute:gameState': {
+    type: 'compute',
+    authoritative: true,
+    domain: 'game_state',
+    sequencing: 'strict_fifo',
+  }
+};</pre>
+    <p>Three enforced properties: <strong>Sequential delivery</strong> — packets delivered one at a time, using the <code>hold</code> Transit Gate policy automatically. <strong>Global ordering</strong> — in multi-device constellations, mutations route through the server which assigns sequence numbers. Adds latency but guarantees consistency. <strong>Read replicas</strong> — other loops read via the Projection pattern but cannot write to the domain directly.</p>
+    <p>Authoritative designation overrides the concurrency strategy for that domain — there are no conflicts because mutations are sequential. Appropriate for game state, financial ledgers, and any system where mutation order is critical. Not needed for most CRUD applications where eventual consistency is acceptable.</p>
+  </div>
+
+  <p>Pull requests support an extensible vocabulary of query types beyond simple filter/sort — including range queries, geospatial lookups, full-text search, graph traversal, and aggregation. Each <code>FETCH_*</code> contract declares which query types its Vault Loop supports. Unsupported types return <code>QUERY_TYPE_UNSUPPORTED</code>. The specific query types available are declared per project in the Constellation Spec, not prescribed by the standard. The Vault Loop translates query parameters to appropriate database operations.</p>
+</div>
+
+
+<!-- ══ 4: DATA GATES ══ -->
+<div class="chapter" id="ch-gates">
+  <div class="chapter-number">Section 4</div>
+  <div class="chapter-title">Data Gates</div>
+
+  <p>Data Gates are lifecycle policies that govern when data is consumed, archived, or destroyed. Every piece of data in a constellation — bus packets, Vault records, workflow transaction logs — has a declared retention policy. Data does not accumulate unbounded. The L21 origin is the Gate on each loop: a selective destruction point where the operator deliberately retires consumed data by closing the gate. In Loop MMT, the destruction is automatic, policy-driven, and auditable.</p>
+
+  <p><strong>Transit Gate (Buses):</strong> Three policies per packet type. <code>consume</code> — destroy after delivery (default). <code>archive</code> — retain in a circular buffer for diagnostics. <code>hold</code> — stay on bus until receiver acknowledges (for guaranteed delivery across crashes).</p>
+
+  <p><strong>Retention Gate (Vaults):</strong> Three stages per data type. Active (working set, default queries), Archived (soft-removed, available on explicit request), Purged (permanently deleted). Transitions are declared conditions in the Constellation Spec. A background sweep runs periodically, is idempotent, and logs every transition to the audit trail.</p>
+
+  <p>Vault Loops can declare sub-patterns for specialized workloads (e.g., append-only time-series data with automatic downsampling). These are not new loop types — they are recognized configurations of the Vault Loop with declared behaviors. Sub-patterns are defined per project in the Constellation Spec.</p>
+
+  <p><strong>Workflow Gate:</strong> Transaction log retention by outcome. Completed: 30 days active, 1 year archived. Failed/escalated: 90 days active, 2 years archived. In-progress: never gated.</p>
+</div>
+
+
+<!-- ══ 5: BOUNDARIES ══ -->
+<div class="chapter" id="ch-boundaries">
+  <div class="chapter-number">Section 5</div>
+  <div class="chapter-title">Boundary Enforcement</div>
+
+  <p>Every loop is constructed by a factory function that receives exactly its permitted capabilities. A Compute Loop's factory receives <code>{ bus }</code>. A Vault Loop's factory receives <code>{ bus, db }</code>. The closure scope is the wall. If the database client was not passed in, it does not exist — not as a restricted variable, not as a null reference. It is absent from the scope chain entirely. A Compute Loop that attempts to call the database will produce a <code>ReferenceError</code>, not a policy violation. The boundary is enforced by the JavaScript runtime, not by the team's discipline.</p>
+
+  <p>This is not access control. Access control means the variable exists and the system checks whether you are allowed to use it. The closure wall means the variable does not exist. There is nothing to check, nothing to bypass, no flag to toggle. The only way to violate the boundary is active sabotage — smuggling a reference through the bus payload, assigning to the global object — and any such violation is visible, deliberate, and obvious in code review. The architecture converts boundary violations from passive drift (the easy shortcut that accumulates silently) into active sabotage (the deliberate wrong that requires effort and leaves evidence).</p>
+
+  <p>The <code>bus</code> object itself is a filtered view. Each factory receives a bus interface that exposes only the channels that loop type is authorized to use. The test suite verifies every factory's parameter list against the Capability Injection Table on every build — if a factory signature changes to accept a capability its type does not permit, the Gantry catches it before the code integrates.</p>
+
+  <p>The technique has a lineage in capability-based security (Dennis and Van Horn, 1966) and the object-capability model. Loop MMT's application of it is specific to the constraint of AI-assisted development: architectural boundaries must survive complete memory loss between sessions. The AI does not take shortcuts out of laziness or deadline pressure. It takes shortcuts because it does not know the boundary exists unless the scope chain enforces it. The closure wall solves a different problem than process isolation in microservices — process isolation provides crash containment, memory isolation, and deployment independence. The closure wall prevents the gradual accumulation of unauthorized dependencies through convenience, which is the erosion pattern that kills most long-lived single-process applications. These are complementary protections, not competing ones.</p>
+
+  <div class="callout phi">
+    <div class="callout-label">The Derivation</div>
+    In L21, the Gate is a physical point on each loop where data is destroyed when the gate is closed. The operator cannot route data past a closed gate — the hardware enforces the boundary. The closure wall is the software equivalent: a boundary enforced by the runtime, not by the operator's memory or the team's conventions. The principle is the same in both cases — build the constraint into the structure so that violating it is not a matter of discipline but of possibility.
+  </div>
+</div>
+
+
+<!-- ══ 6: WORKFLOWS ══ -->
+<div class="chapter" id="ch-workflows">
+  <div class="chapter-number">Section 6</div>
+  <div class="chapter-title">Workflows</div>
+
+  <p>The Workflow Loop drives multi-step operations. Pipeline specs are data structures (not procedural code) declaring steps, dependencies, timeouts, and failure strategies. The engine is generic — adding a workflow means adding a spec. Five-word failure vocabulary: <strong>Abort</strong> (stop), <strong>Retry</strong> (with backoff), <strong>Skip</strong> (proceed without this step's output), <strong>Compensate</strong> (undo earlier steps), <strong>Escalate</strong> (hand to human). Transaction logs persist after every step. State Reincarnation resumes workflows after crashes.</p>
+
+  <div class="section" id="s-idempotency">
+    <div class="section-title">Idempotency</div>
+    <p>Each step in a pipeline spec can declare an idempotency key derivation — a function that produces a unique key from the step's inputs. If the step is retried (including after reincarnation), the same key is generated and sent with the request. External services that support idempotency keys (payment processors, most REST APIs) correctly deduplicate.</p>
+    <pre>{
+  name:           'charge_payment',
+  emit:           { type: 'PROCESS_PAYMENT', bus: 'PAYMENT' },
+  expect:         'PAYMENT_CONFIRMED',
+  timeout:        30000,
+  onFail:         'abort',
+  idempotencyKey: (inputs) =>
+    `pay_${inputs.orderId}_${inputs.totalPrice}_${inputs.workflowId}`,
+}</pre>
+    <p>The key is derived deterministically from inputs — the same order, price, and workflow always produce the same key. Included in the emitted packet as a standard field. The receiving loop passes it through to the external service. If the service doesn't support idempotency keys, the field is ignored.</p>
+    <p><strong>Internal idempotency</strong> is implicit for all workflow steps. Before dispatching any step, the Workflow Engine checks the transaction log: has this step already completed for this workflow? If yes, skip it and use the recorded result. External idempotency (via declared keys) protects against duplicate calls to outside services. Internal idempotency (via the transaction log) protects against duplicate processing within the constellation. Together, they make any step safe to retry under any failure condition — including the worst case: crash between external API success and transaction log persistence.</p>
+  </div>
+
+  <div class="section" id="s-cascade-update">
+    <div class="section-title">Cascade Update</div>
+    <p>A workflow pattern for hierarchical state propagation. When a child record changes state, the pipeline evaluates whether the parent should also change. Two new pipeline spec features enable this:</p>
+    <p><strong>Conditional steps.</strong> A <code>condition</code> field allows a step to execute only if a predicate on prior results is true. "Only transition parent if all siblings are done." If the condition is false, the step is skipped (not failed — skipped) and the workflow completes normally.</p>
+    <p><strong>Recursive pipelines.</strong> A <code>recursion</code> block declares that a pipeline can trigger itself. When the parent's status changes, the same pipeline fires for the grandparent. A <code>maxDepth</code> guard prevents infinite recursion. If the hierarchy exceeds the depth limit, the cascade stops and emits <code>CASCADE_DEPTH_EXCEEDED</code>.</p>
+    <pre>const PIPELINE_CASCADE = {
+  name:    'cascade_task_completion',
+  trigger: { type: 'STATUS_CHANGE',
+             match: { newStatus: 'done', recordType: 'task' } },
+  steps: [
+    { name: 'fetch_siblings',
+      emit: { type: 'FETCH_TASKS', bus: 'VAULT' },
+      queryParams: (trigger) => ({ parentId: trigger.payload.parentId }),
+      expect: 'TASKS_FETCHED', onFail: 'abort' },
+    { name: 'evaluate_parent',
+      emit: { type: 'EVALUATE_COMPLETION', bus: 'DATA' },
+      needs: ['fetch_siblings.payload'],
+      expect: 'EVALUATION_RESULT', onFail: 'abort' },
+    { name: 'transition_parent',
+      emit: { type: 'STATUS_CHANGE', bus: 'DATA' },
+      needs: ['evaluate_parent.payload'],
+      condition: (results) => results.evaluate_parent.payload.allComplete,
+      expect: 'STATUS_VALIDATED', onFail: 'abort' }
+  ],
+  recursion: { enabled: true, maxDepth: 10,
+               trigger: 'transition_parent.success' }
+};</pre>
+    <p>Works both upward (child completes → parent evaluates) and downward (parent archived → children archived). Downward cascades combine naturally with the Batch pattern — "archive all children of this parent" is a batch status update.</p>
+  </div>
+
+  <div class="section" id="s-failure-assignment">
+    <div class="section-title">Failure Strategy Assignment</div>
+    <p>Every step in a pipeline spec declares its failure strategy using one of the five words. The mechanism is simple. The decision of which word to assign is not — especially for steps that could plausibly use more than one strategy. This guidance provides a decision framework.</p>
+
+    <p><strong>Escalate</strong> when the cost of a wrong automatic decision exceeds the cost of delay. If the system choosing incorrectly would create a problem that requires human effort to undo — a double charge, a lost order, an irreversible state transition — escalate. The Operator sees the paused workflow, evaluates the situation with context the system doesn't have, and decides. Use for: payment failures above a threshold, cancellations with partial completion, any step where the compensation action is expensive or unreliable.</p>
+
+    <p><strong>Retry</strong> when the failure is likely transient and the operation is safe to repeat. Network timeouts, temporary service unavailability, rate limit hits. Always declare a retry limit and backoff strategy — unbounded retries are an infinite loop with extra steps. Combine with idempotency keys for external calls. Use for: database writes during brief connectivity loss, external API calls that return 503, webhook deliveries.</p>
+
+    <p><strong>Abort</strong> when continuing would produce corrupt or inconsistent state. If the prerequisite for subsequent steps has failed in a way that makes those steps meaningless — the record to update doesn't exist, the validation returned hard errors, the price calculation produced an impossible result — abort. Already-completed steps are not automatically rolled back unless they declared compensation actions. Use for: validation failures, missing prerequisite data, business rule violations.</p>
+
+    <p><strong>Skip</strong> when the failed step is supplementary and the workflow's primary purpose can still be achieved without it. Sending a confirmation SMS fails but the order was successfully created — the order matters more than the notification. The failure is logged, the Operator can investigate, but the workflow proceeds. Use for: notification delivery, analytics events, non-critical enrichment steps.</p>
+
+    <p><strong>Compensate</strong> when earlier completed steps must be explicitly undone because the workflow can no longer reach a valid end state. A payment was charged but inventory allocation failed — the payment must be refunded. Compensation actions are declared per step and execute in reverse order. Use sparingly: compensation is complex, can itself fail, and adds a second failure path that must be tested. Prefer designing workflows so that irreversible steps come last, after all fallible steps have succeeded.</p>
+
+    <div class="callout tip">
+      <div class="callout-label">The Ordering Principle</div>
+      Where possible, order pipeline steps so that reversible operations come before irreversible ones. Validate before charging. Reserve before confirming. Check inventory before processing payment. This reduces the need for compensation — if the workflow aborts early, there is nothing to undo.
+    </div>
+
+    <p><strong>Batch operations and partial success.</strong> When a batch step processes fifty records and three fail, the step itself is treated as successful — it processed all fifty. The result packet contains both the completed records and the failed records with their error details. A subsequent conditional step handles the failures: routing them into a retry pipeline, a dead letter queue, or an escalation, depending on the failure type. The five-word vocabulary applies to the handling of each failed record in the secondary pipeline, not to the batch step that surfaced them. See also the Batch pattern in §7.</p>
+  </div>
+</div>
+
+
+<!-- ══ 7: PATTERNS ══ -->
+<div class="chapter" id="ch-patterns">
+  <div class="chapter-number">Section 7</div>
+  <div class="chapter-title">Patterns</div>
+
+  <p>Patterns are named, reusable solutions to problems that arise when building with the loop + bus + closure wall architecture. This section defines the <strong>architectural patterns</strong> — patterns that affect how you design a constellation. A companion document (the Patterns Reference) catalogs additional <strong>implementation patterns</strong> — useful techniques for working within the architecture that do not constrain its design.</p>
+
+  <div class="section" id="s-pat-arch">
+    <div class="section-title">Architectural Patterns</div>
+
+    <p>These patterns define structural relationships in the architecture. If you don't know them, you will build the wrong thing.</p>
+
+    <p><strong>The Echo.</strong> <em>L21: The operator observes the ALU result before routing it further — the computation is confirmed before it is used.</em> A loop never trusts that an operation succeeded until the responsible loop confirms it by emitting a completion packet. The UI does not show "Order Confirmed" when the user taps Submit — it shows it when the Vault emits <code>ORDER_CREATED</code>. The difference is the difference between hope and proof. The echo packet can carry metadata about the confirmation — <code>persisted: true</code> vs. <code>persisted: buffered</code> — so downstream loops and the UI know the real status. The Workflow Loop is built entirely on Echoes: emit a step request, wait for the echo, then proceed.</p>
+
+    <p><strong>The Marker.</strong> <em>L21: The marker bit (bit 16) distinguishes a live word from empty space. A word with marker 0 is vacant; marker 1 is live data.</em> Every packet carries a liveness indicator. <code>marker: 'live'</code> is real data. <code>marker: 'empty'</code> is a deliberate null signal — "I looked and there is nothing here." <code>marker: 'tombstone'</code> is a deletion notice — "this record existed and was deliberately removed." The distinction matters because "no data returned" is ambiguous (query failed? genuinely empty?), while a marked empty response is unambiguous. Pull requests must always return a marked packet, never silence.</p>
+
+    <p><strong>The Hydration.</strong> <em>L21: The operator loads a value from memory into the ALU loop, enriching the workspace before computation.</em> A Filter Loop that receives a sparse packet (just an ID), pulls full data from a Vault, and attaches it to the packet before passing it along. The Customer Lookup does this: receives a customer ID, fetches the full customer record, attaches it. The enriched packet now carries everything downstream loops need. Hydration is always done by a Filter Loop (it enriches, it does not transform) and the pull goes through the Vault Bus (it is a data retrieval, not a business computation).</p>
+
+    <p><strong>The Cascade.</strong> <em>L21: PM1 → PM2 → TG1 → TG2. A four-stage conditional pipeline on the Big Loop where each stage filters the output of the previous one, all in a single rotation.</em> Chaining Filter Loops on the bus. Packet enters Filter A, passes or rejects. Passes go to Filter B. Passes go to Filter C. Each filter is independent, has its own contract, and can be added or removed without changing the others. The sequence is defined in the routing table, not in the filters. Adding a new filter to the cascade means updating the routing table — no existing code changes. The most powerful composition mechanism in the architecture.</p>
+
+    <p><strong>The Projection.</strong> <em>L21: The operator reads from multiple sources (ALU result, comparator flags, counter value) to form a complete picture before making a routing decision.</em> A Compute Loop subscribes to change events from multiple Vaults and maintains a derived, denormalized view. When the Order Vault emits <code>ORDER_UPDATED</code>, the Projection Loop pulls related customer, status, and media data, assembles the complete view, and emits <code>PROJECTION_UPDATED</code>. The Presentation Loop subscribes to the projection, not to the individual Vaults — one subscription, one packet, all the data needed to render. The projection is explicitly a derived cache, not a source of truth. It can be rebuilt from the Vaults at any time.</p>
+
+    <p><strong>The Bridge.</strong> <em>L21: When a Pattern Matcher ejects a word, it goes to a one-word bridge buffer before being available to a bus. The bridge holds one word; a second match overwrites if the bridge hasn't drained.</em> A buffering mechanism between a loop's output and the bus. The loop produces output faster than the bus can carry it. The bridge smooths the flow. Three overflow strategies, declared in the loop's spec: <code>overwrite</code> (latest wins, like the L21 PM bridge), <code>queue</code> (FIFO buffer, like the Dependency Gate), <code>backpressure</code> (the loop pauses until the bridge drains). Bridge depth and overflow strategy are declared, not hardcoded.</p>
+
+    <p><strong>The Translator.</strong> When a loop adopts an external dependency that speaks a fundamentally different data model — a payment processor's webhook format, a legacy SOAP API, an OIDC provider's token structure — the loop performs two distinct responsibilities: data translation (converting the external format into clean internal packets) and resilience management (the Dependency Gate's live/buffered/draining lifecycle). These are different concerns and should be recognized as such, even though they live in the same loop. The Translator is the data-scrubbing half. It receives raw external data, validates it against the external provider's schema, maps it to the internal packet contract, and emits clean packets that are indistinguishable from any other packet on the bus. The translation logic is isolated inside the loop's closure — no other loop knows or cares that the data originated from a foreign system. The Dependency Gate handles what happens when the external system is unreachable. The Translator handles what happens when it responds. The Constellation Spec should declare both: "this loop adopts Stripe, uses a Dependency Gate for resilience, and uses the Translator pattern to convert Stripe webhooks into <code>PAYMENT_CONFIRMED</code> packets." This makes the data-scrubbing responsibility a design-time decision, visible in the spec, rather than an implementation detail discovered during coding.</p>
+
+    <p><strong>The Batch.</strong> <em>L21: Memory batch write sends all 16 slots sequentially. Destructive read clears after reading.</em> Operating on multiple records atomically. A Workflow pipeline where the first step is a bulk pull request and subsequent steps operate on the entire result set. Vault Loops support batch insert, batch update, and batch archive as declared capabilities. The read-and-consume variant (fetch records and mark them as in-progress atomically) is how retry queues work — the Signal Loop fetches pending notifications and claims them in one operation, so no other instance re-sends them.</p>
+
+  </div>
+
+  <div class="section" id="s-pat-companion">
+    <div class="section-title">Implementation Patterns</div>
+
+    <p>The following patterns are useful techniques for working within the architecture. They do not constrain constellation design — an operator who does not know them will build a working constellation that is less elegant, but not structurally wrong. They are cataloged in the <strong>Patterns Reference</strong> companion document: Flag, Scratch, Clamp, Stamp, Reorder, Counter, Fanout, Debounce, Split-Merge, Cascade Update (see §6 for specification), Sentinel, Heartbeat Absence, Replay, Inlet (see §12), Document Generation (see §12), Tap, Self-Routing Packets, Phantom, Inter-Constellation Communication, Dead Letter, Outbox, Snapshot.</p>
+
+    <p>The Patterns Reference includes L21 origins for each pattern. Operators learn these patterns over time as they build. The standard defines the architecture. The companion defines the idioms.</p>
+  </div>
+
+  <div class="callout phi">
+    <div class="callout-label">On Patterns and the L21 Model</div>
+    Most patterns in the full catalog trace directly to a specific Loop 2.1 hardware component or operating technique. This is not forced mapping — it is evidence that the hardware model captures fundamental computational patterns that recur at every level of abstraction. The machine's design, because it is minimal and observable, exposes patterns that conventional software buries under layers of abstraction. Loop MMT names them and makes them explicit.
+  </div>
+</div>
+
+
+<!-- ══ 8: FAULT TOLERANCE ══ -->
+<div class="chapter" id="ch-fault">
+  <div class="chapter-number">Section 8</div>
+  <div class="chapter-title">Fault Tolerance</div>
+
+  <p>Fault tolerance in Loop MMT operates at three independent levels. Each level catches a different category of failure. Together, they provide defense-in-depth — no single failure propagates across the system unchecked.</p>
+
+  <p><strong>Bus level.</strong> Contract gates validate every packet at outbound and inbound. A malformed packet — wrong type, missing field, shape mismatch — is rejected before it reaches the bus. Bad data does not travel. This is the first line of defense and it operates on every transfer, every time, with no exceptions. The contract gate does not log a warning and let the packet through. It rejects. The emitting loop receives an error. The bus stays clean.</p>
+
+  <p><strong>Loop level.</strong> Each loop is its own failure domain. The closure wall prevents a failure in one loop from accessing another loop's state. The bus contracts prevent a failure from propagating bad data to downstream consumers. If a loop encounters an unrecoverable error, it follows a four-step recovery protocol: do not crash the process, emit an error event to the bus (so the Observatory and Operator Alerts can respond), preserve whatever state can be preserved, and continue operating in a degraded mode if possible. A Compute Loop that fails on one packet should not fail on the next — each packet is independent. The goal is containment: the failure stays in the loop that experienced it.</p>
+
+  <p><strong>Workflow level.</strong> Multi-step operations fail in more complex ways than single-loop operations — a step can succeed and then a subsequent step can fail, leaving the workflow in a partially-completed state. The five-word failure vocabulary (§6) addresses this: each step declares its failure strategy before code is written. The Workflow Engine executes the declared strategy automatically. The transaction log records every step's outcome, enabling State Reincarnation after crashes. Workflow-level fault tolerance is not about preventing failures — it is about ensuring that every failure has a pre-declared response.</p>
+
+  <p><strong>Bus isolation.</strong> Each bus is an independent failure domain with its own priority queue and its own contract registry. A malformed packet on the Data Bus does not affect the Vault Bus or the Signal Bus. A backpressure condition on one bus does not stall another. This isolation means that a single failure — even a sustained one — cannot take down the entire communication layer. The buses degrade independently.</p>
+</div>
+
+
+<!-- ══ 9: STATE ══ -->
+<div class="chapter" id="ch-state">
+  <div class="chapter-number">Section 9</div>
+  <div class="chapter-title">State and Persistence</div>
+
+  <p><strong>The Two-Place Rule:</strong> Data exists on a bus or in a Vault. No third place. The Presentation Loop holds a projection, not the source of truth.</p>
+
+  <p><strong>Sync Model:</strong> Eventually consistent via real-time subscriptions on the Sync Bus. Offline devices queue writes locally and drain on reconnection.</p>
+
+  <div class="section" id="s-concurrency">
+    <div class="section-title">Concurrency Strategy</div>
+    <p>When two operators modify the same record on different devices simultaneously, the default resolution is <strong>last-write-wins</strong> — the second write silently overwrites the first. Both writes are captured in the audit trail, so the overwritten change is never lost. This is appropriate for most projects.</p>
+    <p>For data types where silent overwrites are unacceptable, the Constellation Spec can declare alternative strategies per record type: field-level merge (non-conflicting field changes both apply) or optimistic locking (version-checked writes that fail on conflict). Data domains governed by an Authoritative Loop (§3) override the concurrency strategy entirely — there are no conflicts because mutations are sequential.</p>
+  </div>
+</div>
+
+
+<!-- ══ 10: DEPENDENCIES ══ -->
+<div class="chapter" id="ch-deps">
+  <div class="chapter-number">Section 10</div>
+  <div class="chapter-title">The Dependency Principle</div>
+
+  <p>Dependency-averse, not zero-dependency. <strong>Built:</strong> custom infrastructure owned entirely. <strong>Adopted:</strong> external services, justified, isolated behind one loop type, wrapped in a Dependency Gate. <strong>Forbidden:</strong> dependencies that compromise architectural guarantees (UI frameworks, state management, build tools).</p>
+
+  <p><strong>Dependency Gates:</strong> Three modes. Live (pass-through with latency monitoring). Buffered (unreachable — writes buffer in IndexedDB, reads from cache). Draining (recovered — buffer drains at controlled rate). The gate is generic infrastructure. The loop's bus interface does not change across modes.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 11: SECURITY & IDENTITY                                   -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-security">
+  <div class="chapter-number">Section 11</div>
+  <div class="chapter-title">Security and Identity</div>
+
+  <p>Security in Loop MMT is not a feature bolted on after the architecture is built. It is a structural property of the architecture, enforced at the same level as loop boundaries and bus contracts.</p>
+
+  <div class="section" id="s-auth-gate">
+    <div class="section-title">The Auth Gate</div>
+
+    <p>The Auth Gate is a specialized Filter Loop positioned between the Presentation Loop and the Working Loop. Every operator action passes through the Auth Gate before entering the system. The Auth Gate performs three functions:</p>
+
+    <p><strong>1. Identity verification.</strong> The Auth Gate validates the session token (via the auth provider — Supabase Auth, for example) and attaches the verified operator identity to the packet. The identity is not self-reported by the UI — it is cryptographically verified by the auth provider and stamped by the Auth Gate. Every packet that enters the Working Loop carries a verified <code>operatorId</code> and <code>role</code>.</p>
+
+    <p><strong>2. Role-based access control.</strong> The Auth Gate checks whether the operator's role is authorized to perform the requested action. The authorization rules are declared in the Constellation Spec as a role-permission matrix:</p>
+
+    <pre>const ROLES = {
+  owner:    { can: ['*'] },                       // all actions
+  operator: { can: ['intake', 'status_change',
+                     'lookup', 'reconcile_daily'] },
+  viewer:   { can: ['lookup', 'reconcile_daily'] }  // read-only
+};
+
+const ACTIONS_REQUIRING = {
+  cancel_order:      ['owner'],
+  issue_refund:      ['owner'],
+  modify_price_table:['owner'],
+  reconcile_season:  ['owner'],
+  intake:            ['owner', 'operator'],
+  status_change:     ['owner', 'operator'],
+};</pre>
+
+    <p>An operator who does not have the required role for an action gets a <code>AUTH_REJECTED</code> packet back through the Data Bus. The UI shows a clear "you don't have permission" message. The audit trail logs the attempt.</p>
+
+    <p><strong>3. Session management.</strong> The Auth Gate tracks active sessions and handles token refresh, expiration, and forced logout (if the owner revokes an operator's access). Session state follows the Two-Place Rule — it is either on the bus (a session validation request in transit) or in the auth provider (persisted).</p>
+
+    <div class="callout key">
+      <div class="callout-label">Structural Enforcement</div>
+      The Auth Gate enforces permissions at the same architectural level as the closure wall enforces loop capabilities. A Compute Loop cannot access the database because it does not have the db client in scope. An operator cannot cancel an order because the Auth Gate strips that action before it reaches the Working Loop. Neither constraint depends on the UI hiding a button — both are enforced by infrastructure that sits below the UI layer.
+    </div>
+  </div>
+
+  <p>The Auth Gate supports contextual access rules beyond simple role-action checks. The role-permission matrix can include predicate-based <code>where</code> clauses for record-level access control ("this doctor can only see patients assigned to them") and <code>cannot</code> lists for field-level access control ("nurses can see patient demographics and clinical data but not prescriptions"). Predicates are evaluated at two points: the Auth Gate checks them before actions enter the Working Loop, and the Vault Loop applies them as server-side query filters so unauthorized records are never returned. Field groups and access rules are declared in the Constellation Spec. The specific schema for contextual rules is defined per project.</p>
+
+  <div class="section" id="s-sanitization">
+    <div class="section-title">Input Sanitization</div>
+    <p>Every string that enters the system through the Working Loop is sanitized before it travels further. This is a responsibility of the Validation Filter Loop — the same loop that validates schema compliance also strips or escapes potentially dangerous content (HTML entities, script injection patterns, SQL-relevant characters). Sanitization is not optional and not per-feature. It is a property of the validation layer that every packet passes through.</p>
+  </div>
+
+  <div class="section" id="s-rate-limit">
+    <div class="section-title">Rate Limiting</div>
+    <p>The Working Loop enforces a declared maximum ingest rate — packets per second per operator, and packets per second globally. If the rate is exceeded, the Working Loop rejects with a <code>RATE_LIMITED</code> error. This prevents a runaway UI bug, a malicious actor, or a misconfigured Clock from overwhelming the bus. The rate limits are declared in the Constellation Spec and are tunable without code changes.</p>
+  </div>
+
+  <div class="section" id="s-pii">
+    <div class="section-title">PII Policy</div>
+    <p>The Constellation Spec declares which fields in which packet types contain personally identifiable information (PII) — customer names, phone numbers, email addresses. The policy governs: PII fields are encrypted at rest in the Vault (the persistence layer handles this). PII fields are never logged in full in the audit trail — they are hashed or truncated (last four digits of a phone number, for example). PII fields are excluded from health packets and Observatory telemetry. The PII declaration is part of the packet contract — it sits alongside the field type and validation rules.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 12: INFRASTRUCTURE PATTERNS                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-infra">
+  <div class="chapter-number">Section 12</div>
+  <div class="chapter-title">Infrastructure Patterns</div>
+
+  <div class="section" id="s-inlet">
+    <div class="section-title">The Inlet</div>
+    <p>The Inlet is a recognized sub-pattern of the Working Loop for continuous external data streams — WebSocket, Server-Sent Events, MQTT, or polling intervals on REST endpoints. It is not a new loop type. It is a Working Loop with additional infrastructure for stream management. Receives <code>bus</code> only (same capabilities as any Working Loop).</p>
+    <p>What makes it distinct: <strong>Connection lifecycle</strong> — manages persistent connection establishment, authentication with the source, reconnection on failure (with exponential backoff), and graceful shutdown. Config is declared in the Constellation Spec. <strong>Back-pressure</strong> — if the stream is faster than the system can process, a declared strategy applies: <code>buffer</code> (hold in local queue up to max), <code>sample</code> (every Nth reading), <code>latest</code> (most recent value per key — useful for position updates), or <code>drop</code> (reject when full, with counter). <strong>Stream health</strong> — emits health packets: connection state, ingest rate, back-pressure state, drop count.</p>
+    <pre>const INLET_GPS_FLEET = {
+  name:       'inlet:gps',
+  source:     { type: 'websocket', url: 'wss://fleet.example.com/positions' },
+  auth:       { type: 'bearer', tokenFrom: 'config:fleet_api_key' },
+  reconnect:  { backoff: 'exponential', maxDelay: 30000 },
+  backpressure: { strategy: 'latest', keyField: 'payload.vehicleId' },
+  injectAs:   { type: 'INTAKE_RAW', subtype: 'gps_position' },
+  bus:        'DATA',
+  rateLimit:  { maxPerSecond: 100 }
+};</pre>
+    <p>Inlet-injected packets pass through the Auth Gate with a system-level identity (<code>operator: 'system:inlet:gps'</code>), same as Clock packets. Once on the bus, they are indistinguishable from any other packet. The source is external. The processing is standard. L21 analog: External Bus E receiving data from outside the machine.</p>
+  </div>
+
+  <div class="section" id="s-clock">
+    <div class="section-title">The Clock</div>
+
+    <p>The Clock is a scheduled event emitter that injects packets into the Working Loop on declared schedules. It is not a loop type — it is infrastructure, like the bus. It reads a schedule table from the Constellation Spec and emits <code>INTAKE_RAW</code> packets at the declared times. The Working Loop does not know or care whether a packet came from a user tapping a button or from the Clock — it processes both identically.</p>
+
+    <pre>const SCHEDULES = [
+  { name: 'daily_reconciliation',  cron: '0 23 * * *',
+    emit: { subtype: 'reconcile', scope: 'daily' } },
+  { name: 'retention_sweep',       cron: '0 3 * * *',
+    emit: { subtype: 'retention_sweep' } },
+  { name: 'pickup_reminder_check', cron: '0 10 * * *',
+    emit: { subtype: 'pickup_reminder_check' } },
+  { name: 'health_heartbeat',      interval: 30000,
+    emit: { subtype: 'heartbeat_tick' } },
+];</pre>
+
+    <p>The Clock supports both cron-style schedules (for time-of-day events) and interval-based schedules (for periodic heartbeats). Clock-emitted packets pass through the Auth Gate with a system-level identity (<code>operator: 'system:clock'</code>) so they are distinguishable from human-initiated actions in the audit trail.</p>
+  </div>
+
+  <div class="section" id="s-config">
+    <div class="section-title">Configuration</div>
+
+    <p>Application configuration lives in a Config Vault — a Vault Loop whose sole job is storing and serving configuration data. Two kinds:</p>
+
+    <p><strong>Static config:</strong> Changes rarely. Price tables, cut options, processing fees, role definitions. Loaded at constellation startup. Loops access it via pull requests (<code>FETCH_PRICE_TABLE</code>, <code>FETCH_ROLE_MATRIX</code>).</p>
+
+    <p><strong>Runtime config:</strong> Can change while the system is running. Feature flags, maintenance mode toggle, temporary surcharges. Stored in the Config Vault but pushed to subscribing loops when changed via a <code>CONFIG_UPDATED</code> event on the Data Bus. Loops that use runtime config subscribe to this event and refresh their local copy.</p>
+
+    <p>The Config Vault is the single answer to "where do I change X?" Every configurable value in the system lives here. The UI provides an admin interface for the owner role to modify configuration. Changes go through the standard pipeline: Working Loop → Auth Gate (owner only) → Validation → Config Vault → CONFIG_UPDATED → all subscribing loops.</p>
+  </div>
+
+  <div class="section" id="s-docgen">
+    <div class="section-title">Document Generation</div>
+    <p>Generating a formatted document (PDF receipt, printable carcass tag, season report) is a two-loop pattern. A Compute Loop takes business data and produces formatted content (HTML template populated with order data). A Signal Loop handles the delivery channel — print, download, email attachment. The Compute Loop produces the document; the Signal Loop delivers it. Neither crosses into the other's responsibility.</p>
+  </div>
+
+  <div class="section" id="s-operator-alerts">
+    <div class="section-title">Operator Alerts</div>
+    <p>The Notification Signal Loop sends messages to customers. A separate Operator Alert Signal Loop sends messages to the system operator — the person responsible for keeping the system running. Different audience, different trigger conditions, different urgency. When a Dependency Gate transitions to buffered mode at 2am, the customer doesn't need to know. The operator does. The Operator Alert loop subscribes to <code>DEPENDENCY_OFFLINE</code>, <code>WORKFLOW_ABORTED</code>, <code>LOOP_ERROR</code> (repeated), and other critical system health events, and delivers alerts via the operator's preferred channel (SMS, email, push notification).</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 13: LONGEVITY & EVOLUTION                                 -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="chapter" id="ch-longevity">
+  <div class="chapter-number">Section 13</div>
+  <div class="chapter-title">Longevity and Evolution</div>
+
+  <p>Software rots. Dependencies get deprecated. APIs change. The developer who understood the system moves on. Business rules change but old logic stays. Data accumulates in outdated formats. Security vulnerabilities emerge in code nobody touches. The environment shifts — browsers drop features, devices change, services get acquired and shut down. The knowledge of why things are the way they are evaporates, until nobody can safely change anything because nobody knows what will break.</p>
+
+  <p>Loop MMT is designed to resist this. Not through perfect code — there is no such thing — but through structural properties that make decay detectable, evolution safe, and understanding recoverable. A constellation built to the standard should be as comprehensible to a new developer (human or AI) reading it five years from now as it was the day it shipped. That is the design goal.</p>
+
+  <div class="section" id="s-self-verify">
+    <div class="section-title">Self-Verification</div>
+
+    <p>A Loop MMT constellation carries its own blueprint — the Constellation Spec. The spec declares every loop, every bus, every route, every contract, every pipeline. The key insight: the spec is not just documentation. It is executable. The bus reads the routing table from it. The workflow engine reads pipeline specs from it. The contract gates read packet shapes from it. The initializer reads the loop manifest and capability table from it.</p>
+
+    <p>This means the system can check itself against its own blueprint at any time. Self-verification runs at two levels:</p>
+
+    <p><strong>Startup verification.</strong> When the constellation initializes, it verifies structural integrity before accepting any traffic: every declared loop is instantiated, every bus is active, every route has a live subscriber, every packet contract is loaded. If any check fails, the constellation does not start — it emits a diagnostic report listing exactly what is missing or misconfigured. The implementation is straightforward (iterate the manifest, check each entity exists) and belongs in the Coding Standards, not here. The principle is what matters: a partially-wired constellation never operates.</p>
+
+    <p><strong>Runtime verification.</strong> While the constellation is running, periodic integrity checks verify that the system has not drifted from its spec. The Clock emits a <code>SELF_VERIFY</code> event on a declared schedule (hourly by default). The initializer re-runs the startup checks against the live system. If a loop has crashed and not recovered, if a bus subscription has silently dropped, if a contract definition has been corrupted in memory — the runtime verification catches it and emits a <code>INTEGRITY_FAILURE</code> event on the Data Bus. The Operator Alert loop picks it up.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">The Principle</div>
+      Most software systems can only be verified by external tests. A Loop MMT constellation can verify itself, because it carries its own specification and can compare its running state against it. The spec is the blueprint. The initializer is the inspector. The gap between "what the system should be" and "what the system is" is measurable at any moment.
+    </div>
+  </div>
+
+  <div class="section" id="s-contract-version">
+    <div class="section-title">Contract Versioning</div>
+
+    <p>Packet contracts evolve. v2 of the order system adds a <code>rushProcessing</code> field that v1 didn't have. If you update all producers and consumers simultaneously, there is no problem. In practice, rolling updates — especially across multiple devices that may be running different versions — mean that v1 and v2 packets coexist on the bus during the migration window.</p>
+
+    <p>Loop MMT handles this through versioned contracts:</p>
+
+    <p>Every packet carries a <code>version</code> field. The contract registry holds multiple versions of each packet type. The bus validates against the version declared in the packet. A v1 packet is validated against the v1 contract. A v2 packet is validated against the v2 contract. Both pass validation. Neither is rejected for being the "wrong" version.</p>
+
+    <p>Consuming loops declare which versions they accept. A loop that has been updated to v2 can declare that it accepts both v1 and v2. A translation function converts v1 packets to v2 format (adding default values for new fields). When all producers have been updated to v2 and all consumers no longer need v1 support, the v1 contract is retired.</p>
+
+    <pre>const CONTRACT_ORDER_CREATED = {
+  versions: {
+    1: {
+      fields: { orderId: 'string', customerId: 'string',
+                status: 'string', totalPrice: 'number' }
+    },
+    2: {
+      fields: { orderId: 'string', customerId: 'string',
+                status: 'string', totalPrice: 'number',
+                rushProcessing: 'boolean' },
+      migrateFrom: {
+        1: (v1) => ({ ...v1, rushProcessing: false })
+      }
+    }
+  },
+  current: 2,
+  deprecated: [1],   // still accepted, migration available
+  retired: []        // no longer accepted by the bus
+};</pre>
+
+    <p>The <code>deprecated</code> list is a warning — packets with this version are accepted but trigger a <code>CONTRACT_DEPRECATED</code> event on the Signal Bus so the operator knows that old-version producers still exist. The <code>retired</code> list is a hard stop — packets with this version are rejected by the bus. This gives the operator a clear migration path: deploy v2, watch for deprecation warnings, fix the remaining v1 producers, then retire v1.</p>
+  </div>
+
+  <div class="section" id="s-schema-migration">
+    <div class="section-title">Schema Migration</div>
+
+    <p>Vault Loops handle database schema evolution through declared migration scripts. Each migration is a named, ordered, idempotent transformation. The Vault knows what version its data is at (stored as a metadata record) and what version the code expects. The gap is bridged automatically on startup.</p>
+
+    <pre>const MIGRATIONS = {
+  orders: [
+    {
+      version: 2,
+      name: 'add_rush_processing',
+      up: async (db) => {
+        await db.rpc('add_column_if_not_exists', {
+          table: 'orders',
+          column: 'rush_processing',
+          type: 'boolean',
+          default_val: 'false'
+        });
+      },
+      down: async (db) => {
+        await db.rpc('drop_column_if_exists', {
+          table: 'orders',
+          column: 'rush_processing'
+        });
+      }
+    }
+  ]
+};</pre>
+
+    <p>Each migration has an <code>up</code> (apply) and <code>down</code> (revert) function. Migrations are idempotent — running <code>up</code> twice produces the same result as running it once (the <code>if_not_exists</code> guard). The Vault Loop runs pending migrations before accepting any bus traffic on startup. If a migration fails, the Vault Loop emits <code>MIGRATION_FAILED</code> and refuses to start — better to surface the problem than to operate against a mismatched schema.</p>
+
+    <p>This means deploying a new version of the constellation is: update the code, restart, and the Vault Loops automatically migrate the schema to match. No manual database scripts. No "did someone remember to run the migration?" The migration is part of the code, runs on startup, and is verified by the self-verification system.</p>
+  </div>
+
+  <div class="section" id="s-dep-sunset">
+    <div class="section-title">Dependency Sunset Protocol</div>
+
+    <p>Every adopted dependency will eventually die. The service shuts down, changes its API, gets acquired, raises prices, or becomes a security liability. The Dependency Sunset Protocol is a planned transition process, not an emergency scramble.</p>
+
+    <p>Each dependency in the Constellation Spec declares a sunset profile:</p>
+
+    <pre>const DEPENDENCY_SUPABASE = {
+  name:       'supabase',
+  type:       'persistence',
+  usedBy:     ['vault:customers', 'vault:orders', 'vault:media'],
+  isolatedBy: 'Dependency Gate',
+  replacementStrategy: {
+    alternatives: ['firebase', 'planetscale', 'local-sqlite'],
+    migrationScope: 'Vault Loop internals only',
+    busInterfaceChange: false,
+    estimatedEffort: 'One Vault Loop rewrite per table. Bus contracts, 
+                      routing table, pipeline specs, Compute Loops, 
+                      Filter Loops, and Presentation Loop: zero changes.'
+  }
+};</pre>
+
+    <p>The sunset profile makes the replacement cost visible before it is needed. When Supabase announces a breaking API change, the operator consults the sunset profile and knows immediately: which loops are affected (only the Vault Loops), what the alternatives are, and that the rest of the constellation is untouched. The Dependency Gate's buffered mode provides a grace period during the migration — the old service is dying but the system continues operating on its local buffer while the Vault Loop internals are rewritten for the new provider.</p>
+
+    <p>The sunset profile is reviewed periodically (the Clock can emit a reminder) to ensure it stays current. If a new alternative has emerged or the effort estimate has changed, the profile is updated. This is preventive maintenance — the same principle as checking the expiration date on a fire extinguisher.</p>
+  </div>
+
+  <div class="section" id="s-immortal">
+    <div class="section-title">The Immortal Constellation</div>
+
+    <p>A constellation built to the full Loop MMT standard has the following properties:</p>
+
+    <p><strong>It can explain itself.</strong> The Constellation Spec, the routing table, the pipeline specs, the contract registry, the capability injection table, the retention policies, the role matrix, the schedule table, the dependency sunset profiles — together, these are a complete, readable description of what the system is and how it works. A new developer (human or AI) reading these documents can understand the system without access to the people who built it. The L21 production code paper calls this "cold-read comprehension." It is the single most important property for longevity.</p>
+
+    <p><strong>It can verify itself.</strong> Startup verification and runtime integrity checks compare the running system against the spec. Drift is detected automatically. The operator does not need to manually audit the system — the system audits itself and reports discrepancies.</p>
+
+    <p><strong>It can evolve safely.</strong> Contract versioning allows packet types to change without breaking existing consumers. Schema migrations run automatically on startup. The constellation version number in the spec tracks the overall system evolution. Each version bump is a deliberate, documented change — not an accumulation of invisible drift.</p>
+
+    <p><strong>It can survive its dependencies.</strong> Every adopted dependency is isolated behind a loop, wrapped in a gate, and documented with a sunset profile. When a dependency dies, the blast radius is contained to one loop. The replacement path is known in advance.</p>
+
+    <p><strong>It cleans up after itself.</strong> Data Gates retire consumed bus traffic, archive old records, and purge expired data on declared schedules. The system does not accumulate unbounded state. Storage costs grow linearly with business activity, not exponentially with time.</p>
+
+    <p><strong>It alerts when it is sick.</strong> The Operator Alert loop monitors system health events and notifies the operator when something needs attention — before the system degrades to the point where the operator notices symptoms. Dependency gate transitions, workflow failures, integrity check failures, rate limit hits — all surface as actionable alerts.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">The Standard</div>
+      A well-built Loop MMT constellation does not need its original developer to keep running. It does not need a specific AI model or a specific chat history. It needs its spec, its tests, and its code — all of which are permanent, readable artifacts. The system is its own documentation. The tests are its own verification. The Data Gates are its own janitor. The dependency profiles are its own insurance policy. It is designed to be handed to a stranger and understood, maintained, and extended — indefinitely. That is what "just always works" means in practice.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 14: OBSERVATORY ══ -->
+<div class="chapter" id="ch-observatory">
+  <div class="chapter-number">Section 14</div>
+  <div class="chapter-title">The Observatory</div>
+
+  <p>A separate, reusable monitoring constellation that attaches to any Loop MMT application via passive bus observation. Renders live system state: bus traffic, loop health, dependency gate status, workflow timelines, and historical traces. Four internal loops: Telemetry Intake (Working), Metrics Engine (Compute), History Vault (Vault), Observatory UI (Presentation). Subscribes read-only — never emits to the application's buses. Portable across constellations. The same Observatory works with any Loop MMT application because the health packet spec is standardized.</p>
+
+  <p>The Observatory also surfaces Operator Alerts visually — paused workflows needing escalation, dependency gates in buffered mode, integrity check failures. Combined with the Operator Alert Signal Loop, this provides two channels: visual (for when the operator is watching) and push notification (for when they are not).</p>
+
+  <div class="section" id="s-constellation-map">
+    <div class="section-title">The Constellation Map</div>
+    <p>The Observatory monitors runtime traffic. The Constellation Map addresses a different problem: design-time comprehension. As a constellation grows from 8 loops to 30 or more, the routing table becomes long enough that the Operator can no longer hold the full topology in their head by reading it as a list. The Constellation Map is a generated visualization of the system's structure — loops as nodes, buses as edges, routing entries as connections — produced from the Constellation Spec.</p>
+
+    <p>The Constellation Map is not a live traffic monitor. It is a static architectural diagram that answers: what are all the loops, how are they connected, what packet types flow between them, and where does this new module plug in? It is generated from the spec, which means it is always consistent with the spec and never hand-drawn from memory. The Integrator conversation can use it to visualize cross-module relationships. The Operator can use it to plan Phase 2 conversation groupings. A new developer (human or AI) can use it to understand the system's shape before reading any code.</p>
+
+    <p>The Constellation Map is a development tool, not a runtime tool. It belongs alongside the Progress Dashboard and the Action Plan as a planning and comprehension aid. When the Constellation Spec changes, the map is regenerated. It does not require the application to be running.</p>
+  </div>
+
+  <div class="section" id="s-auditor">
+    <div class="section-title">The Auditor</div>
+
+    <p>The Observatory monitors running constellations at runtime. The Auditor is its analog for the development process at build time — a passive reconciliation role that checks cross-document consistency without the power to change anything.</p>
+
+    <p>The Auditor is an intermittent conversation — opened for a check cycle, loaded with the current document set, run through a reconciliation check suite, and closed after delivering its report. It does not persist between cycles. Each cycle is a fresh session with no memory of previous cycles. A stateless Auditor cannot drift.</p>
+
+    <p>The Auditor's checks are mechanical and binary. They compare two sources that should agree and report whether they do. Three categories: <strong>Count Reconciliation</strong> (do totals match across documents — module count in dashboard vs. spec, deliverables received vs. verified), <strong>Reference Integrity</strong> (do identifiers in one document exist in the documents they point to — contract names in loading packs vs. contract registry, module names in dashboard vs. spec), and <strong>Sequence Integrity</strong> (are ordered events consistent — deliverable timestamps flow forward through the lifecycle, spec changes follow decisions and precede propagation).</p>
+
+    <p>The Auditor does not recommend corrective action. It does not assess quality. It does not evaluate whether any role is performing well. It compares documents and reports mismatches. The Operator reads the report and decides what to do. This constraint is what makes the Auditor trustworthy — its output is verifiable by inspection. If the Auditor says there is a mismatch, the Operator looks at the two numbers. They either match or they do not.</p>
+
+    <p>The Auditor runs at three kinds of moments: phase gates (mandatory — the project cannot advance until the reconciliation report shows all checks passing or the Operator has explicitly acknowledged each failure), periodic mid-phase checks (recommended — every N deliverables or N hours during Phase 2, calibrated by the Operator), and on-demand (the Operator's instinct says something is not right). Phase-gate audits are not optional.</p>
+
+    <p>The Auditor does not communicate with the Coordinator or the Integrator. It receives documents from the Operator and delivers its report to the Operator. This structural isolation prevents the entity being checked from influencing the check.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">The Design</div>
+      A persistent Auditor is tempting because it could watch in real time. But real-time watching requires persistent state, and persistent state requires trust, and trust requires verification — which is the problem the Auditor was created to solve. The intermittent design breaks the recursion. Each session is a clean room. It trusts nothing except the documents it is handed and the checks it was built to run.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 15: SCOPE BOUNDARY ══ -->
+<div class="chapter" id="ch-boundary-stmt">
+  <div class="chapter-number">Section 15</div>
+  <div class="chapter-title">Scope Boundary</div>
+
+  <p>Loop MMT is a data-flow architecture for business applications where the cost of incorrect data exceeds the cost of latency. It handles CRUD operations, multi-step workflows, event-driven communication, real-time sync, continuous data stream intake, hierarchical data propagation, geospatial queries, financial transactions, and multi-tenant access control.</p>
+
+  <p>It does not handle real-time signal processing — audio synthesis, video encoding, physics simulation, or any domain where sub-millisecond latency is required and the cost of latency exceeds the cost of correctness. The bus's contract validation and priority queue add overhead that is negligible for business logic but potentially fatal for sample-accurate audio.</p>
+
+  <p>The two can coexist in the same application. A browser-based DAW's project management layer (tracks, arrangements, presets, file management) is a Loop MMT constellation. Its audio engine is a direct Web Audio API implementation that bypasses the bus architecture entirely. The boundary is clear: data management goes through the constellation; signal processing does not.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">The Rule</div>
+    A bus that can optionally bypass its own safety guarantees is a bus that will bypass its safety guarantees at the worst possible moment. Loop MMT does not offer a "fast mode" that skips validation. If your traffic cannot tolerate validation overhead, it belongs outside the constellation. The boundary is explicit, not optional.
+  </div>
+
+  <div class="section" id="s-performance">
+    <div class="section-title">Performance Budget</div>
+    <p>The architecture's safety layers — contract validation on every packet, Auth Gate on every action, transaction logging on every workflow step, Observatory tap on every bus transfer — each add overhead. For any single operation the cost is negligible. On hot paths that fire on every user interaction, the costs compound. The Standard does not prescribe specific performance targets because they are application-specific: a real-time dashboard has different latency requirements than a batch reconciliation job.</p>
+    <p>The Constellation Spec should declare performance budgets for latency-sensitive paths. The Gantry should include a performance verification tier that measures actual overhead against those budgets. The first build of a constellation should measure the real cost of the safety layers so that performance decisions are informed by data, not by assumption. If the measured overhead is unacceptable for a specific path, the answer is to redesign the path — not to bypass the safety layers.</p>
+  </div>
+
+  <div class="section" id="s-future-extensions">
+    <div class="section-title">Noted Future Extensions</div>
+    <p>These are areas where the architecture is well-positioned but a formal pattern has not yet been specified. They are noted here so that when a real project needs them, the design is deliberate rather than improvised. The standard evolves by discovering what is missing when real problems hit real constraints — not by imagining what might be useful.</p>
+
+    <p><strong>Tenant Scoping Pattern.</strong> The standard handles multi-tenant access control through the Auth Gate (stamps packets with <code>tenantId</code>), scoped subscriptions (Presentation Loops receive only their tenant's data), and RBAC (contextual access rules can include tenant predicates). These are logic-layer controls. What is not yet formalized is a standard pattern for data-layer tenant isolation — ensuring that Tenant A's records are physically or logically separated from Tenant B's at the storage level. For constellations using Postgres (via Supabase or similar), the mechanisms are well-understood: Row Level Security policies, schema-per-tenant, or separate databases. The Vault Loop architecture is well-suited to this — all database access is concentrated in Vault Loops, so adding tenant scoping affects exactly one loop type. The formal pattern — how tenant scoping is declared in the Constellation Spec, how Vault Loops enforce it, how it interacts with the Dependency Gate's buffered mode — will be specified when a real multi-tenant project requires it.</p>
+  </div>
+</div>
+
+
+<!-- ══ 16: DEVELOPMENT ══ -->
+<div class="chapter" id="ch-dev">
+  <div class="chapter-number">Section 16</div>
+  <div class="chapter-title">Development Methodology</div>
+
+  <p>Parallel AI conversations coordinated by a human Operator. The development process is loop-shaped: conversations are loops, documents are the bus, the Operator routes between them. Six conversation types, each with defined responsibilities and structural boundaries, manage the flow of work from specification through deployment. An append-only event ledger records every significant action, making the entire process auditable and replayable.</p>
+
+  <p><strong>The Ten Practices:</strong> (1) Read before you write. (2) Talk first, code second. (3) Plan in phases, deliver in builds. (4) The Verification Gantry — tests are a fixed gate, not a suggestion. (5) Code as persistence layer — architecture in the code, not the chat. (6) The Operator owns decisions; pushback is a deliverable. (7) Documentation is part of the product. (8) Verify against source, not memory. (9) Design around the memory boundary. (10) This method is not a shortcut.</p>
+
+  <p><strong>Parallel model:</strong> Phase 0 (spec finalization). Phase 1 (infrastructure: bus, gates, workflow engine, Clock, Auth Gate, initializer with self-verification). Phase 2 (parallel loop development — multiple conversations, each with a loading pack). Phase 3 (integration — assemble, test scenarios, inject failures). Phase 4 (verification — gantry green). Phase 5 (deployment and final archive).</p>
+
+  <p><strong>Conversation loading protocol:</strong> Each conversation receives: coding standards, bus API reference, relevant slice of routing table and contracts, capability injection spec for its loop type. Not loaded: full routing table, other loops' implementations, full Standard, Action Plan. Context is finite. Give each conversation exactly what it needs.</p>
+
+
+  <div class="section" id="s-role-taxonomy">
+    <div class="section-title">Role Taxonomy</div>
+
+    <p>Five roles participate in a Loop MMT development process. Each holds different information, produces different outputs, and operates under different boundary constraints. The Operator is human. The other four are AI conversations.</p>
+
+    <table class="ref-table">
+      <tr><th>Role</th><th>Holds</th><th>Does</th><th>Does Not</th></tr>
+      <tr>
+        <td><strong>Operator</strong></td>
+        <td>Architectural vision, domain knowledge, decision authority</td>
+        <td>Makes decisions, resolves conflicts, evaluates quality, directs work, approves spec changes, routes documents between conversations</td>
+        <td>Write code, maintain project documents mechanically</td>
+      </tr>
+      <tr>
+        <td><strong>Coordinator</strong></td>
+        <td>Module status index, event ledger, decision queue, dependency graph summary</td>
+        <td>Maintains event ledger, tracks status, triages Integrator findings, surfaces decisions to Operator, prepares routing manifests and loading packs</td>
+        <td>Write code, verify code, make architectural decisions, modify the spec without Operator approval</td>
+      </tr>
+      <tr>
+        <td><strong>Integrator</strong></td>
+        <td>Full Constellation Spec, contract registry, routing table</td>
+        <td>Verifies deliverables against spec, reports mismatches with category and confidence tags</td>
+        <td>Write code, modify implementations, make architectural decisions, track project status</td>
+      </tr>
+      <tr>
+        <td><strong>Auditor</strong></td>
+        <td>Nothing between cycles — receives documents fresh each time</td>
+        <td>Runs mechanical reconciliation checks comparing documents that should agree, produces pass/fail reports</td>
+        <td>Recommend corrective action, assess quality, hold state, modify documents, communicate with Coordinator or Integrator</td>
+      </tr>
+      <tr>
+        <td><strong>Module Workers</strong></td>
+        <td>Scoped loading pack for their assigned module</td>
+        <td>Build the code for their assigned module(s)</td>
+        <td>See other modules, modify the spec, communicate with other workers</td>
+      </tr>
+    </table>
+
+    <p>The Coordinator manages <em>flow</em>. The Integrator manages <em>correctness</em>. The Auditor checks <em>consistency</em>. These are different concerns. Combining them in a single conversation would overload its context and create conflicts of interest — the entity tracking schedule should not be the entity deciding whether a deliverable passes, and neither should be the entity checking whether the system's documents agree with each other.</p>
+
+    <p><strong>Six conversation types:</strong> Specification (Phase 0), Module (Phase 2+), Integrator (Phases 2–4), Coordinator (Phases 1–5, persistent), Auditor (intermittent, at phase gates and on-demand), and Bug Fix (Phase 4+).</p>
+
+    <div class="callout key">
+      <div class="callout-label">The Coordinator's Boundaries</div>
+      The Coordinator is expected to push back when it detects conflicts — routing to a blocked module, spec changes that break dependencies, decisions that contradict earlier decisions. The Operator can always override. The override is always recorded in the event ledger. Pushback is not disobedience; it is the Coordinator doing its job. But the Coordinator never writes code, never verifies code against the spec, and never applies a spec change without explicit Operator approval. These boundaries have the same structural status as the closure wall that constrains loop capabilities.
+    </div>
+  </div>
+
+
+  <div class="section" id="s-session-deliverables">
+    <div class="section-title">Session Deliverables and Design Decisions</div>
+
+    <p>Each conversation type produces defined deliverables. Specification conversations produce the Constellation Spec and the Action Plan. Module conversations produce code, tests, and handoffs. The Coordinator produces the event ledger and routing artifacts. The Integrator produces verification reports. The Auditor produces reconciliation reports.</p>
+
+    <p>Technical Design Documents are the expected default output of Specification conversations and Module conversations when design decisions involving non-trivial alternatives are made. A decision has non-trivial alternatives when the rejected options are reasonable — not when the chosen option is complex. The Operator may decline to produce a TDD when the decision is trivial, fully captured by a spec update, or reversible at near-zero cost. The declination is noted in the Coordinator's event ledger with a one-line reason.</p>
+
+    <p>The talk-first protocol (Practice 2) is the trigger. If a talk-first conversation surfaces a decision with non-trivial alternatives, it should produce a TDD. The TDD records the reasoning; the Constellation Spec records the result. Both may be produced in the same conversation. When a TDD's decision affects the spec, both must be updated — a decision that lives only in a TDD is a decision the Integrator will never verify against.</p>
+  </div>
+
+
+  <div class="section" id="s-session-identity">
+    <div class="section-title">Session Identity</div>
+
+    <p>Every conversation in a Loop MMT project carries a session ID that encodes the role, the date and time of session start, and a sequence letter for disambiguation:</p>
+
+    <pre>ROLE-YYYYMMDD-HHMM-SEQ</pre>
+
+    <table class="ref-table">
+      <tr><th>Prefix</th><th>Role</th><th>Example</th></tr>
+      <tr><td><code>COORD</code></td><td>Coordinator</td><td><code>COORD-20260412-1432-A</code></td></tr>
+      <tr><td><code>INTG</code></td><td>Integrator</td><td><code>INTG-20260413-0900-A</code></td></tr>
+      <tr><td><code>MOD-xxx</code></td><td>Module Worker</td><td><code>MOD-AUTH-20260412-1530-A</code></td></tr>
+      <tr><td><code>SPEC</code></td><td>Specification (Phase 0)</td><td><code>SPEC-20260410-1000-A</code></td></tr>
+      <tr><td><code>AUDIT</code></td><td>Auditor</td><td><code>AUDIT-20260415-1400-A</code></td></tr>
+      <tr><td><code>BUG</code></td><td>Bug Fix</td><td><code>BUG-20260420-1100-A</code></td></tr>
+    </table>
+
+    <p>Session IDs sort chronologically. Every event ledger entry carries the session ID of the conversation that produced it. Cross-session references use the fully qualified form: <code>COORD-20260412-1432-A:E-047</code> means event 47 from that Coordinator session. This enables full traceability across the entire project history — any event can be traced backward to its cause and forward to its consequences.</p>
+  </div>
+
+
+  <div class="section" id="s-event-ledger">
+    <div class="section-title">The Event Ledger</div>
+
+    <p>The event ledger is an append-only chronological record of everything that happens in the project. It is the source of truth. All other project documents — the progress dashboard, the decision log, the session log, the dependency graph — are materialized views derived from the ledger. They are convenient snapshots, but the ledger is canonical.</p>
+
+    <p>Nothing in the ledger is edited. If a status was wrong and gets corrected, that is two events — the original and the correction. Both remain. Each event carries a sequential ID, a timestamp, an event type, the session ID that produced it, a payload, and a <code>triggered-by</code> reference tracing the causal chain. The Coordinator produces an updated ledger artifact after every event; if the Coordinator crashes, the most recent artifact is the recovery point.</p>
+
+    <p>Document governance rides on the ledger. Every document change is a ledger event. Every dependency relationship is tracked. When a spec change is applied, the Coordinator identifies all downstream documents that need review — loading packs, module status, dependency graph — and flags them automatically. The Document Registry (§17) is a materialized view of the ledger, not a separately maintained artifact. This replaces manual dependency tracking and propagation with structural tracking that cannot be forgotten.</p>
+
+    <p>The specific event types, entry formats, compaction strategy, and context management mechanics are defined in the Coordinator Operating Instructions. The standard establishes the principle: the ledger is the source of truth, everything else is a view.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">The L21 Parallel</div>
+      In L21, the session recording captures every tick — every state change, every signal propagation. The current state is just the latest frame. Any prior state is reachable by replaying the log to that point. The event ledger is the same idea applied to project management. The dashboard is not the state. The ledger is the state. The dashboard is a view.
+    </div>
+  </div>
+
+
+  <div class="section" id="s-coordinator-integrator">
+    <div class="section-title">Coordinator–Integrator Interface</div>
+
+    <p>The Coordinator and Integrator coordinate through defined document schemas, not direct communication. The Operator carries documents between them. The Integrator produces tagged verification reports; the Coordinator routes findings based on the tags. Each finding carries a category (<code>mechanical</code>, <code>judgment</code>, or <code>architectural</code>) and a confidence level (<code>high</code> or <code>low</code>). The Coordinator routes based on these tags without interpreting the substance. The Integrator maintains its own verification log, independent of the Coordinator's ledger — the overlap at interface events is what the Auditor checks for reconciliation. The report schema and routing rules are defined in the Coordinator Operating Instructions.</p>
+  </div>
+
+
+  <div class="section" id="s-auto-routing">
+    <div class="section-title">Auto-Routing and Decision Queue</div>
+
+    <p>The Coordinator can auto-route Integrator findings tagged <code>mechanical</code> with <code>high</code> confidence directly to module conversations. All other findings go to the Operator. The threshold is calibrated per project. Every auto-routed finding is logged. When uncertain, the Coordinator escalates — false escalation costs seconds, false auto-routing costs a module conversation building against wrong instructions.</p>
+
+    <p>Decisions requiring the Operator are collected into a priority-ordered queue: P1 (blocking other work), P2 (spec-affecting), P3 (cross-module), P4 (module-scoped). The Coordinator presents decisions at minimal verbosity; the Operator requests more context on any item. The routing matrix, decision queue format, and escalation rules are defined in the Coordinator Operating Instructions.</p>
+  </div>
+
+
+  <div class="section" id="s-safety-arch">
+    <div class="section-title">The Five-Layer Safety Architecture</div>
+
+    <p>No single layer catches every failure. Each layer catches a different category at a different point in the process. Together, they provide defense-in-depth for the development process itself.</p>
+
+    <p><strong>Layer 1: Coordinator Self-Checks.</strong> After every event, the Coordinator runs mechanical verification: index integrity (module counts match), ledger continuity (no sequence gaps), open item consistency (pending counts match unresolved events). Self-checks catch immediate errors but not accumulated cross-document drift.</p>
+
+    <p><strong>Layer 2: The Auditor.</strong> Intermittent reconciliation comparing documents that should agree. Catches cross-document inconsistencies that accumulate between Coordinator operations — stale loading packs, undocumented spec changes, missing dependency entries, deliverables received but never verified. See §14 for full specification.</p>
+
+    <p><strong>Layer 3: The Integrator as Incidental Cross-Check.</strong> When a module builds code against a stale loading pack, the resulting code will fail Integrator verification because it implements the wrong contract. The Integrator does not know the loading pack was stale — it knows the code does not match the current spec. The effect is the same: the error is caught indirectly.</p>
+
+    <p><strong>Layer 4: Document Fingerprinting.</strong> Every document the Coordinator maintains carries a version number and a content fingerprint (hash). If the Coordinator reports "dashboard updated" but the fingerprint did not change, the update did not happen. Fingerprints detect silent failures — operations that were reported as completed but did not actually change the document.</p>
+
+    <p><strong>Layer 5: Operator Touch Points.</strong> Every spec change requires Operator approval. Every phase transition requires Operator review of the Auditor's reconciliation report. Every circuit breaker trip requires Operator resolution. These are mandatory and cannot be delegated. The Operator also periodically spot-checks the Coordinator's mechanical routing decisions — not to approve them, but to verify the Coordinator's patterns are calibrated correctly.</p>
+
+    <div class="callout phi">
+      <div class="callout-label">Defense in Depth</div>
+      Self-checks catch immediate errors but not accumulated drift. The Auditor catches drift but not quality. The Integrator catches code defects but not process defects. Fingerprints catch silent failures but not semantic errors. The Operator catches everything but cannot look at everything. Remove any layer and a category of failure becomes invisible until it is expensive. The safety architecture does not assume AI is untrustworthy. It assumes that multi-role systems with evolving state will develop inconsistencies, and that catching them early and mechanically is cheaper than catching them late and manually.
+    </div>
+  </div>
+
+
+  <div class="section" id="s-circuit-breaker">
+    <div class="section-title">The Divergence Circuit Breaker</div>
+
+    <p>If a single Auditor check cycle produces failures at or above a defined threshold (default: three), routing pauses — no new deliverables go to the Integrator, no findings are routed, no spec changes propagate, no new conversations start. Module conversations actively building continue; the Coordinator queues incoming events rather than processing them. The Operator reviews the Auditor report, diagnoses the issue, and releases the pause. Below the threshold, failures are reported for Operator review but work continues. The threshold is calibrated per project.</p>
+  </div>
+</div>
+
+
+<!-- ══ 17: DOCUMENT STACK ══ -->
+<div class="chapter" id="ch-docs">
+  <div class="chapter-number">Section 17</div>
+  <div class="chapter-title">Document Stack</div>
+
+  <p>A Loop MMT project is governed by two categories of documents: <strong>universal documents</strong> that exist once and apply to every project, and <strong>project documents</strong> that are created fresh for each project. Both are versioned. Both are tracked — through the event ledger, not through a separate governance system. Every document change is a ledger event. The Coordinator tracks dependencies and flags downstream impacts automatically. The Document Registry is a materialized view of the ledger, showing the current state of every document without requiring manual maintenance.</p>
+
+  <table class="ref-table">
+    <tr><th>#</th><th>Document</th><th>Category</th><th>Purpose</th></tr>
+    <tr><td>1</td><td><strong>The Loop MMT Standard</strong></td><td>Universal</td><td>The methodology. Governs all other documents. Not project-specific. Root of the dependency graph.</td></tr>
+    <tr><td>2</td><td><strong>Glossary</strong></td><td>Universal</td><td>Shared vocabulary. L21 terms, MMT terms, dev process terms. Must stay in sync with the Standard.</td></tr>
+    <tr><td>3</td><td><strong>Coding Standards</strong></td><td>Universal</td><td>Naming, function structure, comments, prefix taxonomy. Applies to all code in all constellations.</td></tr>
+    <tr><td>4</td><td><strong>Interaction Guide</strong></td><td>Universal</td><td>How to practice Loop MMT. Session cycle, conversation types, loading protocols, routing role, handoff template, failure modes.</td></tr>
+    <tr><td>5</td><td><strong>Constellation Spec</strong></td><td>Project</td><td>Master spec for a project. Loops, buses, routes, contracts, pipelines, retention, roles, schedules, dependencies, sunset profiles.</td></tr>
+    <tr><td>6</td><td><strong>Action Plan</strong></td><td>Project</td><td>Development recipe. Phases, conversation assignments, dependency graph, delivery criteria.</td></tr>
+    <tr><td>7</td><td><strong>Progress Dashboard</strong></td><td>Project</td><td>Live build status, session log, and Document Registry. The operational state of the project, kept current at all times.</td></tr>
+    <tr><td>8</td><td><strong>Loading Packs</strong></td><td>Project</td><td>Per-conversation document sets. Each pack is a version-pinned slice of the document stack for a specific conversation type.</td></tr>
+    <tr><td>9</td><td><strong>Technical Design Documents</strong></td><td>Project</td><td>Feature-level design decisions too detailed for the Constellation Spec. One TDD per significant design problem. Expected default for design decisions with non-trivial alternatives. The Operator may decline; the declination is tracked in the event ledger.</td></tr>
+    <tr><td>10</td><td><strong>Event Ledger</strong></td><td>Project</td><td>The append-only chronological record of every significant event in the project. The source of truth from which all other project state documents are derived. Maintained by the Coordinator, produced as an artifact after every event.</td></tr>
+    <tr><td>11</td><td><strong>Decision Log</strong></td><td>Project</td><td>A materialized view of the event ledger filtered to decisions — approvals, rejections, and deferrals with rationale and downstream impacts. Derived from the ledger on request.</td></tr>
+    <tr><td>12</td><td><strong>Coordinator Operating Instructions</strong></td><td>Universal</td><td>The behavioral specification for the Coordinator conversation. Defines event processing protocols, document formats, triage categories, self-verification checks, boundary constraints, state export format, and interaction patterns. To the Coordinator what the Coding Standards are to module conversations.</td></tr>
+    <tr><td>13</td><td><strong>Auditor Operating Instructions</strong></td><td>Universal</td><td>The reconciliation check suite definition, report format, loading protocol, and boundary constraints. Precise enough that any AI session loaded with it will run the checks identically.</td></tr>
+    <tr><td>14</td><td><strong>Reconciliation Reports</strong></td><td>Project</td><td>The Auditor's output — summary line (X of N checks passed), pass list, failure list with specific discrepancy details. One report per Auditor check cycle. Consistent format across cycles for comparability.</td></tr>
+    <tr><td>15</td><td><strong>Conversation Prompt Templates</strong></td><td>Universal</td><td>Standardized opening, continuation, and closing prompts for all six conversation types. Fill-in-the-blank templates with filled examples using a reference project. Operators use this when starting or resuming any session.</td></tr>
+    <tr><td>16</td><td><strong>Operator Orientation</strong></td><td>Universal</td><td>Entry-point document for new Operators. Covers the mental model, the six phases, the five roles, the session cycle, and the document stack in accessible narrative form. Not loaded into project conversations — read once before starting a first project.</td></tr>
+    <tr><td>17</td><td><strong>Developer Guide</strong></td><td>Universal</td><td>Comprehensive standalone guide covering all six phases, all five roles, session cycle, talk-first protocol, handoff standard, routing role, document hygiene, and failure modes. Designed to stand alone — an Operator with no other corpus documents can run a project from it. Includes quick reference section with phase table, failure vocabulary, prefix taxonomy, and loading guide by conversation type.</td></tr>
+    <tr><td>18</td><td><strong>Test Suite &amp; Gantry Specification</strong></td><td>Universal</td><td>Defines "gantry green" across three tiers: Tier 1 (module self-check), Tier 2 (Integrator cross-check), Tier 3 (final gate). Two-track model: AI static analysis checklist + JS harness templates. Universal template — each project instantiates a Project Gantry Document during Phase 0 by populating all [FILL] slots. Phase 0 is not complete until the Project Gantry Document exists.</td></tr>
+    <tr><td>19</td><td><strong>TDD Standard</strong></td><td>Universal</td><td>Guide and template for Technical Design Documents. Covers when to write a TDD (expected default for non-trivial design decisions, any phase), the seven-section structure, process integration, naming convention, and storage. Includes a blank template and a complete worked example. The project-level TDD documents listed at row 9 are produced using this standard.</td></tr>
+    <tr><td>20</td><td><strong>Handoff Standard</strong></td><td>Universal</td><td>Authoritative specification for session handoff documents. Covers what a handoff is, when to write one, the seven required sections, and weak/strong comparison examples. Compact enough to go in every loading pack — and it does. Every loading pack includes this document.</td></tr>
+    <tr><td>21</td><td><strong>Writing Standards</strong></td><td>Universal</td><td>Prose equivalent of the Coding Standards. Voice, tone, structural principles, anti-pattern catalog, document-type guidance, and delivery checklist for all AI-produced prose. Loaded into every session that produces documents or prose-heavy deliverables. Encodes the corpus feedback loop: documents train AI tone, AI output enters corpus, corpus trains the next instance.</td></tr>
+    <tr><td>22</td><td><strong>L21 Technical Reference</strong></td><td>Universal</td><td>Source material reference documenting the L21 architecture, eight tenets, build arc, and the derivation chain from hardware to methodology. Not a required loading document — provided for human readers evaluating the provenance of Loop MMT's architectural decisions. Reference document, not operational.</td></tr>
+    <tr><td>23</td><td><strong>Patterns Reference</strong></td><td>Universal</td><td>Companion to §7. Catalogs all implementation patterns with descriptions, L21 origins, use guidance, and code sketches. Loaded into module conversations when the assigned module uses patterns beyond the architectural set defined in the Standard.</td></tr>
+    <tr><td>24</td><td><strong>Development History</strong></td><td>Universal</td><td>Narrative record of how the methodology was created, the L21 derivation chain, and the corpus build arc. Reference document, not operational. Low propagation urgency.</td></tr>
+    <tr><td>25</td><td><strong>Constellation Spec Standard</strong></td><td>Universal</td><td>Structure, template, and worked example for the Constellation Spec. To be produced post-Phase-0 from the Butcher Constellation build. Status: <code>Draft</code> (placeholder — document does not yet exist).</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <div class="callout-label">Document rank</div>
+    The Standard is the highest-ranked document. When any document conflicts with the Standard, the Standard wins. When project documents conflict with each other, the Constellation Spec outranks the Action Plan, which outranks the Loading Packs. Conflicts are resolved by updating the lower-ranked document, not by exception.
+  </div>
+
+
+  <!-- ──────────────────────────────────────── -->
+  <div class="section" id="s-doc-registry">
+    <div class="section-title">Document Registry</div>
+
+    <p>The Document Registry is a materialized view of the event ledger showing the current state of every project document: name, version, last updated date, dependencies, and status. The Coordinator maintains it automatically as it processes events — the Operator does not need to update it manually.</p>
+
+    <p>Four status values: <code>Current</code> (approved, consistent with dependencies), <code>Review Required</code> (a dependency has changed since last review), <code>Draft</code> (produced but not yet approved), <code>Archived</code> (retired). When a document's dependency changes version, the Coordinator flags the downstream document as <code>Review Required</code> in the ledger. The flag is automatic and cannot be forgotten — it is a property of the event, not a manual step.</p>
+
+    <p>Loading packs pin exact document versions. If a pinned document has advanced, the pack is stale and must be updated before use. The Coordinator tracks this through the ledger; the Operator spot-checks.</p>
+  </div>
+
+
+  <!-- ──────────────────────────────────────── -->
+  <div class="section" id="s-doc-dependencies">
+    <div class="section-title">Document Dependencies</div>
+
+    <p>Documents have upstream dependencies. When a dependency changes, the Coordinator flags downstream documents as <code>Review Required</code> in the ledger. The dependency graph is declared once; propagation is automatic.</p>
+
+    <table class="ref-table">
+      <tr><th>Document</th><th>Depends On</th><th>Why</th></tr>
+      <tr><td>Standard</td><td><em>None</em></td><td>Root document. No upstream.</td></tr>
+      <tr><td>Glossary</td><td>Standard</td><td>Must define the terms the Standard introduces. New Standard sections or patterns require new glossary entries.</td></tr>
+      <tr><td>Coding Standards</td><td>Standard</td><td>The prefix taxonomy and architectural conventions reflect the Standard's loop types and bus model. Standard changes may require coding convention updates.</td></tr>
+      <tr><td>Interaction Guide</td><td>Standard</td><td>Describes how to practice the methodology. Standard changes may alter what the Interaction Guide says about conversation loading, session cycles, or handoff content.</td></tr>
+      <tr><td>Constellation Spec</td><td>Standard, Coding Standards</td><td>All loop types, bus names, pipeline structures, and naming must conform to the Standard and the Coding Standards.</td></tr>
+      <tr><td>Action Plan</td><td>Constellation Spec</td><td>Phases, conversation assignments, and delivery criteria are derived from the Constellation Spec. A spec change may alter the plan.</td></tr>
+      <tr><td>Progress Dashboard</td><td>Constellation Spec, Action Plan</td><td>Tracks the build state of the constellation and the phases of the action plan. A spec or plan change may alter what the dashboard tracks.</td></tr>
+      <tr><td>Loading Packs</td><td>Constellation Spec, Coding Standards, Glossary</td><td>Each pack is a slice of these documents pinned to specific versions. Any upstream version change makes the pack stale.</td></tr>
+      <tr><td>Technical Design Documents</td><td>Constellation Spec, Coding Standards</td><td>Design decisions must conform to the architecture the spec declares and the naming the coding standards require.</td></tr>
+      <tr><td>Event Ledger</td><td>Constellation Spec</td><td>Module names, session IDs, and finding references in the ledger must correspond to entities in the spec.</td></tr>
+      <tr><td>Decision Log</td><td>Event Ledger</td><td>Derived from the ledger. Consistency is structural, not manual.</td></tr>
+      <tr><td>Coordinator Operating Instructions</td><td>Standard</td><td>Defines behavior that implements the methodology. Standard changes to role definitions or event types require instruction updates.</td></tr>
+      <tr><td>Auditor Operating Instructions</td><td>Standard, Coordinator Operating Instructions</td><td>The check suite references document formats defined by the Coordinator's instructions and role structures defined by the Standard.</td></tr>
+      <tr><td>Reconciliation Reports</td><td>Auditor Operating Instructions</td><td>Report format and check definitions come from the Auditor's instructions.</td></tr>
+      <tr><td>Conversation Prompt Templates</td><td>Interaction Guide</td><td>Formalizes the session protocols the Interaction Guide describes. Changes to conversation types or loading protocols in the Interaction Guide may require prompt template updates.</td></tr>
+      <tr><td>Operator Orientation</td><td>Standard, Interaction Guide</td><td>Summarizes both documents for first-time readers. Standard or Interaction Guide changes may require orientation updates to stay accurate.</td></tr>
+      <tr><td>Developer Guide</td><td>Standard, Interaction Guide</td><td>Comprehensive synthesis of the methodology and all six phases. Standard changes to architecture or role definitions, or Interaction Guide changes to session protocols, require Developer Guide updates.</td></tr>
+      <tr><td>Test Suite &amp; Gantry Specification</td><td>Standard, Coding Standards</td><td>Gantry checks reference loop types, bus contracts, and naming conventions defined by the Standard and Coding Standards. Changes to either may require check updates.</td></tr>
+      <tr><td>TDD Standard</td><td>Standard, Coding Standards</td><td>TDD structure and naming conventions reflect the Standard's architecture and the Coding Standards' naming requirements. Standard changes to the design process may require template updates.</td></tr>
+      <tr><td>Handoff Standard</td><td>Standard, Interaction Guide</td><td>Handoff section requirements reflect the session cycle and conversation types defined by the Standard and Interaction Guide. Changes to either may require handoff structure updates.</td></tr>
+      <tr><td>Writing Standards</td><td>Standard</td><td>Prose conventions and voice calibration reflect the Standard's terminology and the methodology's overall register. Standard changes to terminology or document types may require Writing Standards updates.</td></tr>
+      <tr><td>L21 Technical Reference</td><td>Standard</td><td>Documents the derivation chain from L21 to Loop MMT. Standard changes to architectural patterns or L21 analogs may require reference updates. Low propagation urgency — reference document, not operational.</td></tr>
+      <tr><td>Patterns Reference</td><td>Standard, Coding Standards</td><td>Pattern descriptions must conform to the Standard's architectural definitions and the Coding Standards' naming conventions. Standard changes to architectural patterns directly affect the companion catalog.</td></tr>
+      <tr><td>Development History</td><td>Standard</td><td>Documents the derivation chain from L21 to Loop MMT. Standard changes to architectural patterns or L21 analogs may require reference updates. Low propagation urgency — reference document, not operational.</td></tr>
+      <tr><td>Constellation Spec Standard</td><td>Standard, Coding Standards</td><td>Section structure and naming conventions reflect the Standard's architecture and the Coding Standards' naming requirements.</td></tr>
+    </table>
+
+    <p>This graph has a clear propagation structure. A Standard version bump touches everything. A Constellation Spec version bump touches Action Plan, Progress Dashboard, Loading Packs, and TDDs. A Glossary version bump touches Loading Packs (which carry the Glossary). The registry makes these propagations visible without requiring the Operator to track them mentally.</p>
+
+
+  </div>
+
+
+  <!-- ──────────────────────────────────────── -->
+  <div class="section" id="s-doc-pinning">
+    <div class="section-title">Version Pinning in Loading Packs</div>
+
+    <p>Each loading pack declares the exact version of every document it includes. "Load the Glossary" is not sufficient — the pack must specify which version. When a pinned document advances, the Coordinator flags the pack as stale in the ledger. A session that opens with a stale loading pack will produce work built on shifted ground — the Coordinator and the Integrator (incidentally, through contract mismatches) both catch this.</p>
+
+    <p>Version numbers appear in exactly two places — a document's own header and the Document Registry. Prose cross-references use document names and section numbers only. Version numbers are never included in prose cross-references. "See the Interaction Guide §5" — not "see the Interaction Guide v4 §5." The Document Registry is the sole authority on version state. Loading packs are the one exception: they pin specific versions because the session needs to know exactly what it loaded.</p>
+  </div>
+
+
+  <!-- ──────────────────────────────────────── -->
+  <div class="section" id="s-doc-authorship">
+    <div class="section-title">Document Authorship</div>
+
+    <p>The AI produces content; the Operator reviews and approves it. A version increment equals Operator approval — the AI does not unilaterally advance version numbers. A document the Operator has not reviewed is a <code>Draft</code>. This is logged in the ledger like everything else.</p>
+  </div>
+
+
+  <!-- ──────────────────────────────────────── -->
+  <div class="section" id="s-doc-hygiene">
+    <div class="section-title">Document Hygiene</div>
+
+    <p>When a Coordinator is active, document hygiene is automatic: every document change is a ledger event, dependency propagation is structural, and the registry updates itself. The Operator's role is oversight — spot-checking that the Coordinator's picture matches reality, not manually running a protocol.</p>
+
+    <p>When working without a Coordinator (small projects, Phase 0), the AI enumerates document changes at session close, flags downstream dependencies as <code>Review Required</code>, and records the state in the handoff. The Operator confirms completeness. This is the same logic the Coordinator automates — just executed manually.</p>
+
+    <div class="callout key">
+      <div class="callout-label">The Principle</div>
+      Document governance is the same problem as data governance: track changes, propagate impacts, surface inconsistencies. The event ledger solves both. A document dependency that changed is a ledger event. A stale loading pack is a query against the ledger. The Coordinator makes it structural. Without the Coordinator, the Operator makes it manual. Either way, the discipline is the same.
+    </div>
+  </div>
+
+
+  <!-- ──────────────────────────────────────── -->
+  <div class="section" id="s-doc-stale">
+    <div class="section-title">Stale Documents</div>
+
+    <p>A <code>Review Required</code> document must be reviewed or explicitly acknowledged before loading into a conversation. The Operator either updates it (returns to <code>Current</code>) or acknowledges the known risk on the record. There is no silent loading of stale documents — an AI operating on stale information cannot detect that it is stale.</p>
+  </div>
+
+</div>
+
+
+<!-- ══ 18: CODING STANDARDS ══ -->
+<div class="chapter" id="ch-coding">
+  <div class="chapter-number">Section 18</div>
+  <div class="chapter-title">Coding Standards</div>
+
+  <p>Full words, no abbreviations. Prefix system for role identification at a glance:</p>
+
+  <table class="ref-table">
+    <tr><th>Prefix</th><th>Meaning</th><th>Examples</th></tr>
+    <tr><td><code>bus_</code></td><td>Bus instance</td><td><code>bus_data</code>, <code>bus_vault</code></td></tr>
+    <tr><td><code>loop_</code></td><td>Loop factory/instance</td><td><code>loop_pricingEngine</code></td></tr>
+    <tr><td><code>pkt_</code></td><td>Packet type constant</td><td><code>pkt_ORDER_CREATED</code></td></tr>
+    <tr><td><code>wf_</code></td><td>Workflow/pipeline</td><td><code>wf_cancelOrder</code></td></tr>
+    <tr><td><code>gate_</code></td><td>Dependency gate</td><td><code>gate_supabase</code></td></tr>
+    <tr><td><code>v_</code></td><td>State variable</td><td><code>v_orderStatus</code></td></tr>
+    <tr><td><code>f_</code></td><td>Pure function</td><td><code>f_calculatePrice</code></td></tr>
+    <tr><td><code>e_</code></td><td>DOM element</td><td><code>e_intakeForm</code></td></tr>
+    <tr><td><code>h_</code></td><td>Event handler</td><td><code>h_onIntakeSubmit</code></td></tr>
+    <tr><td><code>c_</code></td><td>Contract definition</td><td><code>c_orderCreated</code></td></tr>
+  </table>
+
+  <p>Single-purpose functions. Comments explain why, not what. Error case before happy path (NASA rule). Magic numbers become named constants. Loop section headers as quick-reference cards (type, capabilities, emits, listens). The constellation initializer is the last section — the entry point for topology comprehension.</p>
+
+  <p><strong>Delivery checklist:</strong> (1) Factory signatures match capability table. (2) Emitted packets match contracts. (3) Subscriptions match routing table. (4) Error handling follows recovery protocol. (5) Naming follows taxonomy. (6) Comments explain why. (7) Tests pass.</p>
+</div>
+
+
+</main>
+</div>
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>The Standard · v13</span>
+  <span>© 2026 <a href="/cdn-cgi/l/email-protection#1c6f74797d5c6f74797d7b69726874796e327f7371" style="color:inherit;">Shea Gunther</a> · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function setSkin(id){document.body.className='skin-'+id;try{localStorage.setItem('loop-mmt-std-skin',id);}catch(e){}document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));}
+document.addEventListener('DOMContentLoaded',()=>{let s='og';try{s=localStorage.getItem('loop-mmt-std-skin')||'og';}catch(e){}setSkin(s);const ch=document.querySelectorAll('.chapter,.section[id]');const tl=document.querySelectorAll('.toc-list a');const ob=new IntersectionObserver(es=>{es.f

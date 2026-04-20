@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Patterns Reference · v3</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--filter:#006888;--signal:#c01848;--present:#7040a0;--workflow:#2868b0;--font:'Courier New','Consolas',monospace;--max-w:860px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--filter:#00ddff;--signal:#ff4488;--present:#cc88ff;--workflow:#44aaff;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--filter:#007898;--signal:#b01040;--present:#6030a0;--workflow:#1858a0;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}
+  .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .doc-title{text-align:right;}
+  .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}
+  .doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;}
+  .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;transition:border-color .1s,color .1s,background .1s;}
+  .skin-btn:hover{border-color:var(--fg);color:var(--fg);}
+  .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .content{max-width:var(--max-w);margin:0 auto;padding:48px 48px 96px;}
+  .chapter{margin-bottom:56px;}
+  .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:16px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}
+  code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  pre{background:var(--code-bg);padding:14px 16px;font-family:var(--font);font-size:13px;line-height:1.6;overflow-x:auto;margin:16px 0;border-left:3px solid var(--border2);}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}
+  .callout.phi{background:var(--panel);border-left-color:var(--accent);font-style:italic;}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .callout.phi .callout-label{color:var(--accent);}
+  .callout.note{background:var(--panel2);border-left-color:var(--filter);}
+  .callout.note .callout-label{color:var(--filter);}
+  body.skin-winamp .callout.note .callout-label{color:var(--filter);}
+  body.skin-sunrise .callout.note .callout-label{color:var(--filter);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;line-height:1.5;}
+  .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .ref-table tr:last-child td{border-bottom:none;}
+  .ref-table td:first-child{font-family:var(--font);font-size:13px;color:var(--fg-dim);white-space:nowrap;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}
+  .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  .pat{margin-bottom:40px;padding-bottom:32px;border-bottom:2px solid var(--border2);}
+  .pat:last-child{border-bottom:none;}
+  .pat-name{font-family:var(--font);font-size:18px;font-weight:bold;letter-spacing:1px;margin-bottom:4px;}
+  .pat-l21{font-family:var(--font);font-size:12px;color:var(--accent);font-style:italic;margin-bottom:12px;padding:8px 12px;border-left:3px solid var(--accent);background:var(--panel2);}
+  .pat-section{margin:16px 0;}
+  .pat-section-label{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .pat-related{font-size:14px;color:var(--fg-dim);margin-top:12px;font-style:italic;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}
+  .page-footer{max-width:var(--max-w);margin:0 auto;padding:20px 48px 48px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);display:flex;justify-content:space-between;}
+  @media(max-width:700px){.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}}
+</style>
+</head>
+<body class="skin-og">
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title"><div class="title-main">Patterns Reference</div><div class="build-tag">v3 · 30 March 2026</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="abstract-box">
+  <div class="abstract-label">About This Document</div>
+  <p style="margin-bottom:8px;">The complete implementation guide for all thirty Loop MMT™ patterns. Each pattern includes: what it is, when to use it, how it works, a complete code example following Loop MMT conventions, implementation constraints, and related patterns. This document provides enough information for an AI to implement any pattern in a constellation build.</p>
+  <p style="margin-bottom:8px;">Patterns are organized into six categories: Core (architectural patterns that constrain constellation design), Data Flow, Workflow, Resilience, Infrastructure, and Scale. Each code example uses the Loop MMT factory pattern, bus API, packet contracts, and prefix taxonomy defined in the Coding Standards.</p>
+  <p style="margin-bottom:0;"><strong>On pattern provenance.</strong> The thirty patterns fall into three groups. The majority are derived from Loop 2.1 hardware — twenty-four have direct L21 analogs, and the closing note in this document discusses that lineage. A smaller set are patterns where Loop MMT and established software engineering independently arrived at the same shape: the Projection converges with the CQRS read model, Split-Merge with Fork-Join, Replay with Event Sourcing. These convergences are noted inline and reflect that the underlying problems are real and recurring — not that any source copied from another. Finally, three patterns are adopted directly by name from prior software engineering practice: Debounce (from electronics and the JavaScript/UI ecosystem), Dead Letter (from <em>Enterprise Integration Patterns</em> and modern message brokers), and Outbox (from distributed systems reliability literature). Loop MMT does not claim to have invented these. It adopts them because they solve real problems well and fit cleanly within the architecture.</p>
+</div>
+
+<div class="chapter">
+  <div class="chapter-number">Quick Reference</div>
+  <div class="chapter-title">All 30 Patterns</div>
+  <table class="ref-table">
+    <tr><th>#</th><th>Pattern</th><th>Category</th><th>Summary</th></tr>
+    <tr><td>1</td><td><a href="#pat-1" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Echo</a></td><td>Core</td><td>Trust the confirmation packet, not the request.</td></tr>
+    <tr><td>2</td><td><a href="#pat-2" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Marker</a></td><td>Core</td><td>Every packet carries a liveness indicator: live, empty, or tombstone.</td></tr>
+    <tr><td>3</td><td><a href="#pat-3" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Hydration</a></td><td>Core</td><td>A Filter Loop enriches a sparse packet by pulling full data from a Vault.</td></tr>
+    <tr><td>4</td><td><a href="#pat-4" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Cascade</a></td><td>Core</td><td>Chained Filter Loops; sequence defined by routing table, not by filters.</td></tr>
+    <tr><td>5</td><td><a href="#pat-5" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Projection</a></td><td>Core</td><td>A Compute Loop maintains a derived, denormalized view from multiple Vaults.</td></tr>
+    <tr><td>6</td><td><a href="#pat-6" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Bridge</a></td><td>Core</td><td>Buffer between a loop's output and the bus; three overflow strategies.</td></tr>
+    <tr><td>7</td><td><a href="#pat-7" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Translator</a></td><td>Core</td><td>Data-scrubbing half of a loop that adopts an external dependency.</td></tr>
+    <tr><td>8</td><td><a href="#pat-8" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Batch</a></td><td>Core</td><td>Operating on multiple records atomically via a workflow pipeline.</td></tr>
+    <tr><td>9</td><td><a href="#pat-9" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Flag</a></td><td>Data Flow</td><td>Diagnostic metadata alongside a Compute Loop's primary result.</td></tr>
+    <tr><td>10</td><td><a href="#pat-10" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Scratch</a></td><td>Data Flow</td><td>Transient working state inside a loop during a single transaction.</td></tr>
+    <tr><td>11</td><td><a href="#pat-11" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Clamp</a></td><td>Data Flow</td><td>A Filter Loop that enforces declared bounds on specific fields.</td></tr>
+    <tr><td>12</td><td><a href="#pat-12" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Stamp</a></td><td>Data Flow</td><td>A Filter Loop that adds derived metadata without modifying existing fields.</td></tr>
+    <tr><td>13</td><td><a href="#pat-13" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Reorder</a></td><td>Data Flow</td><td>Cascade filter order is a routing concern; change the table, not the filters.</td></tr>
+    <tr><td>14</td><td><a href="#pat-14" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Counter</a></td><td>Data Flow</td><td>Configurable trigger-based counting within loops; feeds health packets.</td></tr>
+    <tr><td>15</td><td><a href="#pat-15" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Fanout</a></td><td>Data Flow</td><td>One event triggers multiple independent subscribers.</td></tr>
+    <tr><td>16</td><td><a href="#pat-16" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Debounce</a></td><td>Data Flow</td><td>A Filter Loop that coalesces rapid-fire events, forwarding after a quiet period.</td></tr>
+    <tr><td>17</td><td><a href="#pat-17" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Split-Merge</a></td><td>Workflow</td><td>Parallel step groups within a pipeline spec; merge on all or any.</td></tr>
+    <tr><td>18</td><td><a href="#pat-18" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Cascade Update</a></td><td>Workflow</td><td>Recursive pipeline for hierarchical state propagation.</td></tr>
+    <tr><td>19</td><td><a href="#pat-19" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Sentinel</a></td><td>Resilience</td><td>Anomaly detection over a sliding time window.</td></tr>
+    <tr><td>20</td><td><a href="#pat-20" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Heartbeat Absence</a></td><td>Resilience</td><td>Alerting on missing expected events, not just on errors.</td></tr>
+    <tr><td>21</td><td><a href="#pat-21" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Replay</a></td><td>Resilience</td><td>Re-emit archived packets for debugging or reprocessing.</td></tr>
+    <tr><td>22</td><td><a href="#pat-22" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Inlet</a></td><td>Infrastructure</td><td>Working Loop sub-pattern for continuous external data streams.</td></tr>
+    <tr><td>23</td><td><a href="#pat-23" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Document Generation</a></td><td>Infrastructure</td><td>Compute produces formatted content; Signal delivers it.</td></tr>
+    <tr><td>24</td><td><a href="#pat-24" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Self-Routing Packets</a></td><td>Scale</td><td>Packet payload refines routing beyond the routing table.</td></tr>
+    <tr><td>25</td><td><a href="#pat-25" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Phantom</a></td><td>Scale</td><td>Test double on the bus; controlled, deterministic loop replacement.</td></tr>
+    <tr><td>26</td><td><a href="#pat-26" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Tap</a></td><td>Scale</td><td>Lightweight, selective observer filtered to one packet type or source.</td></tr>
+    <tr><td>27</td><td><a href="#pat-27" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Inter-Constellation Communication</a></td><td>Scale</td><td>Two constellations exchange data through a shared protocol bus.</td></tr>
+    <tr><td>28</td><td><a href="#pat-28" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Dead Letter</a></td><td>Resilience</td><td>Holding area for items that exhausted all processing attempts.</td></tr>
+    <tr><td>29</td><td><a href="#pat-29" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Outbox</a></td><td>Core</td><td>Atomic write + event emit via a database outbox table.</td></tr>
+    <tr><td>30</td><td><a href="#pat-30" style="color:var(--fg);text-decoration:none;border-bottom:1px solid var(--border2);">Snapshot</a></td><td>Infrastructure</td><td>Point-in-time frozen copy of a Vault's state for reporting or backup.</td></tr>
+  </table>
+</div>
+
+<hr>
+
+<div class="chapter">
+  <div class="chapter-number">Category 1</div>
+  <div class="chapter-title">Core Patterns</div>
+  <p>These nine patterns constrain how a constellation is designed. If you don't know them, you will build the wrong thing.</p>
+
+  <div class="pat" id="pat-1">
+    <div class="pat-name">1. The Echo</div>
+    <div class="pat-l21">L21: The operator observes the ALU result before routing it further — the computation is confirmed before it is used.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A loop never trusts that an operation succeeded until the responsible loop confirms it by emitting a completion packet. The UI does not show "Order Confirmed" when the user taps Submit — it shows it when the Vault emits <code>ORDER_CREATED</code>. The difference is the difference between hope and proof.</p><p>The echo packet can carry metadata about the confirmation — <code>persisted: true</code> vs. <code>persisted: buffered</code> — so downstream loops and the UI know the real status. The Workflow Loop is built entirely on Echoes: emit a step request, wait for the echo, then proceed.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Every time a loop requests an action from another loop. Every Vault write. Every external service call. Every workflow step. If the action matters, wait for the echo. If you are tempted to show success before the echo arrives, you are showing hope, not proof.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The requesting loop emits a command packet (e.g., <code>CREATE_ORDER</code>). The responsible loop processes it. On success, the responsible loop emits a confirmation packet (e.g., <code>ORDER_CREATED</code>) with the result in the payload. On failure, it emits an error packet. The requesting loop (or the Workflow engine, or the Presentation Loop) subscribes to both the success and error types.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Echo: Vault Loop confirms a write ──
+
+// Vault Loop — processes the command, emits the echo
+function createVaultOrders({ bus, db }) {
+  bus.vault.on('CREATE_ORDER', async (packet) => {
+    try {
+      const record = await db.from('orders').insert(packet.payload);
+      bus.vault.emit({
+        type: 'ORDER_CREATED',
+        marker: 'live',
+        payload: { ...record, persisted: true },
+        source: 'vault:orders',
+      });
+    } catch (err) {
+      bus.data.emit({
+        type: 'LOOP_ERROR',
+        payload: { loop: 'vault:orders', operation: 'CREATE_ORDER',
+                   error: err.message },
+        source: 'vault:orders',
+      });
+    }
+  });
+}
+
+// Presentation Loop — waits for the echo, not the request
+function createPresentationOrders({ bus, document }) {
+  function h_onSubmitOrder(formData) {
+    // Show "processing..." — NOT "order confirmed"
+    v_renderOrderStatus('processing');
+
+    bus.data.emit({
+      type: 'INTAKE_RAW',
+      payload: { subtype: 'create_order', ...formData },
+      source: 'presentation:orders',
+    });
+  }
+
+  // The echo — now we can show confirmation
+  bus.vault.on('ORDER_CREATED', (packet) => {
+    v_renderOrderStatus('confirmed', packet.payload);
+  });
+
+  bus.data.on('LOOP_ERROR', (packet) => {
+    if (packet.payload.operation === 'CREATE_ORDER') {
+      v_renderOrderStatus('error', packet.payload.error);
+    }
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Never show a success state before the echo arrives. Never assume the echo will arrive — always handle the error case. The echo must carry enough information for the subscriber to act on it without pulling additional data (include the created record, not just the ID).</p></div>
+    <div class="pat-related">Related: Marker (echos carry markers), Projection (subscribes to echoes to update derived views)</div>
+  </div>
+
+  <div class="pat" id="pat-2">
+    <div class="pat-name">2. The Marker</div>
+    <div class="pat-l21">L21: The marker bit (bit 16) distinguishes a live word from empty space. A word with marker 0 is vacant; marker 1 is live data.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Every packet carries a liveness indicator. <code>marker: 'live'</code> is real data. <code>marker: 'empty'</code> is a deliberate null signal — "I looked and there is nothing here." <code>marker: 'tombstone'</code> is a deletion notice — "this record existed and was deliberately removed."</p><p>The distinction matters because "no data returned" is ambiguous (query failed? genuinely empty?), while a marked empty response is unambiguous. Pull requests must always return a marked packet, never silence.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Every pull response. Every Vault read. Any situation where "no result" is a valid, meaningful answer that downstream loops need to distinguish from "the operation failed." If a customer lookup returns nothing, the downstream loop needs to know: did the customer not exist (empty), was the record deleted (tombstone), or did the database fail (error)?</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The Vault Loop checks the result of the database query. If records are returned, it emits with <code>marker: 'live'</code>. If the query succeeded but returned no rows, it emits with <code>marker: 'empty'</code>. If a record was found but its status is archived/purged, it emits with <code>marker: 'tombstone'</code>. The consuming loop inspects the marker before processing the payload.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Marker: Vault Loop marks every response ──
+
+function createVaultCustomers({ bus, db }) {
+  bus.vault.on('FETCH_CUSTOMER', async (packet) => {
+    try {
+      const { data, error } = await db
+        .from('customers')
+        .select('*')
+        .eq('id', packet.payload.customerId)
+        .single();
+
+      if (error &amp;&amp; error.code === 'PGRST116') {
+        // No rows returned — genuinely empty
+        bus.vault.emit({
+          type: 'CUSTOMER_FETCHED',
+          marker: 'empty',
+          payload: { customerId: packet.payload.customerId },
+          source: 'vault:customers',
+        });
+        return;
+      }
+      if (error) throw error;
+
+      if (data.status === 'archived') {
+        bus.vault.emit({
+          type: 'CUSTOMER_FETCHED',
+          marker: 'tombstone',
+          payload: { customerId: data.id, archivedAt: data.archived_at },
+          source: 'vault:customers',
+        });
+        return;
+      }
+
+      bus.vault.emit({
+        type: 'CUSTOMER_FETCHED',
+        marker: 'live',
+        payload: data,
+        source: 'vault:customers',
+      });
+    } catch (err) {
+      bus.data.emit({
+        type: 'LOOP_ERROR',
+        payload: { loop: 'vault:customers', operation: 'FETCH_CUSTOMER',
+                   error: err.message },
+        source: 'vault:customers',
+      });
+    }
+  });
+}
+
+// ── Consumer checks the marker ──
+bus.vault.on('CUSTOMER_FETCHED', (packet) => {
+  switch (packet.marker) {
+    case 'live':
+      f_processCustomer(packet.payload);
+      break;
+    case 'empty':
+      f_handleCustomerNotFound(packet.payload.customerId);
+      break;
+    case 'tombstone':
+      f_handleDeletedCustomer(packet.payload.customerId);
+      break;
+  }
+});</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>A pull response must never be silence — always emit a marked packet, even when there's nothing to return. The <code>empty</code> marker is not an error — it's a valid result that means "I successfully looked and found nothing." The <code>tombstone</code> marker is not an error either — it means the record existed and was deliberately removed, which may require different handling than "never existed."</p></div>
+    <div class="pat-related">Related: Echo (echos carry markers), Retention Gate (produces tombstones)</div>
+  </div>
+
+  <div class="pat" id="pat-3">
+    <div class="pat-name">3. The Hydration</div>
+    <div class="pat-l21">L21: The operator loads a value from memory into the ALU loop, enriching the workspace before computation.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Filter Loop that receives a sparse packet (just an ID), pulls full data from a Vault, and attaches it to the packet before passing it along. The enriched packet now carries everything downstream loops need without them having to make their own Vault pulls.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When a Working Loop receives an intake that contains just a reference (a customer ID, an order ID) and downstream Compute or Filter Loops need the full record to do their work. Rather than every downstream loop independently pulling the same data, one Hydration Filter enriches the packet once.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Filter Loop. Receives <code>bus</code> only. Subscribes to the sparse packet type. Makes a pull request to the Vault Bus. Attaches the response to the packet. Emits the enriched packet under a new type (or the same type with an enrichment flag). The pull goes through the Vault Bus — this is a data retrieval, not a business computation.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Hydration: enrich an order packet with customer data ──
+
+function createFilterCustomerHydration({ bus }) {
+  bus.data.on('ORDER_INTAKE_VALIDATED', async (packet) => {
+    // Pull full customer data from the Vault
+    const customerResponse = await bus.vault.pull({
+      type: 'FETCH_CUSTOMER',
+      payload: { customerId: packet.payload.customerId },
+    });
+
+    if (customerResponse.marker !== 'live') {
+      bus.data.emit({
+        type: 'HYDRATION_FAILED',
+        payload: {
+          reason: 'customer_not_found',
+          customerId: packet.payload.customerId,
+          originalPacket: packet.type,
+        },
+        source: 'filter:customerHydration',
+      });
+      return;
+    }
+
+    // Emit enriched packet — downstream loops get everything
+    bus.data.emit({
+      type: 'ORDER_HYDRATED',
+      marker: 'live',
+      payload: {
+        ...packet.payload,
+        customer: customerResponse.payload,
+      },
+      source: 'filter:customerHydration',
+    });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Hydration is always done by a Filter Loop — it enriches, it does not transform. The pull goes through the Vault Bus. If the hydration pull returns <code>empty</code> or <code>tombstone</code>, the Filter must handle it — either emit a failure packet or emit the original packet with a flag indicating hydration was incomplete. Never silently drop a packet because hydration failed.</p></div>
+    <div class="pat-related">Related: Marker (hydration checks the marker on the pull response), Cascade (hydration is often the first step in a filter cascade)</div>
+  </div>
+
+  <div class="pat" id="pat-4">
+    <div class="pat-name">4. The Cascade</div>
+    <div class="pat-l21">L21: PM1 → PM2 → TG1 → TG2. A four-stage conditional pipeline on the Big Loop where each stage filters the output of the previous one, all in a single rotation.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Chaining Filter Loops on the bus. Packet enters Filter A, passes or rejects. Passes go to Filter B. Passes go to Filter C. Each filter is independent, has its own contract, and can be added or removed without changing the others. The sequence is defined in the routing table, not in the filters. Adding a new filter to the cascade means updating the routing table — no existing code changes.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When incoming data needs multiple independent checks or transformations: validation, then authorization, then hydration, then rate-checking. Each step is a separate concern. The Cascade is the composition mechanism — you build the pipeline by composing independent filters, not by building one monolithic filter that does everything.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Each Filter Loop subscribes to a specific input type and emits a specific output type. The routing table chains them: Filter A's output type is Filter B's input type. The filters themselves do not know about each other. The routing table is the composition layer. To add a new step: write the Filter, add routing entries, done. To remove a step: remove the routing entries, wire the predecessor's output to the successor's input.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Cascade: three independent filters chained by routing ──
+
+// Filter 1: Schema validation
+function createFilterOrderValidation({ bus }) {
+  bus.data.on('ORDER_INTAKE_RAW', (packet) => {
+    const errors = f_validateOrderSchema(packet.payload);
+    if (errors.length > 0) {
+      bus.data.emit({
+        type: 'VALIDATION_REJECTED',
+        payload: { errors, originalPacket: packet },
+        source: 'filter:orderValidation',
+      });
+      return;
+    }
+    bus.data.emit({
+      type: 'ORDER_INTAKE_VALIDATED',
+      marker: 'live',
+      payload: packet.payload,
+      source: 'filter:orderValidation',
+    });
+  });
+}
+
+// Filter 2: Authorization check
+function createFilterOrderAuth({ bus }) {
+  bus.data.on('ORDER_INTAKE_VALIDATED', (packet) => {
+    if (!f_checkPermission(packet.operatorId, 'create_order')) {
+      bus.data.emit({
+        type: 'AUTH_REJECTED',
+        payload: { action: 'create_order', operatorId: packet.operatorId },
+        source: 'filter:orderAuth',
+      });
+      return;
+    }
+    bus.data.emit({
+      type: 'ORDER_INTAKE_AUTHORIZED',
+      marker: 'live',
+      payload: packet.payload,
+      source: 'filter:orderAuth',
+    });
+  });
+}
+
+// Filter 3: Customer hydration
+function createFilterCustomerHydration({ bus }) {
+  bus.data.on('ORDER_INTAKE_AUTHORIZED', async (packet) => {
+    const customer = await bus.vault.pull({
+      type: 'FETCH_CUSTOMER',
+      payload: { customerId: packet.payload.customerId },
+    });
+    if (customer.marker !== 'live') { /* handle missing */ return; }
+    bus.data.emit({
+      type: 'ORDER_HYDRATED',
+      marker: 'live',
+      payload: { ...packet.payload, customer: customer.payload },
+      source: 'filter:customerHydration',
+    });
+  });
+}
+
+// ── Routing table entries that define the cascade ──
+// ORDER_INTAKE_RAW      → filter:orderValidation
+// ORDER_INTAKE_VALIDATED → filter:orderAuth
+// ORDER_INTAKE_AUTHORIZED→ filter:customerHydration
+// ORDER_HYDRATED        → compute:pricing (next stage)</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Filters in a cascade must not depend on each other's internals. Each filter gets a packet, does its job, emits the result. If you find yourself needing Filter B to know what Filter A decided, that information should travel in the packet payload or as a stamp — not through a side channel. The routing table order is the only coupling.</p></div>
+    <div class="pat-related">Related: Reorder (change cascade order by changing routing), Stamp (filters can stamp packets for downstream use), Hydration (commonly a cascade step)</div>
+  </div>
+
+  <div class="pat" id="pat-5">
+    <div class="pat-name">5. The Projection</div>
+    <div class="pat-l21">L21: The operator reads from multiple sources (ALU result, comparator flags, counter value) to form a complete picture before making a routing decision.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Compute Loop subscribes to change events from multiple Vaults and maintains a derived, denormalized view. When the Order Vault emits <code>ORDER_UPDATED</code>, the Projection Loop pulls related customer, status, and media data, assembles the complete view, and emits <code>PROJECTION_UPDATED</code>. The Presentation Loop subscribes to the projection, not to the individual Vaults — one subscription, one packet, all the data needed to render.</p><p>The projection is explicitly a derived cache, not a source of truth. It can be rebuilt from the Vaults at any time.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When the Presentation Loop needs data from multiple Vaults to render a view. Rather than the UI making five separate pull requests and assembling the data itself, the Projection Loop does the assembly once and emits a complete view packet. Also useful when multiple Compute Loops need the same assembled data — they all subscribe to the projection rather than each assembling independently.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Compute Loop. Subscribes to change events from relevant Vaults (<code>ORDER_CREATED</code>, <code>ORDER_UPDATED</code>, <code>CUSTOMER_UPDATED</code>). On any change, pulls current data from all relevant sources, assembles the combined view, and emits a projection packet. The Presentation Loop subscribes to the projection type. The projection can be rebuilt from scratch by pulling all source data — useful after a crash or on startup.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Projection: assembled order view for the UI ──
+
+function createComputeOrderProjection({ bus }) {
+  // Subscribe to every event that could change the projection
+  const v_triggerTypes = [
+    'ORDER_CREATED', 'ORDER_UPDATED', 'ORDER_ARCHIVED',
+    'CUSTOMER_UPDATED', 'STATUS_CHANGE',
+  ];
+
+  for (const type of v_triggerTypes) {
+    bus.vault.on(type, (packet) => {
+      f_rebuildProjection(packet.payload.orderId || packet.payload.id);
+    });
+  }
+
+  async function f_rebuildProjection(orderId) {
+    // Pull current state from all sources
+    const order = await bus.vault.pull({
+      type: 'FETCH_ORDER', payload: { orderId },
+    });
+    if (order.marker !== 'live') return;
+
+    const customer = await bus.vault.pull({
+      type: 'FETCH_CUSTOMER',
+      payload: { customerId: order.payload.customerId },
+    });
+
+    const statusHistory = await bus.vault.pull({
+      type: 'FETCH_STATUS_HISTORY',
+      payload: { orderId },
+    });
+
+    // Assemble the complete view
+    bus.data.emit({
+      type: 'ORDER_PROJECTION_UPDATED',
+      marker: 'live',
+      payload: {
+        order: order.payload,
+        customer: customer.marker === 'live' ? customer.payload : null,
+        statusHistory: statusHistory.payload || [],
+        projectedAt: Date.now(),
+      },
+      source: 'compute:orderProjection',
+    });
+  }
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>A projection is a derived cache, not a source of truth. Never write to a Vault based on projection data — always go back to the source Vaults. If the projection diverges from the Vaults (due to a missed event or timing), it must be rebuildable from scratch. Include a <code>projectedAt</code> timestamp so consumers know how fresh the data is. A projection that subscribes to too many event types or pulls from too many Vaults may become a performance bottleneck — scope projections to what the consumer actually needs.</p></div>
+    <div class="pat-related">Related: Fanout (projections subscribe to fanned-out events), Echo (projections rebuild on echoes from Vaults)</div>
+    <div class="callout note"><div class="callout-label">Convergent Pattern</div>The Projection is the read model in CQRS (Command Query Responsibility Segregation), described independently by Greg Young and Udi Dahan around 2010. Loop MMT arrived at the same shape through the L21 model — the operator reading from multiple sources to form a complete picture before routing — before recognizing the convergence. The problems are the same; the derivation paths differ.</div>
+  </div>
+
+  <div class="pat" id="pat-6">
+    <div class="pat-name">6. The Bridge</div>
+    <div class="pat-l21">L21: When a Pattern Matcher ejects a word, it goes to a one-word bridge buffer before being available to a bus. The bridge holds one word; a second match overwrites if the bridge hasn't drained.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A buffering mechanism between a loop's output and the bus. The loop produces output faster than the bus can carry it. The bridge smooths the flow. Three overflow strategies, declared in the loop's spec: <code>overwrite</code> (latest wins, like the L21 PM bridge), <code>queue</code> (FIFO buffer), <code>backpressure</code> (the loop pauses until the bridge drains).</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When a loop produces bursts of output that could overwhelm the bus or downstream consumers. Common with Inlet-pattern Working Loops receiving high-frequency streams (GPS positions, sensor data), or Compute Loops processing batch results. The strategy depends on the data semantics: position updates use <code>overwrite</code> (only the latest matters), order processing uses <code>queue</code> (every order matters), and payment processing uses <code>backpressure</code> (never lose a payment, never process faster than confirmation).</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The bridge sits inside the loop, between the processing logic and the bus emit call. The loop writes to the bridge instead of directly to the bus. The bridge drains to the bus according to the declared strategy. Bridge depth and overflow strategy are declared in the Constellation Spec, not hardcoded.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Bridge: three strategies ──
+
+function f_createBridge(strategy, maxDepth) {
+  const v_buffer = [];
+  let v_draining = false;
+
+  return {
+    // Loop writes here instead of directly to bus
+    write(packet) {
+      if (strategy === 'overwrite') {
+        // Latest wins — replace whatever is in the buffer
+        v_buffer.length = 0;
+        v_buffer.push(packet);
+      } else if (strategy === 'queue') {
+        if (v_buffer.length >= maxDepth) {
+          // Queue full — emit BRIDGE_OVERFLOW, drop oldest
+          v_buffer.shift();
+        }
+        v_buffer.push(packet);
+      } else if (strategy === 'backpressure') {
+        if (v_buffer.length >= maxDepth) {
+          // Caller must wait — return a promise that resolves
+          // when space is available
+          return new Promise((resolve) => {
+            const v_interval = setInterval(() => {
+              if (v_buffer.length < maxDepth) {
+                clearInterval(v_interval);
+                v_buffer.push(packet);
+                resolve();
+              }
+            }, 10);
+          });
+        }
+        v_buffer.push(packet);
+      }
+    },
+
+    // Bus drains from here
+    drain(emitFn) {
+      if (v_draining || v_buffer.length === 0) return;
+      v_draining = true;
+      const packet = v_buffer.shift();
+      emitFn(packet);
+      v_draining = false;
+    },
+
+    get pending() { return v_buffer.length; },
+  };
+}
+
+// Usage in a loop factory
+function createInletGpsFleet({ bus }) {
+  const v_bridge = f_createBridge('overwrite', 1);
+
+  // High-frequency GPS data arrives here
+  v_websocket.onmessage = (raw) => {
+    const packet = f_translateGpsPayload(raw);
+    v_bridge.write(packet);
+  };
+
+  // Drain to bus on a controlled interval
+  setInterval(() => {
+    v_bridge.drain((packet) => bus.data.emit(packet));
+  }, 100); // 10 Hz max to bus, regardless of input rate
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Bridge strategy is a design decision, not an implementation detail — declare it in the Constellation Spec. <code>overwrite</code> loses data deliberately (appropriate when only the latest value matters). <code>queue</code> can lose data at the overflow boundary. <code>backpressure</code> never loses data but can stall the producing loop. Choose based on the cost of losing a packet vs. the cost of stalling. The Debounce pattern is related but different — Debounce manages event frequency at the semantic level; Bridge manages throughput at the transport level.</p></div>
+    <div class="pat-related">Related: Inlet (uses Bridge for back-pressure), Debounce (semantic-level frequency management vs. transport-level)</div>
+  </div>
+
+  <div class="pat" id="pat-7">
+    <div class="pat-name">7. The Translator</div>
+    <div class="pat-l21">No direct L21 analog. Derived from the dependency isolation principle.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>The data-scrubbing half of a loop that adopts an external dependency speaking a foreign data model. The Translator receives raw external data, validates it against the external provider's schema, maps it to the internal packet contract, and emits clean packets that are indistinguishable from any other packet on the bus. The translation logic is isolated inside the loop's closure — no other loop knows or cares that the data originated from a foreign system.</p><p>The Dependency Gate handles what happens when the external system is unreachable. The Translator handles what happens when it responds.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Every loop that talks to an adopted dependency: payment processors, auth providers, notification services, external APIs. The external system speaks its own language (Stripe webhook format, Supabase auth token structure, Twilio response shape). The Translator converts that language into clean internal packets before the data touches the bus.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented inside the loop that owns the dependency. The loop receives the raw external response, validates it against the known external schema (catch malformed responses early), maps fields to the internal contract, and emits a standard packet. The Constellation Spec should declare both the Dependency Gate (for resilience) and the Translator pattern (for data scrubbing).</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Translator: Stripe webhook → clean internal packet ──
+
+function createSignalPayments({ bus, services }) {
+  const { stripe, gate_stripe } = services;
+
+  // Stripe webhook arrives
+  async function h_onStripeWebhook(rawEvent) {
+    // Step 1: Validate the raw external data
+    const v_verified = stripe.webhooks.constructEvent(
+      rawEvent.body, rawEvent.headers['stripe-signature'],
+      v_webhookSecret
+    );
+    if (!v_verified) {
+      bus.data.emit({
+        type: 'LOOP_ERROR',
+        payload: { loop: 'signal:payments',
+                   error: 'Stripe signature verification failed' },
+        source: 'signal:payments',
+      });
+      return;
+    }
+
+    // Step 2: Translate — map Stripe's schema to our contract
+    // Stripe says "payment_intent.succeeded" with their field names.
+    // We say "PAYMENT_CONFIRMED" with ours.
+    if (v_verified.type === 'payment_intent.succeeded') {
+      const v_stripeData = v_verified.data.object;
+      bus.data.emit({
+        type: 'PAYMENT_CONFIRMED',
+        marker: 'live',
+        payload: {
+          paymentId:    v_stripeData.id,
+          orderId:      v_stripeData.metadata.order_id,
+          amountCents:  v_stripeData.amount,
+          currency:     v_stripeData.currency,
+          method:       v_stripeData.payment_method_types[0],
+          confirmedAt:  new Date(v_stripeData.created * 1000).toISOString(),
+        },
+        source: 'signal:payments',
+      });
+    }
+
+    if (v_verified.type === 'payment_intent.payment_failed') {
+      const v_stripeData = v_verified.data.object;
+      bus.data.emit({
+        type: 'PAYMENT_FAILED',
+        marker: 'live',
+        payload: {
+          paymentId:   v_stripeData.id,
+          orderId:     v_stripeData.metadata.order_id,
+          failureCode: v_stripeData.last_payment_error?.code || 'unknown',
+          failureMsg:  v_stripeData.last_payment_error?.message || '',
+        },
+        source: 'signal:payments',
+      });
+    }
+  }
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The translation must be complete — no Stripe field names, no Twilio response shapes, no external-provider-isms leaking onto the bus. If any downstream loop can tell the data came from an external source by looking at field names, the translation is incomplete. Validate the raw external data before translating — external APIs change without warning, and catching a malformed response at the Translator is cheaper than catching it downstream.</p></div>
+    <div class="pat-related">Related: Dependency Gate (handles unreachability; Translator handles response translation), Batch (Translator may handle batch webhook events)</div>
+  </div>
+
+  <div class="pat" id="pat-8">
+    <div class="pat-name">8. The Batch</div>
+    <div class="pat-l21">L21: Memory batch write sends all 16 slots sequentially. Destructive read clears after reading.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Operating on multiple records atomically. A Workflow pipeline where the first step is a bulk pull request and subsequent steps operate on the entire result set. Vault Loops support batch insert, batch update, and batch archive as declared capabilities. The read-and-consume variant (fetch records and mark them as in-progress atomically) is how retry queues work — the Signal Loop fetches pending notifications and claims them in one operation, so no other instance re-sends them.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Any operation that needs to process a set of records together: sending all pending notifications, archiving all completed orders older than 90 days, reconciling all transactions from yesterday, downsampling a batch of sensor readings. Also the foundation of the read-and-consume pattern for work queues.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The Workflow pipeline's first step is a bulk pull to the Vault. The Vault returns a set of records (marked <code>live</code>). Subsequent steps operate on the set. For read-and-consume: the pull atomically marks the records as <code>in_progress</code> so concurrent readers don't pick them up. On completion, the records are marked <code>done</code>. On failure, they return to <code>pending</code> after a timeout.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Batch: send all pending notifications ──
+
+// Pipeline spec for batch notification send
+const PIPELINE_BATCH_NOTIFY = {
+  name: 'batch_send_notifications',
+  trigger: { type: 'CLOCK_TICK', match: { subtype: 'notification_sweep' } },
+  steps: [
+    {
+      name: 'fetch_pending',
+      emit: { type: 'FETCH_NOTIFICATIONS', bus: 'VAULT' },
+      queryParams: { status: 'pending', limit: 50 },
+      expect: 'NOTIFICATIONS_FETCHED',
+      onFail: 'abort',
+    },
+    {
+      name: 'claim_batch',
+      emit: { type: 'CLAIM_NOTIFICATIONS', bus: 'VAULT' },
+      needs: ['fetch_pending.payload'],
+      expect: 'NOTIFICATIONS_CLAIMED',
+      onFail: 'abort',
+    },
+    {
+      name: 'send_all',
+      emit: { type: 'SEND_NOTIFICATION_BATCH', bus: 'SIGNAL' },
+      needs: ['claim_batch.payload'],
+      expect: 'BATCH_SENT',
+      onFail: 'escalate',
+    },
+    {
+      name: 'mark_complete',
+      emit: { type: 'MARK_NOTIFICATIONS_SENT', bus: 'VAULT' },
+      needs: ['send_all.payload'],
+      expect: 'NOTIFICATIONS_MARKED',
+      onFail: 'retry',
+      retryLimit: 3,
+    },
+  ],
+};</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Batch size matters — a batch of 10,000 records will time out. Declare a <code>limit</code> in the pull request. If more records remain, the Clock triggers another batch cycle. The read-and-consume pattern must handle the case where a batch is claimed but the process dies before completing — include a timeout that returns uncompleted records to <code>pending</code>.</p></div>
+    <div class="pat-related">Related: Cascade Update (uses Batch for downward cascades), Sentinel (monitors batch failure rates)</div>
+  </div>
+
+  <div class="pat" id="pat-29">
+    <div class="pat-name">29. The Outbox</div>
+    <div class="pat-l21">No direct L21 analog. Derived from the reliability requirement that a data write and its corresponding bus event must be atomic.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A reliability pattern that makes Vault writes and their corresponding bus events atomic. The Vault Loop writes the business record and an outbox entry in the same database transaction. A separate sweep reads the outbox and emits to the bus. The outbox entry is deleted after the emit is confirmed. If the process crashes between the write and the emit, the outbox entry survives and the sweep picks it up on restart. No event is ever lost.</p><p>Without the Outbox, a Vault Loop that writes to the database and then emits an echo packet has a failure window: if the process crashes between the write and the emit, the record exists but no downstream loop ever learns about it.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Every Vault Loop where the echo matters for downstream processing. If a record is written but the <code>ORDER_CREATED</code> event is lost, the Projection never updates, the notification never sends, the analytics never count it. For business-critical data (orders, payments, customer records), the Outbox eliminates the failure window.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The database has an <code>outbox</code> table. When the Vault Loop processes a write, it inserts both the business record and an outbox entry in the same transaction. The outbox entry contains the packet type, payload, and a <code>published</code> flag (initially false). A sweep function reads unpublished entries, emits them to the bus, and marks them published. The sweep is idempotent: if it crashes after emitting but before marking, the next sweep re-emits and downstream idempotency handling deduplicates.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Outbox: atomic write + event ──
+
+function createVaultOrders({ bus, db }) {
+  bus.vault.on('CREATE_ORDER', async (packet) =&gt; {
+    try {
+      // Single transaction: business write + outbox entry
+      const { data, error } = await db.rpc('create_order_with_outbox', {
+        order_data: packet.payload,
+        outbox_event: {
+          packet_type: 'ORDER_CREATED',
+          payload: packet.payload,
+          source: 'vault:orders',
+        },
+      });
+      if (error) throw error;
+
+      // Immediately try to publish (best case: no delay)
+      f_publishOutbox(bus, db);
+    } catch (err) {
+      bus.data.emit({
+        type: 'LOOP_ERROR',
+        payload: { loop: 'vault:orders', operation: 'CREATE_ORDER',
+                   error: err.message },
+        source: 'vault:orders',
+      });
+    }
+  });
+
+  async function f_publishOutbox(bus, db) {
+    const { data: v_pending } = await db
+      .from('outbox')
+      .select('*')
+      .eq('published', false)
+      .order('created_at', { ascending: true })
+      .limit(50);
+
+    if (!v_pending || v_pending.length === 0) return;
+
+    for (const entry of v_pending) {
+      bus.vault.emit({
+        type: entry.packet_type, marker: 'live',
+        payload: entry.payload, source: entry.source,
+      });
+      await db.from('outbox')
+        .update({ published: true,
+                  published_at: new Date().toISOString() })
+        .eq('id', entry.id);
+    }
+  }
+
+  // Sweep on startup (catch missed during downtime)
+  f_publishOutbox(bus, db);
+  // Sweep periodically
+  setInterval(() =&gt; f_publishOutbox(bus, db), 5000);
+}
+
+// Postgres RPC — atomic business write + outbox insert:
+// CREATE FUNCTION create_order_with_outbox(
+//   order_data jsonb, outbox_event jsonb
+// ) RETURNS jsonb AS $$
+// BEGIN
+//   INSERT INTO orders (...) VALUES (...) RETURNING ...;
+//   INSERT INTO outbox (packet_type, payload, source, published)
+//     VALUES (..., false);
+//   RETURN result;
+// END; $$ LANGUAGE plpgsql;</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The business write and outbox insert must be in the same database transaction. If they are separate operations, the failure window still exists. The sweep must be idempotent. The outbox table needs a Retention Gate: published entries should be purged after a retention period. The sweep should have a batch limit.</p></div>
+    <div class="pat-related">Related: Echo (Outbox guarantees the echo is eventually emitted), Dead Letter (items that fail the outbox sweep), State Reincarnation (solves the same problem for workflow steps; Outbox solves it for non-workflow writes)</div>
+    <div class="callout note"><div class="callout-label">Adopted Pattern</div>The Outbox pattern is established practice in distributed systems and microservices architecture, associated primarily with Chris Richardson's work on microservices patterns and the Transactional Outbox solution to the dual-write problem. The pattern's L21 origin note is accurate — the pattern has no direct hardware analog — and it was adopted into Loop MMT because it solves a real reliability problem that emerges from the architecture's own constraints. The concept and the name come from distributed systems literature.</div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="chapter">
+  <div class="chapter-number">Category 2</div>
+  <div class="chapter-title">Data Flow Patterns</div>
+  <p>Patterns for how data moves through, gets enriched, gets annotated, and gets shaped within the loop + bus architecture.</p>
+
+  <div class="pat" id="pat-9">
+    <div class="pat-name">9. The Flag</div>
+    <div class="pat-l21">L21: The comparator produces six flags (GT, LT, EQ, GTE, LTE, NEQ) alongside the ALU result. The flags inform — they do not trigger automatic action.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>When a Compute Loop produces a result, it also produces diagnostic flags alongside the primary payload. Flags are metadata that describe properties of the result: <code>loyaltyDiscountApplied: true</code>, <code>priceExceedsAverage: true</code>, <code>weightInTopDecile: true</code>. Flags travel in the packet. Any downstream loop can read them. The producing loop doesn't know who reads the flags.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When a computation produces information that downstream loops might want to act on but that isn't part of the core result. The Pricing Engine knows the loyalty discount was applied — the UI wants to display that, the Audit Trail wants to log it, the Sentinel wants to track it. Rather than each downstream loop re-deriving the information, the Flag carries it.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented inside a Compute Loop. After computing the primary result, the loop evaluates flag conditions and includes them in the emitted packet's payload under a <code>flags</code> object. Downstream loops read <code>packet.payload.flags</code> and branch or display accordingly.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Flag: Pricing Engine sets diagnostic flags ──
+
+function createComputePricing({ bus }) {
+  bus.data.on('ORDER_HYDRATED', (packet) => {
+    const v_basePrice = f_calculateBasePrice(packet.payload);
+    const v_discount = f_calculateDiscount(packet.payload.customer);
+    const v_finalPrice = v_basePrice - v_discount;
+    const v_averagePrice = f_getRunningAverage();
+
+    bus.data.emit({
+      type: 'PRICE_CALCULATED',
+      marker: 'live',
+      payload: {
+        orderId: packet.payload.orderId,
+        basePrice: v_basePrice,
+        discount: v_discount,
+        totalPrice: v_finalPrice,
+        flags: {
+          loyaltyDiscountApplied: v_discount > 0,
+          priceExceedsAverage: v_finalPrice > v_averagePrice,
+          rushOrder: packet.payload.rushProcessing === true,
+          bulkOrder: packet.payload.items.length > 10,
+        },
+      },
+      source: 'compute:pricing',
+    });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Flags inform — they do not trigger automatic action. A flag should never cause a branching decision in the producing loop itself; that would be business logic, not a flag. Flags are for downstream consumers. Keep the <code>flags</code> object flat (boolean or simple values). If a "flag" needs a complex payload, it's probably a separate packet, not a flag.</p></div>
+    <div class="pat-related">Related: Stamp (adds metadata at the Filter level; Flag adds metadata at the Compute level), Counter (can increment on flag values)</div>
+  </div>
+
+  <div class="pat" id="pat-10">
+    <div class="pat-name">10. The Scratch</div>
+    <div class="pat-l21">L21: Four Working Scratch registers hold intermediate values during multi-step computation without the 41-tick cost of a bus transfer.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A loop holds transient working state during a single operation — running totals during a reconciliation batch, intermediate values during a price calculation. Scratch state is never persisted to a Vault, never exposed on the bus, and is cleared when the transaction completes. This is a declared exception to the Two-Place Rule.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When a computation needs intermediate values that have no meaning outside the current operation. A reconciliation loop summing a batch of transactions. A pricing engine tracking discount tiers across line items. An aggregation loop computing averages. The intermediate values are meaningless if the operation fails — they'd be recomputed from inputs on retry.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Simple JavaScript variables inside the loop's processing function. The key discipline: scratch state is scoped to a single function invocation or a single event handler execution. It does not persist across separate bus events. If the loop crashes, scratch state is gone, and that's fine because it would be recomputed.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Scratch: reconciliation with running totals ──
+
+function createComputeReconciliation({ bus }) {
+  bus.data.on('RECONCILE_REQUEST', async (packet) => {
+    const v_transactions = packet.payload.transactions;
+
+    // Scratch state — exists only during this computation
+    let v_totalCredits = 0;
+    let v_totalDebits = 0;
+    let v_discrepancies = [];
+    let v_processedCount = 0;
+
+    for (const txn of v_transactions) {
+      if (txn.type === 'credit') v_totalCredits += txn.amount;
+      if (txn.type === 'debit') v_totalDebits += txn.amount;
+      if (Math.abs(txn.reportedBalance - txn.calculatedBalance) > 0.01) {
+        v_discrepancies.push({
+          txnId: txn.id,
+          reported: txn.reportedBalance,
+          calculated: txn.calculatedBalance,
+        });
+      }
+      v_processedCount++;
+    }
+    // Scratch state used, now emit the result
+    bus.data.emit({
+      type: 'RECONCILIATION_COMPLETE',
+      marker: 'live',
+      payload: {
+        totalCredits: v_totalCredits,
+        totalDebits: v_totalDebits,
+        net: v_totalCredits - v_totalDebits,
+        discrepancies: v_discrepancies,
+        processedCount: v_processedCount,
+      },
+      source: 'compute:reconciliation',
+    });
+    // Scratch state goes out of scope here — gone
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Scratch state must never leak into loop-level variables that persist across events. If you find yourself storing scratch state in a closure variable that survives after the event handler returns, it is no longer scratch — it is ghost state. The test: if the loop restarted right now, would this variable need to be recovered? If yes, it's not scratch — persist it.</p></div>
+    <div class="pat-related">Related: Two-Place Rule (Scratch is the declared exception), Flag (results of scratch computation can become flags)</div>
+  </div>
+
+  <div class="pat" id="pat-11">
+    <div class="pat-name">11. The Clamp</div>
+    <div class="pat-l21">L21: A Threshold Gate in clamp mode rewrites values in-place to a configured bound without ejecting them. TG with mode ≥ 1000, clamp 1000 silently clips every value above 1000.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Filter Loop that modifies specific fields within declared bounds. A weight normalizer that caps at a safety maximum. A price floor that ensures no order goes below a minimum. A date normalizer that rounds timestamps. The key distinction from a Compute Loop: a Clamp enforces bounds, not business logic.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When data can arrive with values outside an acceptable range and the correct behavior is to clip them rather than reject them. A weight entry of 99,999 lbs is clearly a typo — clamp to the declared maximum. A negative price is impossible — clamp to zero. Distinct from validation (which rejects bad data). A Clamp fixes bad data within declared limits.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Filter Loop. The bounds are declared in the Constellation Spec or config, not hardcoded. The loop reads the bounds, checks each relevant field, and clamps or rejects based on the declared <code>onViolation</code> policy. Emits a stamped flag indicating clamping occurred.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Clamp: weight bounds enforcement ──
+
+const CLAMP_RULES = {
+  weight: { min: 0.1, max: 2000, onViolation: 'clamp' },
+  price:  { min: 0,   max: 99999, onViolation: 'reject' },
+};
+
+function createFilterWeightClamp({ bus }) {
+  bus.data.on('ORDER_HYDRATED', (packet) => {
+    const v_payload = { ...packet.payload };
+    let v_clamped = false;
+
+    for (const [field, rule] of Object.entries(CLAMP_RULES)) {
+      const v_value = v_payload[field];
+      if (v_value === undefined) continue;
+
+      if (v_value < rule.min || v_value > rule.max) {
+        if (rule.onViolation === 'reject') {
+          bus.data.emit({
+            type: 'VALIDATION_REJECTED',
+            payload: { field, value: v_value, min: rule.min, max: rule.max,
+                       reason: 'out_of_bounds' },
+            source: 'filter:weightClamp',
+          });
+          return; // Stop processing — rejected
+        }
+        // Clamp: silently adjust to nearest bound
+        v_payload[field] = Math.max(rule.min, Math.min(rule.max, v_value));
+        v_clamped = true;
+      }
+    }
+
+    bus.data.emit({
+      type: 'ORDER_BOUNDS_CHECKED',
+      marker: 'live',
+      payload: {
+        ...v_payload,
+        flags: { ...(v_payload.flags || {}), boundsClamped: v_clamped },
+      },
+      source: 'filter:weightClamp',
+    });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Bounds must come from the Constellation Spec or Config Vault, not from hardcoded values. The Clamp should stamp a flag when it adjusts a value so downstream loops and the audit trail know the original value was out of bounds. Never clamp silently without a flag — the operator needs to know when data arrives out of range.</p></div>
+    <div class="pat-related">Related: Stamp (Clamp often stamps to indicate clamping occurred), Cascade (Clamp is often a step in a filter cascade)</div>
+  </div>
+
+  <div class="pat" id="pat-12">
+    <div class="pat-name">12. The Stamp</div>
+    <div class="pat-l21">L21: Pattern Matcher rewrite mode matches a word and rewrites specific bits without ejecting it — in-place annotation of data as it circulates.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Filter Loop that matches a condition and adds metadata to the packet without removing it from the pipeline. Not the same as Hydration (which pulls external data). The Stamp adds information derived from the packet itself: "this order is above average weight," "this customer is VIP tier," "this order was entered during the Tuesday rush." Stamps are additive — they do not modify existing fields, they add new ones.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When downstream loops or the Presentation Loop need to know something about a packet that can be derived from its contents but shouldn't be re-derived by every consumer. A VIP flag on a customer order. A "bulk" tag on a large order. A "rush hour" annotation on an intake. The Stamp computes it once and carries it forward.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Filter Loop. Evaluates conditions against the packet payload. Adds new fields (under a <code>stamps</code> namespace or as individual flags) without modifying existing fields. Emits the annotated packet.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Stamp: annotate orders with business classifications ──
+
+function createFilterOrderStamp({ bus }) {
+  bus.data.on('ORDER_BOUNDS_CHECKED', (packet) => {
+    const v_stamps = {};
+
+    // Weight classification
+    if (packet.payload.weight > 500) {
+      v_stamps.heavyOrder = true;
+    }
+
+    // Time-of-day classification
+    const v_hour = new Date().getHours();
+    if (v_hour >= 6 &amp;&amp; v_hour <= 9) {
+      v_stamps.morningRush = true;
+    }
+
+    // Customer tier (from hydrated customer data)
+    if (packet.payload.customer &amp;&amp;
+        packet.payload.customer.totalOrders > 50) {
+      v_stamps.vipCustomer = true;
+    }
+
+    // Emit with stamps added — original fields untouched
+    bus.data.emit({
+      type: 'ORDER_STAMPED',
+      marker: 'live',
+      payload: {
+        ...packet.payload,
+        stamps: { ...(packet.payload.stamps || {}), ...v_stamps },
+      },
+      source: 'filter:orderStamp',
+    });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Stamps are additive only — never modify existing fields. Use a <code>stamps</code> namespace to keep stamp fields separate from core data fields. A stamp that requires a Vault pull is not a stamp — it's a Hydration. Stamps derive from data already in the packet.</p></div>
+    <div class="pat-related">Related: Flag (produced by Compute Loops; Stamps produced by Filter Loops), Hydration (pulls external data; Stamp derives from packet data), Sentinel (can monitor stamp patterns)</div>
+  </div>
+
+  <div class="pat" id="pat-13">
+    <div class="pat-name">13. The Reorder</div>
+    <div class="pat-l21">L21: The operator can switch whether Pattern Matchers run before Threshold Gates or vice versa on the Big Loop. Filter order is configurable at runtime.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Cascade filter order is a routing concern, not a filter concern. The individual filters do not change. The routing table determines the sequence. Want authorization before validation? Change the routing. Want sanitization before auth? Insert a new step. The filters are independent modules — the routing table is the composition layer.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When you need to change the order of filter processing without modifying any filter code. During development: "we realized auth should happen before validation." In production: "we need to insert a rate limiter before everything else." Because each filter is independent and the cascade is defined by routing, reordering is a routing table change — zero code changes.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Not a code pattern inside a loop — it's a routing table pattern. The implementation is: change the packet type wiring between filters. Filter A's output type becomes Filter C's input, Filter C's output becomes Filter B's input. The filters themselves are unchanged.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Reorder: changing filter sequence via routing table ──
+
+// BEFORE: Validate → Auth → Hydrate
+const ROUTES_BEFORE = [
+  { type: 'ORDER_INTAKE_RAW',        source: 'working:intake',
+    dest: 'filter:validation',         bus: 'DATA' },
+  { type: 'ORDER_INTAKE_VALIDATED',   source: 'filter:validation',
+    dest: 'filter:auth',               bus: 'DATA' },
+  { type: 'ORDER_INTAKE_AUTHORIZED',  source: 'filter:auth',
+    dest: 'filter:hydration',          bus: 'DATA' },
+];
+
+// AFTER: Auth → Validate → Hydrate
+// Only the routing table changes. No filter code changes.
+const ROUTES_AFTER = [
+  { type: 'ORDER_INTAKE_RAW',        source: 'working:intake',
+    dest: 'filter:auth',               bus: 'DATA' },
+  { type: 'ORDER_INTAKE_AUTHORIZED',  source: 'filter:auth',
+    dest: 'filter:validation',          bus: 'DATA' },
+  { type: 'ORDER_INTAKE_VALIDATED',   source: 'filter:validation',
+    dest: 'filter:hydration',          bus: 'DATA' },
+];
+
+// The filter factories are IDENTICAL in both configurations.
+// Only the routing table entries changed.</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>This only works if each filter is truly independent — no filter should assume what came before it or what comes after it. If Filter B depends on a stamp that Filter A adds, reordering them breaks the dependency. Keep filters independent. If an ordering dependency exists, document it in the routing table comments.</p></div>
+    <div class="pat-related">Related: Cascade (Reorder changes cascade sequence), Stamp (ordering dependencies can arise when one filter stamps and another reads the stamp)</div>
+  </div>
+
+  <div class="pat" id="pat-14">
+    <div class="pat-name">14. The Counter</div>
+    <div class="pat-l21">L21: Five counters with configurable triggers. The Working counter can increment on "word passes read head," "bus transfer received," or "inject delivered." Triggers are operator-configurable at runtime.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Every loop maintains counters — packets processed, errors encountered, average processing time, specific event counts. These feed health packets for the Observatory. The L21 insight: triggers are configurable. Not just "packets processed" but "orders above $300" or "cancellations from repeat customers." Counter triggers are declared as conditions in the Config Vault, updateable at runtime.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Every loop needs counters for health monitoring. Use configurable counters when the Operator needs visibility into specific business conditions that may change over time — tracking orders above a threshold, monitoring cancellation rates by customer tier, counting API calls by provider. The Sentinel pattern is built on top of Counter infrastructure.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented inside each loop factory. A counter manager receives the loop's trigger configuration from the Config Vault. On each processed event, it evaluates the triggers and increments matching counters. Periodically emits a health packet with current counter values.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Counter: configurable triggers inside a loop ──
+
+function f_createCounterManager(loopName) {
+  const v_counters = {};
+  let v_triggers = [];
+
+  return {
+    loadTriggers(triggerConfig) {
+      // Triggers from Config Vault — updateable at runtime
+      // Example: [{ name: 'high_value_orders', field: 'totalPrice',
+      //             condition: 'gt', threshold: 300 }]
+      v_triggers = triggerConfig;
+      for (const t of v_triggers) {
+        v_counters[t.name] = v_counters[t.name] || 0;
+      }
+    },
+
+    // Called after every processed packet
+    evaluate(packet) {
+      v_counters['_total'] = (v_counters['_total'] || 0) + 1;
+
+      for (const t of v_triggers) {
+        const v_value = packet.payload?.[t.field];
+        if (v_value === undefined) continue;
+        const v_match =
+          (t.condition === 'gt'  &amp;&amp; v_value > t.threshold)  ||
+          (t.condition === 'lt'  &amp;&amp; v_value < t.threshold)  ||
+          (t.condition === 'eq'  &amp;&amp; v_value === t.threshold) ||
+          (t.condition === 'gte' &amp;&amp; v_value >= t.threshold);
+        if (v_match) v_counters[t.name]++;
+      }
+    },
+
+    // Emitted as part of health packet
+    getSnapshot() {
+      return { loop: loopName, counters: { ...v_counters },
+               timestamp: Date.now() };
+    },
+  };
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Counter triggers must be declared in the Config Vault, not hardcoded. The Operator should be able to add, remove, or change trigger conditions without a code deployment. Keep counter names descriptive and stable — the Sentinel and Observatory dashboard will reference them. Reset counters on a declared schedule (per health interval), not on every packet.</p></div>
+    <div class="pat-related">Related: Sentinel (built on counter infrastructure), Config Vault (triggers stored there), Heartbeat Absence (absence of expected counter increments is itself a signal)</div>
+  </div>
+
+  <div class="pat" id="pat-15">
+    <div class="pat-name">15. The Fanout</div>
+    <div class="pat-l21">L21: The operator can route ALU output to multiple bus destinations simultaneously. Multiple buses can be active, each carrying the same result to a different loop.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>One event triggers multiple independent subscribers. When an <code>ORDER_CREATED</code> packet fires, the inventory loop, the notification loop, the analytics loop, and the projection loop all receive it independently. None knows about the others. None depends on the others. The routing table is the fanout declaration — each subscriber is a separate entry.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Any time a single event is relevant to multiple independent consumers. Order creation triggers inventory update, customer notification, analytics tracking, and UI update — all independently. A status change triggers parent evaluation, audit logging, and notification. The Fanout is implicit in the bus model but worth naming as a conscious design decision because adding a new subscriber is a routing table entry, not a code change.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Not a code pattern inside a loop — it's a routing table pattern. The producing loop emits one packet. The routing table declares multiple subscribers for that packet type. The bus delivers a copy to each subscriber. The subscribers process independently and cannot affect each other.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Fanout: ORDER_CREATED reaches four independent consumers ──
+
+// Routing table entries — one producer, four consumers
+const FANOUT_ORDER_CREATED = [
+  { type: 'ORDER_CREATED', source: 'vault:orders',
+    dest: 'compute:orderProjection',   bus: 'VAULT' },
+  { type: 'ORDER_CREATED', source: 'vault:orders',
+    dest: 'signal:customerNotify',     bus: 'VAULT' },
+  { type: 'ORDER_CREATED', source: 'vault:orders',
+    dest: 'compute:analytics',          bus: 'VAULT' },
+  { type: 'ORDER_CREATED', source: 'vault:orders',
+    dest: 'filter:inventoryCheck',     bus: 'VAULT' },
+];
+
+// The Vault Loop emits once — it doesn't know about the fanout
+function createVaultOrders({ bus, db }) {
+  // ... on successful insert:
+  bus.vault.emit({
+    type: 'ORDER_CREATED',
+    marker: 'live',
+    payload: record,
+    source: 'vault:orders',
+  });
+  // That's it. The bus handles delivery to all four subscribers.
+  // Adding a fifth subscriber = one routing table entry.
+  // The Vault Loop code: unchanged.
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The producing loop must not know about or depend on its subscribers. If you find the producer checking whether a specific subscriber received the packet, the fanout discipline is broken. Each subscriber handles its own errors independently — a failure in the notification loop does not affect the analytics loop. If a subscriber's failure should stop the overall operation, it's not a fanout — it's a workflow pipeline.</p></div>
+    <div class="pat-related">Related: Projection (subscribes to fanned-out events), Echo (the echo itself is often fanned out to multiple consumers)</div>
+  </div>
+
+  <div class="pat" id="pat-16">
+    <div class="pat-name">16. The Debounce</div>
+    <div class="pat-l21">L21: The operator waits for a loop to stabilize — watching values circulate and settle — before reading the result and routing it onward.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Filter Loop that coalesces rapid-fire events, forwarding only the last event after a declared quiet period. A user types in a search field; you don't fire a query on every keystroke — you wait until they pause and then forward the final input. A status field gets updated three times in two seconds; downstream loops only need the final value.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When the same event fires rapidly and downstream consumers only need the final value, not every intermediate state. Search-as-you-type. Slider adjustments. Status fields that bounce through intermediate states before settling. Config changes that trigger rebuilds — debounce so only the final config fires the rebuild. Distinct from Bridge (which manages throughput at the transport level). Debounce manages event frequency at the semantic level.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Filter Loop. Holds the most recent event in scratch state with a timer. Each new event resets the timer. When the timer expires (quiet period elapsed), the Filter forwards the held event. The debounce interval is declared per packet type.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Debounce: coalesce rapid search input ──
+
+function createFilterSearchDebounce({ bus }) {
+  const DEBOUNCE_MS = 300;
+  const v_pending = new Map(); // keyed by debounce group
+
+  bus.data.on('SEARCH_INPUT_RAW', (packet) => {
+    const v_key = packet.payload.fieldId || 'default';
+
+    // Clear existing timer for this key
+    if (v_pending.has(v_key)) {
+      clearTimeout(v_pending.get(v_key).timer);
+    }
+
+    // Hold the latest event and start a new timer
+    const v_timer = setTimeout(() => {
+      // Quiet period elapsed — forward the held event
+      bus.data.emit({
+        type: 'SEARCH_INPUT_DEBOUNCED',
+        marker: 'live',
+        payload: packet.payload,
+        source: 'filter:searchDebounce',
+      });
+      v_pending.delete(v_key);
+    }, DEBOUNCE_MS);
+
+    v_pending.set(v_key, { packet, timer: v_timer });
+  });
+}
+
+// ── Status change debounce (different interval) ──
+
+function createFilterStatusDebounce({ bus }) {
+  const DEBOUNCE_MS = 1000; // Status changes settle slower
+  const v_pending = new Map();
+
+  bus.data.on('STATUS_CHANGE_RAW', (packet) => {
+    const v_key = packet.payload.recordId;
+
+    if (v_pending.has(v_key)) {
+      clearTimeout(v_pending.get(v_key).timer);
+    }
+
+    const v_timer = setTimeout(() => {
+      bus.data.emit({
+        type: 'STATUS_CHANGE',
+        marker: 'live',
+        payload: packet.payload,
+        source: 'filter:statusDebounce',
+      });
+      v_pending.delete(v_key);
+    }, DEBOUNCE_MS);
+
+    v_pending.set(v_key, { packet, timer: v_timer });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The <code>v_pending</code> map is scratch state that persists across events — this is the one pattern where scratch state legitimately lives longer than a single event handler. If the loop crashes, pending debounced events are lost. For critical events (payment status changes), do not debounce — use the Bridge pattern instead. Debounce intervals should come from the Config Vault, not hardcoded values. Key the debounce by the appropriate field (record ID, field ID, user session) to avoid unrelated events resetting each other's timers.</p></div>
+    <div class="pat-related">Related: Bridge (transport-level throughput management vs. semantic-level frequency), Scratch (debounce pending state is a special case of scratch)</div>
+    <div class="callout note"><div class="callout-label">Adopted Pattern</div>Debounce is a well-established technique originating in electronics (suppressing mechanical switch bounce) and widely adopted by the JavaScript and UI ecosystem. The name and concept are used without modification. The L21 analog is genuine — the operator deliberately pauses before routing a settled input — but the pattern was already named and in broad use before Loop MMT was conceived. Loop MMT adopts it rather than claims it.</div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="chapter">
+  <div class="chapter-number">Category 3</div>
+  <div class="chapter-title">Workflow Patterns</div>
+  <p>Patterns for multi-step orchestration within the Workflow Loop's pipeline spec system.</p>
+
+  <div class="pat" id="pat-17">
+    <div class="pat-name">17. The Split-Merge</div>
+    <div class="pat-l21">L21: Multiple buses can transfer data simultaneously between different loops. The operator configures parallel data paths.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Extends pipeline specs to support parallel step groups. The Workflow Loop dispatches all steps in a group simultaneously, waits for completion, then proceeds with merged results. <code>merge: 'all'</code> waits for every branch. <code>merge: 'any'</code> proceeds on the first response (useful for redundant fallback paths). <code>onBranchFail: 'abort'</code> kills the group. <code>onBranchFail: 'skip'</code> lets surviving branches complete.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When multiple independent operations can run concurrently: compute price while checking inventory while verifying payment method. When you need redundant paths: try primary API, try fallback API, use whichever responds first. When the total latency of sequential steps is unacceptable but the steps are independent.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Declared in the pipeline spec using a <code>type: 'split'</code> step. The Workflow engine dispatches all branches simultaneously, tracks completions, and merges results according to the declared <code>merge</code> strategy. Subsequent steps access branch results via <code>needs: ['parallel_step.*']</code>.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Split-Merge: parallel order preparation ──
+
+const PIPELINE_CREATE_ORDER = {
+  name: 'create_order',
+  trigger: { type: 'ORDER_VALIDATED', bus: 'DATA' },
+  steps: [
+    {
+      name: 'parallel_prep',
+      type: 'split',
+      branches: [
+        {
+          name: 'price',
+          emit: { type: 'COMPUTE_PRICE', bus: 'DATA' },
+          expect: 'PRICE_CALCULATED',
+          timeout: 5000,
+          onFail: 'abort',
+        },
+        {
+          name: 'inventory',
+          emit: { type: 'CHECK_INVENTORY', bus: 'VAULT' },
+          expect: 'INVENTORY_CONFIRMED',
+          timeout: 3000,
+          onFail: 'abort',
+        },
+        {
+          name: 'payment_method',
+          emit: { type: 'VERIFY_PAYMENT_METHOD', bus: 'SIGNAL' },
+          expect: 'PAYMENT_METHOD_VERIFIED',
+          timeout: 10000,
+          onFail: 'abort',
+        },
+      ],
+      merge: 'all',          // Wait for all three
+      onBranchFail: 'abort', // If any fails, abort the group
+    },
+    {
+      name: 'persist_order',
+      emit: { type: 'CREATE_ORDER', bus: 'VAULT' },
+      needs: ['parallel_prep.*'], // Access all branch results
+      expect: 'ORDER_CREATED',
+      timeout: 5000,
+      onFail: 'escalate',
+    },
+  ],
+};</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Each branch must be truly independent — if branch B depends on branch A's result, they cannot run in parallel. Set per-branch timeouts, not just a group timeout — a slow inventory check shouldn't be masked by a fast price calculation. The <code>merge: 'any'</code> strategy is powerful for redundant fallback paths but be careful: the "losing" branch may still complete and its side effects (if any) must be handled.</p></div>
+    <div class="pat-related">Related: Batch (parallel processing of a set), Cascade Update (may use Split-Merge for parallel child evaluations)</div>
+    <div class="callout note"><div class="callout-label">Convergent Pattern</div>The Split-Merge is the Fork-Join pattern in parallel computing — dispatch independent tasks simultaneously, wait for results, then continue. The term "fork-join" dates to concurrent programming literature of the 1960s and is the execution model behind Java's ForkJoinPool, OpenMP, and similar constructs. Loop MMT uses different terminology because the implementation lives inside a pipeline spec rather than as a threading primitive, but the underlying shape is not new.</div>
+  </div>
+
+  <div class="pat" id="pat-18">
+    <div class="pat-name">18. The Cascade Update</div>
+    <div class="pat-l21">L21: Closing a gate on the Big Loop affects data that then passes through PM and TG inspection — a change in one part of the pipeline affects evaluation downstream.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Workflow pattern for hierarchical state propagation. When a child record changes state, the pipeline evaluates whether the parent should also change. Two pipeline spec features enable this: conditional steps (<code>condition</code> field — execute only if prior results satisfy a predicate) and recursive pipelines (<code>recursion</code> block with <code>maxDepth</code> guard).</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When records have parent-child relationships and state changes should propagate through the hierarchy. All tasks in a project are done → project status should change to done. A parent record is archived → all children should be archived. An order's line items all ship → order status should change to shipped. Works both upward (child completes → parent evaluates) and downward (parent archived → children archived).</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The pipeline's first step fetches siblings (for upward cascades) or children (for downward cascades). A conditional step evaluates whether the parent/children should transition. If the condition is met, the transition fires and the pipeline can recursively trigger itself for the next level of the hierarchy, up to a declared <code>maxDepth</code>.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Cascade Update: task completion propagates to project ──
+
+const PIPELINE_CASCADE_TASK = {
+  name: 'cascade_task_completion',
+  trigger: {
+    type: 'STATUS_CHANGE',
+    match: { newStatus: 'done', recordType: 'task' },
+  },
+  steps: [
+    {
+      name: 'fetch_siblings',
+      emit: { type: 'FETCH_TASKS', bus: 'VAULT' },
+      queryParams: (trigger) => ({
+        parentId: trigger.payload.parentId,
+      }),
+      expect: 'TASKS_FETCHED',
+      onFail: 'abort',
+    },
+    {
+      name: 'evaluate_parent',
+      emit: { type: 'EVALUATE_COMPLETION', bus: 'DATA' },
+      needs: ['fetch_siblings.payload'],
+      expect: 'EVALUATION_RESULT',
+      onFail: 'abort',
+    },
+    {
+      name: 'transition_parent',
+      emit: { type: 'STATUS_CHANGE', bus: 'DATA' },
+      needs: ['evaluate_parent.payload'],
+      // Only fire if ALL siblings are done
+      condition: (results) =>
+        results.evaluate_parent.payload.allComplete === true,
+      expect: 'STATUS_VALIDATED',
+      onFail: 'abort',
+    },
+  ],
+  recursion: {
+    enabled: true,
+    maxDepth: 10,
+    trigger: 'transition_parent.success',
+  },
+};</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Always set a <code>maxDepth</code> guard — without it, a circular hierarchy or a very deep tree causes infinite recursion. If the hierarchy exceeds the depth limit, the cascade stops and emits <code>CASCADE_DEPTH_EXCEEDED</code> for the operator. The conditional step's predicate must be deterministic — the same inputs must always produce the same decision. Downward cascades combine with the Batch pattern: "archive all children of this parent" is a batch status update.</p></div>
+    <div class="pat-related">Related: Batch (downward cascades are batch operations), Split-Merge (parallel child evaluation)</div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="chapter">
+  <div class="chapter-number">Category 4</div>
+  <div class="chapter-title">Resilience Patterns</div>
+  <p>Patterns for monitoring, detecting anomalies, and recovering from failures.</p>
+
+  <div class="pat" id="pat-19">
+    <div class="pat-name">19. The Sentinel</div>
+    <div class="pat-l21">L21: The operator monitors running match counts on Pattern Matchers and counter values to detect unusual patterns over time — not just individual values, but trends.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A Filter Loop that subscribes to the archive buffer (or to live traffic via passive observation) and applies pattern detection over a sliding window. Is the cancellation rate unusually high? More than five <code>LOOP_ERROR</code> events in an hour? One operator creating orders at triple the normal rate? The Sentinel emits <code>ANOMALY_DETECTED</code> on the Signal Bus. It is a watchdog, not a gatekeeper — it does not block traffic.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When you need to detect patterns that emerge over time, not individual bad values. A single error is handled by the Loop Recovery Protocol. Five errors in a row from the same loop is an anomaly worth investigating. A sudden spike in cancellations. An operator account with unusual activity. The Sentinel watches trends; the Counter provides the data; the Operator Alert loop delivers the notification.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Filter Loop using passive observation (reads traffic without being a routing destination). Maintains a sliding window of recent events. Evaluates anomaly rules on each new event. Emits <code>ANOMALY_DETECTED</code> when a rule fires. Rules are declared in the Config Vault and updateable at runtime.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Sentinel: anomaly detection with sliding window ──
+
+function createFilterSentinel({ bus }) {
+  const WINDOW_MS = 60 * 60 * 1000; // 1 hour window
+  const v_events = []; // sliding window
+
+  // Anomaly rules — from Config Vault, updateable at runtime
+  let v_rules = [
+    { name: 'error_spike',  type: 'LOOP_ERROR',
+      threshold: 5,         window: WINDOW_MS },
+    { name: 'cancel_spike', type: 'ORDER_CANCELLED',
+      threshold: 10,        window: WINDOW_MS },
+  ];
+
+  // Passive observation — sees all traffic, not a routing destination
+  bus.data.observe((packet) => {
+    v_events.push({ type: packet.type, timestamp: Date.now(),
+                    source: packet.source });
+
+    // Prune events outside the window
+    const v_cutoff = Date.now() - WINDOW_MS;
+    while (v_events.length > 0 &amp;&amp; v_events[0].timestamp < v_cutoff) {
+      v_events.shift();
+    }
+
+    // Evaluate rules
+    for (const rule of v_rules) {
+      const v_matches = v_events.filter(
+        (e) => e.type === rule.type &amp;&amp;
+               e.timestamp > Date.now() - rule.window
+      );
+      if (v_matches.length >= rule.threshold) {
+        bus.signal.emit({
+          type: 'ANOMALY_DETECTED',
+          payload: {
+            rule: rule.name,
+            count: v_matches.length,
+            threshold: rule.threshold,
+            window: rule.window,
+            samples: v_matches.slice(-3), // Last 3 for context
+          },
+          source: 'filter:sentinel',
+        });
+      }
+    }
+  });
+
+  // Listen for rule updates from Config Vault
+  bus.data.on('CONFIG_UPDATED', (packet) => {
+    if (packet.payload.key === 'sentinel_rules') {
+      v_rules = packet.payload.value;
+    }
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The Sentinel is a watchdog, not a gatekeeper — it emits alerts but does not block traffic. If you need to block traffic based on an anomaly, that's a rate limiter or a circuit breaker, not a Sentinel. Rules must come from the Config Vault so the Operator can adjust thresholds without a deployment. Be careful with the sliding window size — too large and memory grows; too small and patterns are missed. The Sentinel uses passive observation (<code>bus.observe</code>) not subscription (<code>bus.on</code>) — it should not appear as a routing destination.</p></div>
+    <div class="pat-related">Related: Counter (provides the data the Sentinel watches), Heartbeat Absence (absence detection vs. anomaly detection), Operator Alert (delivers Sentinel findings)</div>
+  </div>
+
+  <div class="pat" id="pat-20">
+    <div class="pat-name">20. The Heartbeat Absence</div>
+    <div class="pat-l21">L21: If a loop stops circulating data (gate stuck, clock stopped), the operator notices because the read head stops displaying new values. The absence of expected activity is itself a signal.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>The Observatory (or Operator Alert loop) maintains a table of expected periodic events and their tolerance windows. If the daily reconciliation usually runs at 11pm and it is 11:05 with no <code>RECONCILE_REQUEST</code> packet, the Clock may be dead or the schedule table failed to load. A <code>MISSING_EVENT</code> alert fires. Most monitoring alerts on presence (an error occurred). This alerts on absence (an expected event did not occur).</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When the system has expected periodic events — scheduled jobs, heartbeats, health checks — and the absence of those events is itself a problem. The Clock should emit heartbeats every 30 seconds. The daily reconciliation should run at 11pm. The health check should fire every 5 minutes. If any of these stop happening, something is broken — and no error event will be emitted because the thing that would emit the event is the thing that's broken.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented in the Operator Alert loop or as a dedicated absence monitor. Maintains a table of expected events with their schedules and tolerance windows. On each tick (driven by its own timer, not by the Clock — because the Clock might be the thing that died), it checks whether each expected event has been seen within its tolerance window.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── Heartbeat Absence: detect missing expected events ──
+
+function createFilterAbsenceMonitor({ bus }) {
+  const v_expectedEvents = [
+    { type: 'HEALTH_HEARTBEAT', source: 'clock',
+      intervalMs: 30000, toleranceMs: 10000 },
+    { type: 'RECONCILE_REQUEST', source: 'clock',
+      intervalMs: 24 * 60 * 60 * 1000, toleranceMs: 5 * 60 * 1000 },
+  ];
+
+  const v_lastSeen = new Map();
+
+  // Track when expected events arrive
+  bus.data.observe((packet) => {
+    for (const expected of v_expectedEvents) {
+      if (packet.type === expected.type) {
+        v_lastSeen.set(expected.type, Date.now());
+      }
+    }
+  });
+
+  // Check on our OWN timer — not the Clock
+  // (because the Clock might be dead)
+  setInterval(() => {
+    const v_now = Date.now();
+    for (const expected of v_expectedEvents) {
+      const v_last = v_lastSeen.get(expected.type) || 0;
+      const v_elapsed = v_now - v_last;
+      const v_deadline = expected.intervalMs + expected.toleranceMs;
+
+      if (v_elapsed > v_deadline) {
+        bus.signal.emit({
+          type: 'MISSING_EVENT',
+          payload: {
+            expectedType: expected.type,
+            expectedSource: expected.source,
+            lastSeenMs: v_last,
+            elapsedMs: v_elapsed,
+            deadlineMs: v_deadline,
+          },
+          source: 'filter:absenceMonitor',
+        });
+      }
+    }
+  }, 15000); // Check every 15 seconds
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The absence monitor must run on its own timer, not on the Clock — because the Clock dying is one of the primary failure modes it needs to detect. Set tolerance windows that are meaningful: a heartbeat expected every 30 seconds with a 10-second tolerance fires at 40 seconds of silence. Avoid false alarms by calibrating tolerances to real-world variance. The expected event table should be configurable via the Config Vault so new scheduled events are automatically monitored.</p></div>
+    <div class="pat-related">Related: Sentinel (detects anomalous presence; Heartbeat Absence detects anomalous absence), Counter (absence of expected counter increments), Clock (often the monitored source)</div>
+  </div>
+
+  <div class="pat" id="pat-21">
+    <div class="pat-name">21. The Replay</div>
+    <div class="pat-l21">L21: The .loop session recording file captures every operator action and machine event. A .loop file can be read to reconstruct exactly what happened, in order, at any point in the session.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>The Transit Gate's archive buffer stores recent bus traffic. The Replay pattern reads the buffer and re-emits packets in order — either to the live system (reprocess a failed batch) or to a test harness (reproduce a bug). Operator reports: "the price was wrong on the 3pm order." Pull the archive buffer, find the <code>COMPUTE_PRICE</code> packet, inspect its inputs, replay it through the Pricing Engine in isolation. No guessing. The exact packets are in the buffer.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Post-incident debugging: what happened, exactly, with the exact data? Reprocessing a failed batch after fixing the bug. Regression testing: replay yesterday's traffic through today's code and compare outputs. Any situation where you need to answer "what exactly happened" with certainty rather than reconstruction.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Three operations: extract (pull packets from the archive buffer by time range and type), replay (re-emit the packets to a target loop or test harness in order), and compare (diff the replay output against the original output). For isolated replay, the target loop is wired to a Phantom bus so replayed packets don't affect the live system.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Replay: extract, replay, compare ──
+
+// Extract packets from the archive buffer
+function f_extractFromArchive(bus, options) {
+  const { packetType, startTime, endTime, source } = options;
+  return bus.data.getArchive({
+    type: packetType,
+    after: startTime,
+    before: endTime,
+    source: source || undefined,
+  });
+}
+
+// Replay through a specific loop in isolation
+async function f_replayThroughLoop(packets, loopFactory, capabilities) {
+  // Create an isolated bus for replay — not the live bus
+  const v_replayBus = f_createBus('replay');
+  const v_results = [];
+
+  // Capture outputs
+  v_replayBus.data.observe((packet) => {
+    v_results.push(packet);
+  });
+
+  // Create the loop with the replay bus
+  const v_loop = loopFactory({ bus: v_replayBus, ...capabilities });
+
+  // Feed the extracted packets in order
+  for (const packet of packets) {
+    v_replayBus.data.emit(packet);
+    // Allow async processing to complete
+    await new Promise((r) => setTimeout(r, 10));
+  }
+
+  return v_results;
+}
+
+// Compare replay output against original
+function f_compareResults(original, replayed) {
+  const v_diffs = [];
+  for (let i = 0; i < Math.max(original.length, replayed.length); i++) {
+    const o = original[i];
+    const r = replayed[i];
+    if (!o || !r || JSON.stringify(o.payload) !== JSON.stringify(r.payload)) {
+      v_diffs.push({ index: i, original: o, replayed: r });
+    }
+  }
+  return v_diffs;
+}
+
+// Usage: "The price was wrong on the 3pm order"
+// Step 1: Extract
+const v_packets = f_extractFromArchive(bus, {
+  packetType: 'ORDER_HYDRATED',
+  startTime: '2026-03-30T15:00:00',
+  endTime: '2026-03-30T15:05:00',
+});
+// Step 2: Replay through the pricing engine
+const v_replayResults = await f_replayThroughLoop(
+  v_packets, createComputePricing, {}
+);
+// Step 3: Compare
+const v_diffs = f_compareResults(v_originalOutputs, v_replayResults);</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Replay must use an isolated bus — never replay into the live system unless you explicitly intend to reprocess (and even then, use idempotency keys). The archive buffer has a finite size; packets older than the buffer window are gone. For mission-critical replay capability, increase the archive buffer depth or persist it to a Vault. Replay timing may not match original timing — async operations may resolve in different order. Compare payloads, not timing.</p></div>
+    <div class="pat-related">Related: Phantom (provides controlled loop behavior for replay testing), Archive Buffer (the data source for replay)</div>
+    <div class="callout note"><div class="callout-label">Convergent Pattern</div>Replay is a core concept in Event Sourcing, developed by Greg Young and the CQRS/ES community. The ability to reconstruct state by replaying a log of events is foundational to that approach. Loop MMT arrived at the same shape through the L21 session recording — the .loop file capturing every operator action for reconstruction — and implements it at the bus level rather than as an application-level event store. The problems addressed are the same: debug by inspecting the exact sequence of events, not reconstructed memory.</div>
+  </div>
+
+  <div class="pat" id="pat-28">
+    <div class="pat-name">28. The Dead Letter</div>
+    <div class="pat-l21">L21: The Pattern Matcher eject buffer when no bus is configured to drain it — data that matched but has nowhere to go sits in the bridge until the operator deals with it.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A dedicated holding area for items that have exhausted all processing attempts. When a Signal Loop fails to send a notification after all retries, when a workflow step fails and the Operator resolves the escalation with "skip it," when a packet fails contract validation repeatedly — where does the failed item go? The Dead Letter queue holds it. It is not discarded. It is not retried automatically. It waits for the Operator to investigate and decide: fix and reprocess, or discard deliberately.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Any constellation with Signal Loops that deliver to external services (notifications, webhooks, email). Any constellation with Batch operations where partial failure is possible. Any operation where the cost of silently dropping a failed item is unacceptable but the cost of indefinite retries is also unacceptable. The Dead Letter queue is the third option between "retry forever" and "silently lose it."</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Vault Loop (or a dedicated table within an existing Vault). When an operation exhausts its retry limit, the failed item is written to the dead letter table with the original payload, error details, retry count, and timestamp. The Clock periodically sweeps the dead letter table and emits a health packet with the count. The Operator Alert loop fires when the count exceeds a threshold. The Operator reviews dead letters, fixes the root cause, and either reprocesses them (re-emit to the original pipeline) or archives them deliberately.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Dead Letter: catch failed items, hold for operator ──
+
+function f_sendToDeadLetter(bus, failedItem) {
+  bus.vault.emit({
+    type: 'DEAD_LETTER_WRITE',
+    marker: 'live',
+    payload: {
+      id: f_generateId(),
+      originalType: failedItem.type,
+      originalPayload: failedItem.payload,
+      failureReason: failedItem.error,
+      retryCount: failedItem.retries,
+      failedAt: new Date().toISOString(),
+      source: failedItem.source,
+      status: 'pending_review',
+    },
+    source: 'system:deadLetter',
+  });
+}
+
+// In a Signal Loop — after retries exhaust
+function createSignalNotifications({ bus, services }) {
+  bus.signal.on('SEND_NOTIFICATION', async (packet) =&gt; {
+    let v_retries = 0;
+    const MAX_RETRIES = 3;
+
+    while (v_retries &lt; MAX_RETRIES) {
+      try {
+        await services.sms.send(packet.payload);
+        bus.signal.emit({
+          type: 'NOTIFICATION_SENT', marker: 'live',
+          payload: { notificationId: packet.payload.id },
+          source: 'signal:notifications',
+        });
+        return;
+      } catch (err) {
+        v_retries++;
+        if (v_retries &lt; MAX_RETRIES) {
+          await new Promise((r) =&gt;
+            setTimeout(r, 1000 * Math.pow(2, v_retries)));
+        }
+      }
+    }
+    // All retries exhausted — dead letter
+    f_sendToDeadLetter(bus, {
+      type: 'SEND_NOTIFICATION', payload: packet.payload,
+      error: 'Max retries exhausted', retries: MAX_RETRIES,
+      source: 'signal:notifications',
+    });
+  });
+}
+
+// Operator reprocesses a dead letter
+bus.data.on('REPROCESS_DEAD_LETTER', async (packet) =&gt; {
+  const v_item = await bus.vault.pull({
+    type: 'FETCH_DEAD_LETTER',
+    payload: { id: packet.payload.deadLetterId },
+  });
+  if (v_item.marker !== 'live') return;
+
+  // Re-emit to original pipeline
+  bus.data.emit({
+    type: v_item.payload.originalType, marker: 'live',
+    payload: v_item.payload.originalPayload,
+    source: 'system:deadLetter:reprocess',
+  });
+
+  // Mark reprocessed
+  bus.vault.emit({
+    type: 'DEAD_LETTER_UPDATE',
+    payload: { id: v_item.payload.id, status: 'reprocessed' },
+    source: 'system:deadLetter',
+  });
+});</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Dead letters are not a retry mechanism — they are a holding area for investigation. The dead letter table must capture the complete original payload so reprocessing is possible. Dead letters should have a Retention Gate — pending items are never auto-purged, but reprocessed and archived items can be. The Operator must be alerted when dead letters accumulate; a queue that grows silently defeats its purpose.</p></div>
+    <div class="pat-related">Related: Batch (partial failures produce dead letters), Replay (reprocessing is a targeted replay), Heartbeat Absence (absence of dead letter sweeps is itself a problem)</div>
+    <div class="callout note"><div class="callout-label">Adopted Pattern</div>The Dead Letter Queue is a named pattern from <em>Enterprise Integration Patterns</em> (Gregor Hohpe and Bobby Woolf, 2003) and is standard infrastructure in modern message brokers — RabbitMQ, AWS SQS, Azure Service Bus, and others all implement it under this name. Loop MMT adopts the pattern unchanged. The L21 analog (the PM eject buffer with nowhere to drain) is a genuine independent convergence, but the name and the concept belong to messaging systems literature. Credit where it is due.</div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="chapter">
+  <div class="chapter-number">Category 5</div>
+  <div class="chapter-title">Infrastructure Patterns</div>
+  <p>Patterns for infrastructure components that support the constellation.</p>
+
+  <div class="pat" id="pat-22">
+    <div class="pat-name">22. The Inlet</div>
+    <div class="pat-l21">L21: External Bus E receiving data from outside the machine.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A recognized sub-pattern of the Working Loop for continuous external data streams — WebSocket, Server-Sent Events, MQTT, or polling intervals on REST endpoints. Not a new loop type. It is a Working Loop with additional infrastructure for stream management: connection lifecycle, back-pressure handling, and stream health telemetry.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When the constellation receives continuous data from an external source: GPS fleet tracking, market data feeds, IoT sensor streams, real-time chat messages, live sports scores. Any data source that pushes to the constellation rather than waiting to be pulled.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Implemented as a Working Loop with three additional concerns. Connection lifecycle: manages establishment, authentication, reconnection with exponential backoff, and graceful shutdown — all configured in the Constellation Spec. Back-pressure: when the stream is faster than the system can process, a declared strategy applies (<code>buffer</code>, <code>sample</code>, <code>latest</code>, or <code>drop</code>). Stream health: emits health packets with connection state, ingest rate, back-pressure state, and drop count.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Inlet: GPS fleet tracking stream ──
+
+const INLET_CONFIG = {
+  name:       'inlet:gps',
+  source:     { type: 'websocket', url: 'wss://fleet.example.com/positions' },
+  auth:       { type: 'bearer', tokenFrom: 'config:fleet_api_key' },
+  reconnect:  { backoff: 'exponential', maxDelay: 30000, maxRetries: 100 },
+  backpressure: { strategy: 'latest', keyField: 'payload.vehicleId' },
+  rateLimit:  { maxPerSecond: 100 },
+};
+
+function createWorkingInletGps({ bus }) {
+  let v_ws = null;
+  let v_retryCount = 0;
+  let v_connected = false;
+  const v_bridge = f_createBridge(
+    INLET_CONFIG.backpressure.strategy, 100
+  );
+
+  function f_connect() {
+    v_ws = new WebSocket(INLET_CONFIG.source.url);
+    v_ws.onopen = () => {
+      v_connected = true;
+      v_retryCount = 0;
+      bus.data.emit({
+        type: 'HEALTH_HEARTBEAT',
+        payload: { loop: 'inlet:gps', status: 'connected' },
+        source: 'working:inletGps',
+      });
+    };
+
+    v_ws.onmessage = (event) => {
+      const v_raw = JSON.parse(event.data);
+      // Translate external format to internal packet
+      v_bridge.write({
+        type: 'INTAKE_RAW',
+        payload: {
+          subtype: 'gps_position',
+          vehicleId: v_raw.vid,
+          lat: v_raw.lt,
+          lng: v_raw.ln,
+          speed: v_raw.spd,
+          timestamp: v_raw.ts,
+        },
+        source: 'working:inletGps',
+        operatorId: 'system:inlet:gps',
+      });
+    };
+
+    v_ws.onclose = () => {
+      v_connected = false;
+      f_reconnect();
+    };
+  }
+
+  function f_reconnect() {
+    if (v_retryCount >= INLET_CONFIG.reconnect.maxRetries) {
+      bus.signal.emit({
+        type: 'DEPENDENCY_OFFLINE',
+        payload: { source: 'inlet:gps', reason: 'max_retries_exceeded' },
+        source: 'working:inletGps',
+      });
+      return;
+    }
+    const v_delay = Math.min(
+      1000 * Math.pow(2, v_retryCount),
+      INLET_CONFIG.reconnect.maxDelay
+    );
+    v_retryCount++;
+    setTimeout(f_connect, v_delay);
+  }
+
+  // Drain bridge to bus at controlled rate
+  setInterval(() => {
+    v_bridge.drain((packet) => bus.data.emit(packet));
+  }, 1000 / INLET_CONFIG.rateLimit.maxPerSecond);
+
+  f_connect();
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Inlet-injected packets must pass through the Auth Gate with a system-level identity (<code>operatorId: 'system:inlet:gps'</code>) — they are distinguishable from human actions in the audit trail. The reconnection logic must use exponential backoff with a maximum delay and a maximum retry count. After max retries, emit <code>DEPENDENCY_OFFLINE</code> and stop attempting. The back-pressure strategy is a design decision declared in the Constellation Spec — <code>latest</code> is right for position updates (only the current position matters), <code>buffer</code> is right for events that must not be lost.</p></div>
+    <div class="pat-related">Related: Bridge (Inlet uses Bridge for back-pressure), Translator (Inlet performs translation as part of ingestion), Heartbeat Absence (monitors Inlet health)</div>
+  </div>
+
+  <div class="pat" id="pat-23">
+    <div class="pat-name">23. Document Generation</div>
+    <div class="pat-l21">No direct L21 analog.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A two-loop pattern for producing formatted output. A Compute Loop takes business data and produces formatted content (HTML template populated with order data, a PDF layout, a printable tag). A Signal Loop handles the delivery channel — print, download, email attachment. The Compute Loop produces; the Signal Loop delivers. Neither crosses into the other's responsibility.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When the application needs to produce formatted output: receipts, reports, printable labels, export files, email bodies. The formatting logic (how to lay out an order receipt) is a Compute concern. The delivery logic (how to send it as an email attachment) is a Signal concern. Separating them means adding a new delivery channel requires only a new Signal Loop subscription, not changes to formatting logic.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The Workflow pipeline triggers the document generation. The Compute Loop receives the business data, applies a template, and emits a <code>DOCUMENT_GENERATED</code> packet with the formatted content. The Signal Loop subscribes and handles delivery. Multiple Signal Loops can subscribe for different channels (print, email, download) — this is a Fanout.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── Document Generation: order receipt ──
+
+// Compute Loop — produces the formatted content
+function createComputeReceiptGenerator({ bus }) {
+  bus.data.on('GENERATE_RECEIPT', async (packet) => {
+    const v_order = packet.payload;
+
+    // Apply template — produces HTML string
+    const v_html = f_applyTemplate('receipt', {
+      orderNumber:  v_order.orderId,
+      customerName: v_order.customer.name,
+      items:        v_order.items,
+      totalPrice:   v_order.totalPrice,
+      date:         new Date().toLocaleDateString(),
+    });
+
+    bus.data.emit({
+      type: 'DOCUMENT_GENERATED',
+      marker: 'live',
+      payload: {
+        documentType: 'receipt',
+        format: 'html',
+        content: v_html,
+        metadata: { orderId: v_order.orderId },
+      },
+      source: 'compute:receiptGenerator',
+    });
+  });
+}
+
+// Signal Loop — handles print delivery
+function createSignalPrint({ bus, services }) {
+  bus.signal.on('DOCUMENT_GENERATED', (packet) => {
+    if (packet.payload.documentType === 'receipt') {
+      services.printer.print(packet.payload.content);
+    }
+  });
+}
+
+// Signal Loop — handles email delivery (separate loop, same event)
+function createSignalEmail({ bus, services }) {
+  bus.signal.on('DOCUMENT_GENERATED', (packet) => {
+    if (packet.payload.documentType === 'receipt') {
+      services.email.send({
+        to: packet.payload.metadata.customerEmail,
+        subject: 'Your Receipt',
+        html: packet.payload.content,
+      });
+    }
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The Compute Loop must not know about or reference delivery channels. If you find the receipt generator checking whether to email or print, the separation is broken. Templates should be stored in the Config Vault so they can be updated without code changes. The <code>DOCUMENT_GENERATED</code> packet should carry the content in a format-agnostic way (HTML is a good default) — individual Signal Loops convert to their channel's format if needed.</p></div>
+    <div class="pat-related">Related: Fanout (multiple delivery channels subscribe to the same document event), Translator (delivery Signal Loops may translate content format for their channel)</div>
+  </div>
+
+  <div class="pat" id="pat-30">
+    <div class="pat-name">30. The Snapshot</div>
+    <div class="pat-l21">L21: The operator pauses to read the full state of a loop — every word, every register — capturing a frozen picture of the machine at a specific moment.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A point-in-time frozen copy of a Vault's state for reporting, backup, or migration. Different from a Projection (which is a live derived view that updates continuously). A Snapshot is a frozen copy at a specific moment — "what did the order book look like at end-of-day Thursday?" The output is immutable after it is taken.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>End-of-period reporting: daily close, monthly reconciliation, season summary. Data migration preparation: freeze current state before migrating to a new schema. Disaster recovery checkpoints. Audit compliance: provable state at a specific regulatory deadline. Any situation where the question is "what was the exact state at time T?"</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Triggered by the Clock or by Operator request. A Compute Loop pulls the full current state from the target Vault, assembles it into a frozen dataset with timestamp and metadata, and emits a <code>SNAPSHOT_COMPLETE</code> packet. A Signal Loop or Vault Loop handles storage. The Vault data continues to change after the snapshot; the snapshot itself is immutable.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Snapshot: end-of-day order freeze ──
+
+const PIPELINE_DAILY_SNAPSHOT = {
+  name: 'daily_order_snapshot',
+  trigger: { type: 'CLOCK_TICK',
+             match: { subtype: 'daily_snapshot' } },
+  steps: [
+    {
+      name: 'fetch_all_orders',
+      emit: { type: 'FETCH_ORDERS', bus: 'VAULT' },
+      queryParams: { status: ['pending', 'in_progress', 'completed'],
+                     dateRange: 'today' },
+      expect: 'ORDERS_FETCHED',
+      onFail: 'escalate',
+    },
+    {
+      name: 'build_snapshot',
+      emit: { type: 'BUILD_SNAPSHOT', bus: 'DATA' },
+      needs: ['fetch_all_orders.payload'],
+      expect: 'SNAPSHOT_BUILT',
+      onFail: 'abort',
+    },
+    {
+      name: 'persist_snapshot',
+      emit: { type: 'STORE_SNAPSHOT', bus: 'VAULT' },
+      needs: ['build_snapshot.payload'],
+      expect: 'SNAPSHOT_STORED',
+      onFail: 'retry', retryLimit: 3,
+    },
+  ],
+};
+
+// Compute Loop — assembles the frozen dataset
+function createComputeSnapshotBuilder({ bus }) {
+  bus.data.on('BUILD_SNAPSHOT', (packet) =&gt; {
+    const v_orders = packet.payload;
+    const v_snapshot = {
+      snapshotId: `SNAP-${new Date().toISOString().slice(0, 10)}`,
+      takenAt: new Date().toISOString(),
+      type: 'daily_orders',
+      recordCount: v_orders.length,
+      summary: {
+        totalOrders: v_orders.length,
+        totalRevenue: v_orders.reduce(
+          (sum, o) =&gt; sum + (o.totalPrice || 0), 0),
+        byStatus: f_countByField(v_orders, 'status'),
+      },
+      records: v_orders, // The full frozen dataset
+      metadata: {
+        sourceVault: 'vault:orders',
+        version: 1,
+      },
+    };
+
+    bus.data.emit({
+      type: 'SNAPSHOT_BUILT', marker: 'live',
+      payload: v_snapshot,
+      source: 'compute:snapshotBuilder',
+    });
+  });
+}
+
+// Vault Loop — persists the snapshot (separate table)
+function createVaultSnapshots({ bus, db }) {
+  bus.vault.on('STORE_SNAPSHOT', async (packet) =&gt; {
+    const { error } = await db.from('snapshots').insert({
+      snapshot_id: packet.payload.snapshotId,
+      taken_at: packet.payload.takenAt,
+      type: packet.payload.type,
+      record_count: packet.payload.recordCount,
+      summary: packet.payload.summary,
+      records: packet.payload.records,
+      metadata: packet.payload.metadata,
+    });
+    if (error) throw error;
+
+    bus.vault.emit({
+      type: 'SNAPSHOT_STORED', marker: 'live',
+      payload: { snapshotId: packet.payload.snapshotId,
+                 recordCount: packet.payload.recordCount },
+      source: 'vault:snapshots',
+    });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Snapshots must be immutable once taken — never update a snapshot record. Store snapshots in a dedicated table, not inline with business data. Apply a Retention Gate: daily snapshots retain for 90 days, monthly for 2 years. The snapshot must record its query parameters and source Vault so it can be understood independently. For large Vaults, use pagination (Batch pattern) to avoid timeout.</p></div>
+    <div class="pat-related">Related: Projection (live derived view vs. frozen point-in-time copy), Document Generation (snapshots feed report generation), Batch (large snapshots use pagination), Retention Gate (snapshots need lifecycle management)</div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="chapter">
+  <div class="chapter-number">Category 6</div>
+  <div class="chapter-title">Scale Patterns</div>
+  <p>Patterns that address testing, multi-system coordination, and deployment scenarios.</p>
+
+  <div class="pat" id="pat-24">
+    <div class="pat-name">24. Self-Routing Packets</div>
+    <div class="pat-l21">L21: Address-read mode on the Memory loop. The word's top four bits encode the destination slot. The data routes itself.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A packet that carries routing refinement information in its payload. The bus reads a field to determine additional routing beyond what the routing table specifies. An <code>ORDER_UPDATED</code> packet carries a <code>region</code> field. A multi-region deployment routes to the correct regional Vault based on the field, without separate packet types per region.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Multi-tenant or multi-region deployments where the routing table declares the general path and the payload refines it. Rather than creating <code>ORDER_UPDATED_NORTHEAST</code>, <code>ORDER_UPDATED_SOUTHEAST</code>, etc., one <code>ORDER_UPDATED</code> type carries a region field and the bus uses it to select the correct regional Vault instance.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The bus infrastructure supports a <code>routeBy</code> declaration in the routing table. When a packet matches, the bus reads the specified field from the payload and uses it to select among the available destinations. The producing loop emits a standard packet — it does not know about the routing refinement.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── Self-Routing: region-based Vault selection ──
+
+// Routing table entry with self-routing
+const ROUTE_ORDER_UPDATED = {
+  type: 'ORDER_UPDATED',
+  bus: 'VAULT',
+  source: 'compute:orderProcessing',
+  // Self-routing: read 'region' from payload to select destination
+  routeBy: {
+    field: 'payload.region',
+    destinations: {
+      'northeast': 'vault:ordersNortheast',
+      'southeast': 'vault:ordersSoutheast',
+      'midwest':   'vault:ordersMidwest',
+      'west':      'vault:ordersWest',
+    },
+    fallback: 'vault:ordersDefault',
+  },
+};
+
+// The producing loop doesn't know about regions
+function createComputeOrderProcessing({ bus }) {
+  bus.data.on('ORDER_VALIDATED', (packet) => {
+    bus.vault.emit({
+      type: 'ORDER_UPDATED',
+      marker: 'live',
+      payload: {
+        orderId: packet.payload.orderId,
+        region: packet.payload.region, // This field drives routing
+        ...packet.payload,
+      },
+      source: 'compute:orderProcessing',
+    });
+    // The bus handles the rest — routes to the correct regional Vault
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>The producing loop must not know about or depend on the self-routing mechanism. It emits a standard packet; the bus handles refinement. Always declare a <code>fallback</code> destination for payloads that don't match any route. Self-routing adds a field read to every matching packet delivery — for high-throughput scenarios, verify the performance impact. The self-routing field must be present in every packet of that type; missing fields route to the fallback.</p></div>
+    <div class="pat-related">Related: Scoped Subscription (per-subscriber filtering vs. per-packet routing)</div>
+  </div>
+
+  <div class="pat" id="pat-25">
+    <div class="pat-name">25. The Phantom</div>
+    <div class="pat-l21">No direct L21 analog. Derived from the factory + routing table architecture.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A test double on the bus. During integration testing, a Phantom loop replaces a real loop — it subscribes to the same packet types and emits the same responses, but with controlled, deterministic behavior. Test a Workflow pipeline by replacing the Vault with a Phantom that always succeeds (happy path), always fails (fault injection), or fails on the third call (retry testing). Phantoms are wired through the constellation initializer by swapping the factory — the routing table and contracts don't change.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Integration testing and scenario testing. Happy path: all Phantoms succeed. Failure injection: specific Phantoms fail to test retry, abort, compensate, and escalate strategies. Latency simulation: Phantoms add delays to test timeout behavior. State verification: Phantoms record what they received so tests can assert on the exact packets that arrived.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>A Phantom factory creates a loop that subscribes to the same types as the real loop and emits responses matching the same contracts. The factory accepts a behavior configuration that controls success/failure/delay. The constellation initializer swaps the real factory for the Phantom factory — the routing table is unchanged, the contracts are unchanged, only the behavior changes.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Phantom: test double for a Vault Loop ──
+
+function createPhantomVault(behavior) {
+  // behavior: { mode: 'success' | 'fail' | 'failOnNth',
+  //             failOn: 3, delay: 0, recorded: [] }
+
+  return function phantomVaultFactory({ bus }) {
+    let v_callCount = 0;
+
+    bus.vault.on('CREATE_ORDER', async (packet) => {
+      v_callCount++;
+      behavior.recorded.push({ type: 'CREATE_ORDER', payload: packet.payload,
+                               callNumber: v_callCount });
+
+      // Simulate latency if configured
+      if (behavior.delay > 0) {
+        await new Promise((r) => setTimeout(r, behavior.delay));
+      }
+
+      // Determine success or failure
+      const v_shouldFail =
+        behavior.mode === 'fail' ||
+        (behavior.mode === 'failOnNth' &amp;&amp; v_callCount === behavior.failOn);
+
+      if (v_shouldFail) {
+        bus.data.emit({
+          type: 'LOOP_ERROR',
+          payload: { loop: 'vault:orders', operation: 'CREATE_ORDER',
+                     error: 'Phantom: simulated failure' },
+          source: 'vault:orders', // Same source as real loop
+        });
+        return;
+      }
+
+      bus.vault.emit({
+        type: 'ORDER_CREATED',
+        marker: 'live',
+        payload: {
+          ...packet.payload,
+          id: `phantom-${v_callCount}`,
+          createdAt: new Date().toISOString(),
+        },
+        source: 'vault:orders',
+      });
+    });
+  };
+}
+
+// ── Usage in tests ──
+
+// Happy path
+const v_behavior = { mode: 'success', delay: 0, recorded: [] };
+const v_phantomFactory = createPhantomVault(v_behavior);
+// Wire into initializer instead of real createVaultOrders
+initConstellation({ 'vault:orders': v_phantomFactory });
+
+// Retry testing — fails on the 3rd call
+const v_retryBehavior = { mode: 'failOnNth', failOn: 3, delay: 0,
+                           recorded: [] };
+const v_retryPhantom = createPhantomVault(v_retryBehavior);
+
+// After test: check what the Phantom received
+console.assert(v_behavior.recorded.length === 1);
+console.assert(v_behavior.recorded[0].type === 'CREATE_ORDER');</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Phantoms must emit packets with the same <code>source</code> as the real loop — otherwise downstream loops that filter by source will break. The Phantom's contracts must match the real loop's contracts exactly. The <code>recorded</code> array is the test's primary assertion mechanism — verify that the correct packets arrived with the correct payloads. Phantoms should be created by a factory function that accepts behavior configuration, not as one-off implementations per test.</p></div>
+    <div class="pat-related">Related: Replay (Phantom provides controlled behavior for replay testing), Workflow Engine (Phantom Vaults test workflow failure strategies)</div>
+  </div>
+
+  <div class="pat" id="pat-26">
+    <div class="pat-name">26. The Tap</div>
+    <div class="pat-l21">L21: The operator can observe any single bus by watching its shift register display without affecting its operation.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>A lightweight, selective observer. Where passive observation sees all traffic on a bus, a Tap filters to a single packet type or source. Useful for targeted debugging: "show me only <code>PRICE_CALCULATED</code> packets" or "show me everything emitted by <code>workflow:cancel</code>." The Tap is an observer with a filter predicate. It can be attached and detached at runtime without modifying any loop or route.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>Debugging in development or production. "I want to see what the Pricing Engine is emitting right now." "I want to watch all <code>LOOP_ERROR</code> events for the next 5 minutes." "I want to log every packet that touches this specific order ID." The Tap is a runtime debugging tool — attach, observe, detach. No code changes, no restart.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>The bus infrastructure supports <code>bus.tap(predicate, callback)</code>. The predicate filters traffic to matching packets. The callback receives matching packets. The tap returns a handle that can be detached. The Observatory UI can offer a "tap this type" interaction.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── The Tap: runtime debugging tool ──
+
+// Tap all PRICE_CALCULATED packets
+const v_priceTap = bus.data.tap(
+  (packet) => packet.type === 'PRICE_CALCULATED',
+  (packet) => {
+    console.log('[TAP] Price calculated:',
+      packet.payload.orderId, packet.payload.totalPrice);
+  }
+);
+
+// Tap everything from a specific source
+const v_sourceTap = bus.data.tap(
+  (packet) => packet.source === 'workflow:cancel',
+  (packet) => {
+    console.log('[TAP] Cancel workflow:', packet.type, packet.payload);
+  }
+);
+
+// Tap a specific order's packets across all types
+const v_orderTap = bus.data.tap(
+  (packet) => packet.payload?.orderId === 'ORD-2026-0042',
+  (packet) => {
+    console.log('[TAP] Order 0042:', packet.type, packet.source);
+  }
+);
+
+// Detach when done
+v_priceTap.detach();
+v_sourceTap.detach();
+v_orderTap.detach();
+
+// Time-limited tap — auto-detach after 5 minutes
+function f_timedTap(bus, predicate, callback, durationMs) {
+  const v_tap = bus.tap(predicate, callback);
+  setTimeout(() => v_tap.detach(), durationMs);
+  return v_tap;
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Taps are for debugging, not for business logic. If you find yourself building business logic that depends on a tap, it should be a subscription instead. Taps should be detachable — a tap that can't be removed is a memory leak. In production, taps should be time-limited (auto-detach after N minutes) to prevent forgotten taps accumulating. Taps use the passive observation path — they do not appear as routing destinations and do not affect delivery or priority.</p></div>
+    <div class="pat-related">Related: Passive Observer (Tap is a filtered observer), Sentinel (Sentinel is a persistent observer with analysis; Tap is a temporary observer for debugging)</div>
+  </div>
+
+  <div class="pat" id="pat-27">
+    <div class="pat-name">27. Inter-Constellation Communication</div>
+    <div class="pat-l21">L21: P2P buses F and G connect two machines directly over WebRTC. The CBX protocol coordinates multi-machine challenges. Each machine operates independently; the P2P buses are the shared channel.</div>
+    <div class="pat-section"><div class="pat-section-label">What It Is</div><p>Two separate Loop MMT constellations that exchange data. Not multi-device sync (that is the Sync Bus) — two different applications talking to each other. The butcher constellation talks to an accounting constellation or a supply-ordering system. Each is a separate constellation with its own loops, buses, and spec. They communicate through a dedicated inter-constellation bus carrying a defined set of packet types — the shared protocol.</p></div>
+    <div class="pat-section"><div class="pat-section-label">When to Use It</div><p>When your application ecosystem grows beyond a single constellation. The butcher app needs to send financial data to an accounting system. The order management system needs to talk to a supply chain system. Each system is independently developed and deployed. The inter-constellation bus is the contract boundary — governed by the same packet validation that governs every other bus.</p></div>
+    <div class="pat-section"><div class="pat-section-label">How It Works</div><p>Each constellation declares the inter-constellation bus in its spec. The bus carries only the agreed-upon packet types — the shared protocol. Each constellation has a dedicated Signal Loop that translates internal events into the shared protocol and a dedicated Working Loop that receives shared protocol packets and translates them into internal events. The Translator pattern applies at both ends.</p></div>
+    <div class="pat-section"><div class="pat-section-label">Code Example</div><pre>// ── Inter-Constellation Communication ──
+// Butcher constellation → Accounting constellation
+
+// ── Shared protocol (agreed between both constellations) ──
+const INTER_CONSTELLATION_CONTRACTS = {
+  'FINANCIAL_TRANSACTION': {
+    fields: {
+      transactionId: 'string',
+      type: 'string',         // 'sale' | 'refund' | 'adjustment'
+      amountCents: 'number',
+      currency: 'string',
+      timestamp: 'string',
+      sourceSystem: 'string',
+      referenceId: 'string',  // Order ID in the source system
+    },
+  },
+};
+
+// ── Butcher constellation: outbound adapter ──
+function createSignalAccountingBridge({ bus, services }) {
+  const { interBus } = services; // The shared bus
+
+  // Listen for internal events that need to go to accounting
+  bus.signal.on('PAYMENT_CONFIRMED', (packet) => {
+    // Translate internal event → shared protocol
+    interBus.emit({
+      type: 'FINANCIAL_TRANSACTION',
+      payload: {
+        transactionId: f_generateId(),
+        type: 'sale',
+        amountCents: packet.payload.amountCents,
+        currency: packet.payload.currency,
+        timestamp: packet.payload.confirmedAt,
+        sourceSystem: 'butcher-constellation',
+        referenceId: packet.payload.orderId,
+      },
+    });
+  });
+}
+
+// ── Accounting constellation: inbound adapter ──
+function createWorkingFinancialInlet({ bus }) {
+  // Receives from the shared bus
+  interBus.on('FINANCIAL_TRANSACTION', (packet) => {
+    // Translate shared protocol → internal event
+    bus.data.emit({
+      type: 'INTAKE_RAW',
+      payload: {
+        subtype: 'external_transaction',
+        ...packet.payload,
+      },
+      source: 'working:financialInlet',
+      operatorId: 'system:interConstellation',
+    });
+  });
+}</pre></div>
+    <div class="pat-section"><div class="pat-section-label">Constraints</div><p>Neither constellation has access to the other's internal buses, loops, or spec. The shared protocol is the only coupling. Both constellations use the Translator pattern at the boundary — internal field names and packet types do not leak across the boundary. The shared protocol must be versioned independently of either constellation's internal contracts. Changes to the shared protocol require coordination between both systems' operators — this is the one place where independent development is constrained.</p></div>
+    <div class="pat-related">Related: Translator (used at both ends of the bridge), Inlet (the receiving end is an Inlet-like Working Loop), Dependency Gate (the shared bus is an external dependency)</div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="callout phi">
+  <div class="callout-label">On Patterns and the L21 Model</div>
+  Twenty-four of the thirty patterns trace directly to a specific Loop 2.1 hardware component or operating technique. This is not forced mapping — it is evidence that the hardware model captures fundamental computational patterns that recur at every level of abstraction. A marker bit and a packet liveness indicator solve the same problem in different media. A clamp gate and a bounds-enforcing filter serve the same purpose at different scales. The machine's design, because it is minimal and observable, exposes patterns that conventional software buries under layers of abstraction. Loop MMT names them and makes them explicit.
+  <br><br>
+  Three patterns — Debounce, Dead Letter, and Outbox — are adopted from prior software engineering practice without claiming independent invention. The L21 hardware offers genuine analogs for two of them, but the names and concepts were already established before Loop MMT existed. Good patterns are worth adopting. Pretending otherwise would be inaccurate and unnecessary.
+</div>
+
+</div>
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>Patterns Reference · v3</span>
+  <span>© 2026 <a href="/cdn-cgi/l/email-protection#85f6ede0e4e2f0ebf1ede0f7c5e2e8e4ece9abe6eae8" style="color:inherit;">Shea Gunther</a> · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function setSkin(id){document.body.className='skin-'+id;try{localStorage.setItem('loop-mmt-pat-skin',id);}catch(e){}document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));}
+document.addEve

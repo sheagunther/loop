@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Development History · v1</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--signal:#c01848;--font:'Courier New','Consolas',monospace;--max-w:860px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--callout-note-bg:#f0f0f4;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--signal:#ff4488;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--callout-note-bg:#1a1a1a;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--signal:#b01040;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--callout-note-bg:#fef8f0;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}
+  .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .doc-title{text-align:right;}
+  .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}
+  .doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;}
+  .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;transition:border-color .1s,color .1s,background .1s;}
+  .skin-btn:hover{border-color:var(--fg);color:var(--fg);}
+  .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .content{max-width:var(--max-w);margin:0 auto;padding:48px 48px 96px;}
+  .chapter{margin-bottom:56px;}
+  .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:16px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}
+  ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}
+  code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}
+  .callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}
+  .callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}
+  .callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}
+  .callout.note{background:var(--callout-note-bg);border-left-color:var(--border);}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .callout.tip .callout-label{color:var(--vault);}
+  .callout.warn .callout-label{color:var(--compute);}
+  .callout.key .callout-label{color:var(--working);}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}
+  .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}
+  .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .ref-table tr:last-child td{border-bottom:none;}
+  .page-footer{max-width:var(--max-w);margin:0 auto;padding:20px 48px 48px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);display:flex;justify-content:space-between;}
+  @media(max-width:700px){.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}.page-footer{padding:20px 24px 48px;}}
+</style>
+</head>
+<body class="skin-og">
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title"><div class="title-main">Development History</div><div class="build-tag">v1 · 30 March 2026</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="abstract-box">
+  <div class="abstract-label">About This Document</div>
+  <p style="margin-bottom:8px;">This is the complete development history of Loop MMT from its inception on Saturday, March 29, 2026, through the end of Sunday, March 30, 2026. Everything described here happened in roughly thirty-six hours. The methodology went from a question typed into a chat window to a fifteen-document corpus, two white papers, a generalized coordination protocol, a fiction series, and the present document — which is itself a product of the methodology it describes.</p>
+  <p style="margin-bottom:0;">This document is a historical record, not a methodology document. It does not enter required loading packs. It exists so that anyone encountering Loop MMT can see exactly how, when, and in what order the pieces were built.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 1</div>
+  <div class="chapter-title">Before the Question</div>
+
+  <p>Loop MMT did not start from nothing. It started from 325 builds of a browser-based manual flow computer called Loop 2.1 (325 at the time of the methodology extraction; 329 total by the time the corpus was complete) — an 18,000-line single-file HTML application where the human operator is the program and all data is visible at all times. That project had been built across hundreds of AI-assisted sessions over the preceding months, each session picking up from a handoff document left by the previous one. By build 325, the project had developed informal governance practices — structured handoffs, document-as-bus communication, consistent naming, readability-first coding discipline — that had never been formalized but were functioning in every session.</p>
+
+  <p>The builder was Shea Gunther, 48, of New Gloucester, Maine. Construction worker. No professional software development experience. A career pattern of taking unfamiliar domains and building real things in them — a venture-backed tech company, a renewable energy company, a podcast network, a fifty-acre camping resort, and now a manual flow computer. The relevant skill was not coding. It was coordination: holding the full picture while managing the parts.</p>
+
+  <p>On the morning of Saturday, March 29, 2026, Shea had been working on related material but the idea that became Loop MMT crystallized around noon. He opened a new Claude conversation and typed the question that started everything.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 2</div>
+  <div class="chapter-title">Day One — The Architecture</div>
+  <p><em>Saturday, March 29, 2026 · ~12:00 PM – 10:00 PM</em></p>
+
+  <p>The opening prompt was specific and constrained: come up with an entirely novel way to develop software in the AI agentic age. Take the conceptual model of Loop 2.1 and use it to create a way to structure both the development process and the software itself. The end product that marks success or failure is a set of guidelines and files that can be used to build an app for a deer butcher shop in three days. The system must allow a solo developer leading an AI coding assistant to produce first-class enterprise-level software.</p>
+
+  <p>Every constraint that shaped what followed is in that paragraph. "Entirely novel" — not an adaptation of Agile or Clean Architecture. "Both the development process and the software itself" — methodology and architecture together, inseparable. "Three days" — a timeline that forces ruthless scope control. "Solo developer leading an AI" — the operating model the entire system would be built around.</p>
+
+  <p>Claude read the full L21 corpus — the complete record, the production code paper, the development playbook, the coding standards — and came back with questions. The conversation that followed lasted roughly eight hours and produced three complete architecture drafts.</p>
+
+  <p><strong>Draft 1</strong> had six loop types and a single bus. Two problems emerged immediately: the single bus was a shared failure domain, and choreography without an orchestrator produced implicit coupling. Both traced to the same root cause — the architecture was flat.</p>
+
+  <p><strong>Draft 2</strong> introduced four independent typed buses drawn from L21's nine. The closure wall appeared here — the discovery that JavaScript's scope chain could make boundary enforcement absolute rather than conventional. If a Compute Loop should not access the database, the variable simply does not exist in its scope. "Can we fix it by design?" The answer was yes, and the mechanism was the language runtime itself.</p>
+
+  <p><strong>Draft 3</strong> introduced the Workflow Loop — a processing unit whose input is not data but pipeline specifications. The five-word failure vocabulary (RETRY, SKIP, ABORT, COMPENSATE, ESCALATE) emerged here, along with State Reincarnation (crash recovery from transaction logs, designed for a tablet in a deer shed where things crash). The Workflow Loop made orchestration a first-class loop type rather than an implicit property of the architecture.</p>
+
+  <p>By mid-afternoon, the architecture was extracted from the specific application into a general methodology. The Standard v1 emerged: the nine principles, the ten practices, seven loop types, five typed buses, the Constellation Spec as the complete application topology, the Two-Place Rule for bus communication. Standards v2 and v3 followed in the same session — v2 added the gate analog (discovered through direct comparison with L21's gate mechanic) and the Observatory; v3 added the ninth principle ("the system outlives its builders"), which changed the trajectory of everything that followed by establishing that Loop MMT architectures must survive their creators.</p>
+
+  <p>Standard v4 added the Dependency Gate pattern. Standard v5 produced the first systematic patterns inventory — twenty-two patterns from twelve L21 components, fourteen of which traced directly to hardware features. Standard v6 was the stress test: ten application types thrown at the architecture to find gaps. A CMS validated it cleanly (no gaps). A digital audio workstation broke it (real-time audio processing violates the async assumption), producing the honest scope boundary statement that remains in the Standard today. Eight extensions were discovered and integrated during the stress test, including the Constellation Map and Failure Strategy Assignment.</p>
+
+  <p>By evening, the Standard was at v6 and the architecture was stable.</p>
+
+  <div class="callout key">
+    <div class="callout-label">The Gemini Review</div>
+    During Day One, the work was submitted to Google's Gemini for external review. Three concerns were raised: the ten-practice list felt prescriptive, the bus system's five types might be over-specified, and the pattern count seemed high. The responses: the practices are a floor not a ceiling, the bus types map to distinct data flow categories that cannot be safely merged, and the patterns are consumption items for an AI that reads the full reference — the cost of a missing pattern (improvisation) exceeds the cost of an unused one (words in a file). The most instructive observation: the reviewer did not identify the closure wall as significant, despite it being the methodology's most novel structural contribution. The innovation was invisible to a surface reading.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 3</div>
+  <div class="chapter-title">Day One Evening — The Parallel Sessions</div>
+  <p><em>Saturday, March 29, 2026 · ~8:00 PM – 10:00 PM</em></p>
+
+  <p>After the architecture stabilized, Shea did something the generalized protocol would later name. He opened parallel Claude sessions — three to four running simultaneously, each with a different scope.</p>
+
+  <p><strong>The critique session</strong> received the Standard and the Core Build Plan and was asked to find problems. It found two genuine ones: compensation behavior in Split-Merge parallel branches (what happens when branch A completes successfully, branch B fails, and A's output needs to be rolled back?) and the persistence layer reliability window during crashes (the gap between "operation started" and "operation confirmed" where a crash leaves state ambiguous). Both were solved in-session: per-branch compensation declarations for the first, write-ahead logging with a three-state recovery model (INTENT → COMPLETED with idempotency keys) for the second. Both solutions were folded back into the Standard.</p>
+
+  <p><strong>The white paper session</strong> produced White Paper #1 — an eleven-section, 5,500-word overview of the complete Loop MMT concept for layered audiences (developers, technical leadership, the broader AI development conversation). Shea specified the L21 origin story as substantial but contained, the architecture and methodology as equally weighted, and honest limitations stated plainly. The paper was delivered as styled HTML with the three-skin system.</p>
+
+  <p><strong>The strategy session</strong> reviewed a commercialization concept called the "Sovereign Logic Foundry." Claude critiqued its overclaims, identified that the commercial model was running ahead of production proof, and redirected to structural analysis. Two exercises followed: ten deployment paths for a hypothetical $50M investment, and ten bootstrapped monetization paths. The session concluded that every commercial path depends on shipping the Butcher Constellation first, and that the Gantry (verification/audit tooling) is the most commercially licensable component.</p>
+
+  <p>The parallel sessions were not planned as a demonstration of multi-agent coordination. They were practical — Shea had multiple things to do and limited time. But the topology was exactly what the generalized protocol later formalized: one Operator managing multiple scoped sessions, carrying documents between them, each session seeing only its own context. The findings from the critique session were routed back into the Standard. The white paper incorporated the stable architecture. The strategy session used the white paper's framing. Information flowed between sessions through documents carried by the Operator.</p>
+
+  <p>By 10 PM, Shea went to sleep.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 4</div>
+  <div class="chapter-title">Day Two Morning — The Document Problem</div>
+  <p><em>Sunday, March 30, 2026 · ~6:00 AM – 8:00 AM</em></p>
+
+  <p>Shea woke at 6 AM and started immediately. The day opened with a failure.</p>
+
+  <p>The Glossary was at v5. The Standard had moved to v7 overnight with new terms — the Translator pattern, Failure Strategy Assignment, the Constellation Map — that the Glossary did not define. The two documents were out of sync. No mechanism existed to detect the drift. The Operator caught it because he tried to use the Glossary and noticed the gap. Without that manual check, the drift would have propagated silently into every document that referenced those terms.</p>
+
+  <p>The Glossary was updated to v6 (four new entries). But the real response was architectural: if documents are the bus between sessions, then a stale document is a broken bus, and the methodology needed the same kind of contract validation for documents that it already had for code.</p>
+
+  <p>The result was a complete redesign of Standard §17 (Document Stack). The new §17 contained six subsections: a Document Registry (a versioned manifest with four status states — Current, Review Required, Draft, Archived), a formal document dependency graph rooted in the Standard, version pinning requirements for loading packs, document authorship rules (version increment equals Operator approval), a mandatory five-step Document Hygiene Protocol at session close, and stale document handling policy. The Standard advanced from v7 to v8. The methodology now governed its own documents with the same rigor it applied to code.</p>
+
+  <div class="callout note">
+    <div class="callout-label">The Pattern</div>
+    This is the methodology's origin story in miniature. A real failure, encountered in real time, during real work. The response was not to fix the single instance and move on. The response was to build a system that catches the category of error structurally. The instinct — "can we fix it by design?" — transferred directly from 325 L21 builds where the same pattern had played out dozens of times.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 5</div>
+  <div class="chapter-title">Day Two — The Documentation Explosion</div>
+  <p><em>Sunday, March 30, 2026 · ~8:00 AM – 2:00 PM</em></p>
+
+  <p>With the §17 redesign complete, the corpus grew fast. The compounding returns that the methodology later formalized as Practice 10 were operating in real time: each document made the next one faster because each document carried constraints the next one could lean on rather than re-derive.</p>
+
+  <p><strong>Interaction Guide v1 → v2 → v3.</strong> Version 1 was the Operator's guide — what to do, in what order, with which documents. Version 2 merged it with a newly designed AI guide covering behavioral rules for each conversation type. Version 3 added the Coordinator and Auditor roles, session identity, the event ledger, routing manifests, the decision queue, and the five-layer safety architecture.</p>
+
+  <p><strong>Coding Standards v2.</strong> The full prefix taxonomy (<code>bus_</code>, <code>loop_</code>, <code>pkt_</code>, <code>wf_</code>, <code>gate_</code>, <code>v_</code>, <code>f_</code>, <code>e_</code>, <code>h_</code>, <code>c_</code>), the single-purpose function rule, the NASA-inspired error-case-before-happy-path convention, and the seven-item delivery checklist.</p>
+
+  <p><strong>Conversation Prompt Templates v3.</strong> Fill-in-the-blank templates for all six conversation types with concrete examples drawn from the Butcher Constellation. The prompt structure encodes the loading discipline — give each conversation exactly what it needs and nothing more.</p>
+
+  <p><strong>Coordinator Operating Instructions v1.</strong> The behavioral specification for the Coordinator conversation — a persistent AI session managing project logistics. The event ledger (append-only chronological record, source of truth), module status tracking, Integrator finding triage, the decision queue, routing manifests. The Coordinator is expected to push back when it detects conflicts. The Operator can always override. The override is always recorded.</p>
+
+  <p><strong>Auditor Operating Instructions v1.</strong> The reconciliation check suite — twenty checks in three categories (count reconciliation, reference integrity, sequence integrity). The stateless design was deliberate: a persistent Auditor would need trust, and trust requires verification, which is the problem the Auditor exists to solve. Each session is a clean room.</p>
+
+  <p><strong>Developer Guide v1.</strong> A standalone comprehensive walkthrough of the entire methodology for a new AI instance or human developer. The single document you could hand someone who had never seen Loop MMT and have them understand the system.</p>
+
+  <p><strong>Operator Orientation v1.</strong> The entry point for new human users — what Loop MMT is, how sessions work, what the Operator's job is, the minimum vocabulary to get started.</p>
+
+  <p><strong>TDD Standard v1.</strong> When to write Technical Design Documents, the 13-section structure, process integration, and storage conventions. Written after the practice was discovered empirically — Shea had been writing TDDs without a standard for them and realized the practice needed formalization.</p>
+
+  <p><strong>Handoff Standard v1.</strong> The session handoff specification with seven mandatory sections. Formalized from the practice that had been running informally across 325 L21 sessions. The Handoff Standard was extracted from practice, not designed from theory.</p>
+
+  <p><strong>Patterns Reference v3.</strong> Expanded from twenty-two to thirty patterns, each with a full implementation guide. The thirty-pattern count was later challenged in review and defended: the consumer is an AI that reads the full reference at session start, the cost of an unused pattern is trivial, and the cost of a missing pattern is improvisation.</p>
+
+  <p><strong>Test Suite and Gantry Specification v1.</strong> The three-tier verification framework — Tier 1 (self-check by the building session), Tier 2 (Integrator cross-check against the spec), Tier 3 (Auditor reconciliation across the project).</p>
+
+  <p><strong>The Standard itself advanced from v8 to v11</strong> across the day, absorbing the Coordinator, the Auditor, the event ledger, session identity, the five-layer safety architecture, the Divergence Circuit Breaker, the full role taxonomy, auto-routing, Section 16 (Development Methodology — the largest and most significant addition), and Section 18 (Coding Standards as a formal section reference).</p>
+
+  <p>By early afternoon, the corpus was complete. Thirteen documents. Internally consistent. Version-tracked. Dependency-graphed. Shea called in to work the next day to keep going. He had barely eaten. The overhead of coordination had dropped below the throughput of the AI sessions, and the system was accelerating.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 6</div>
+  <div class="chapter-title">Day Two — Parallel Explorations</div>
+  <p><em>Sunday, March 30, 2026 · Afternoon and Evening</em></p>
+
+  <p>With the core corpus complete, work branched into multiple parallel tracks. Some ran simultaneously in different Claude instances. This section covers the sessions that were not part of the core corpus build but contributed to the project's trajectory.</p>
+
+  <p><strong>The Generalized Protocol.</strong> A session explored whether Loop MMT's coordination patterns could be extracted into a domain-agnostic protocol for AI-assisted work. The key reframe: this project's relationship to Loop MMT mirrors Loop MMT's relationship to L21 — extraction of structural patterns, not porting of domain-specific implementation. Six extractable patterns were identified: Scoped Context with Declared Interfaces, the Integrator, Operator as Router, Contracts Before Work, Documents as the Communication Bus, and Phased Sequential Gates. A seed document and handoff were produced. The generalized protocol was spun out as a standalone project.</p>
+
+  <p><strong>White Paper #2: The Bootstrap Proof.</strong> A second white paper was produced — approximately 5,500 words arguing that the creation of Loop MMT is itself a proof of concept for the generalized protocol. The eight coordination patterns the protocol formalizes were identified operating in the two-day build, unnamed but functioning. The paper was delivered as styled HTML matching the first white paper's format.</p>
+
+  <p><strong>The L21 Conversion Analysis.</strong> A session explored whether L21 could be rebuilt as a Loop MMT constellation. The conclusion: L21's synchronous tick-driven simulation engine is a poor fit for MMT's event-driven async architecture (the Standard's own DAW exclusion applies). However, a clean coexistence model — L21 as a black box with MMT handling persistence and settings through an adapter boundary — was identified as viable.</p>
+
+  <p><strong>The "Can It Generalize Beyond Software?" Question.</strong> A brief session asked whether Loop MMT applies outside software. The answer: the architecture (typed buses, contract validation, constellation specs) is explicitly scoped to data-centric software applications. The underlying coordination discipline may transfer to other domains, but the architecture does not generalize. This distinction — between the software architecture and the coordination patterns — later became the foundation of the generalized protocol work.</p>
+
+  <p><strong>Butcher Constellation Readiness Check.</strong> A session confirmed the corpus was ready for Phase 0 and produced guidance on metrics to track during the first build: specification-vs-reality mismatches, pattern usage, process layer overhead, document drift frequency, and the ratio of coordination time to production time.</p>
+
+  <p><strong>The Corpus Buildout Session.</strong> A focused session produced the remaining documents that filled gaps in the corpus — the Auditor Operating Instructions, the Standard's advance to v11, final IP marking, and the handoff that confirmed readiness for Phase 0.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 7</div>
+  <div class="chapter-title">Day Two Evening — Review and Narrative</div>
+  <p><em>Sunday, March 30, 2026 · Evening</em></p>
+
+  <p><strong>"The Two-Day Standard."</strong> A ten-part narrative historical document was produced covering the full development arc from L21 origins through the complete corpus. First written as markdown, then rebuilt as full HTML with three skins and TOC sidebar at the Operator's request. The document is a historical record, not a methodology document — it does not enter the Document Registry or the project knowledge base.</p>
+
+  <p><strong>The Critical Review.</strong> Claude provided an honest assessment of the methodology's current state. Five concerns were raised: (1) the risk of specification becoming the product, (2) the complexity budget relative to the butcher app use case, (3) the single-file constraint needing scrutiny, (4) stress tests being thought experiments rather than implementations, and (5) the L21 metaphor being over-indexed. The Operator pushed back on concern #1 — correctly — and the framing was retracted. Two design clarifications emerged: thirty patterns is the right starting set (validated against real usage during the build, not pruned preemptively), and the single-file convention is a default, not a rule (same principle as the dependency stance — one file if you can, more if you must).</p>
+
+  <p><strong>The Corpus Review.</strong> A fresh Claude Opus 4.6 instance with no prior exposure to the system read the complete thirteen-document corpus plus the whitepaper. It produced a full architectural assessment, a strengths/weaknesses analysis, a public reception prediction, and an Operator capability assessment. Key findings: the closure wall is the standout structural innovation; the overhead-to-project-size ratio is the primary risk; the 13-document corpus is itself a proof of concept for the generalized protocol (a non-software deliverable produced by human-directed multi-AI coordination in 18 hours); the four-level extraction chain is deeper than the whitepaper's three levels (adding Level 0: 325 L21 builds developing informal governance); human user testing is the highest-priority gap; and AI models are structurally inclined to engage with whatever framework is presented and therefore cannot challenge whether the entire framing is wrong.</p>
+
+  <p><strong>"The Professors" — Scene Six: "The Signal."</strong> A creative session produced a new scene in the fiction series. New character: Chen Wei, 44, principal research engineer at a major Chinese AI company, team of 61. His team independently derived a coordination topology identical to the Operator-as-router pattern through formal distributed systems theory. The scene contributed three ideas that later fed back into the methodology work: calibration as the unnamed fifth Operator function, coordination as a pre-existing domain-independent skill, and coordination momentum (the threshold where coordination overhead drops below worker throughput and the system accelerates).</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 8</div>
+  <div class="chapter-title">Day Two Night — The Consolidation Session</div>
+  <p><em>Sunday, March 30, 2026 · Late Evening</em></p>
+
+  <p>A fresh instance was opened to consolidate the day's parallel threads. Three handoffs were loaded — from the narrative review session, the corpus review session, and the creative session — and merged into a single consolidation handoff.</p>
+
+  <p>The session then pivoted to active work on three fronts:</p>
+
+  <p><strong>White Paper #2 revisions.</strong> External feedback on The Bootstrap Proof was evaluated. The Section One career biography was compressed (five paragraphs to three, career items consolidated into a single evidence list rather than individual paragraphs). A line was added about the Operator not being able to define microservices or ORMs — strengthening the outsider argument. Three ideas from The Professors fiction were worked into the paper without quoting the fictional characters: calibration as the fifth Operator function (added to the Honest Framing callout, Section Six, and Section Seven), coordination as a pre-existing skill (added to Section One and Section Six), and coordination momentum (added to Section Three and Section Four). These were the largest substantive edits to the white paper since its creation.</p>
+
+  <p><strong>Writing Standards v1.</strong> A new methodology document — the prose equivalent of the Coding Standards. Twelve sections across two parts. Part One (for AI instances) covers voice and tone, structural principles, a nine-item anti-pattern catalog, document-type-specific guidance, and a ten-item delivery checklist. Part Two (for Operators) covers communication discipline — how to write opening prompts, mid-session direction, and feedback that produces correction rather than confusion. Section 2 explicitly names the corpus feedback loop: documents train AI instances, AI output enters the corpus, the corpus trains the next instance. The Writing Standards earn their place in the corpus because documents are the bus and writing quality is bus reliability.</p>
+
+  <p><strong>Loop 2.1 Technical Reference v1.</strong> A new document explaining L21 for readers who want to understand where Loop MMT came from. Eight sections: what L21 is, the architecture, the eight tenets, the build arc, a thirteen-row transfer table mapping specific L21 properties to specific MMT features, what did not transfer (and why the boundary matters), the instincts that 329 builds produced, and why the document exists. Not a required loading document — it exists for human readers evaluating the derivation chain.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 9</div>
+  <div class="chapter-title">The Current State</div>
+
+  <p>As of the end of Sunday, March 30, 2026, the Loop MMT project consists of the following:</p>
+
+  <div class="callout note">
+    <div class="callout-label">Historical Snapshot</div>
+    The document versions listed below reflect the corpus state at the end of March 30, 2026 — the date this chapter covers. Several documents have been updated since. Consult the Document Registry in Standard §17 for the current corpus state.
+  </div>
+
+  <p><strong>Core methodology documents (15):</strong> Standard v11, Glossary v8, Coding Standards v2, Writing Standards v1, Interaction Guide v3, Coordinator Operating Instructions v1, Auditor Operating Instructions v1, Developer Guide v1, Operator Orientation v1, Conversation Prompt Templates v3, TDD Standard v1, Handoff Standard v1, Patterns Reference v3, Test Suite & Gantry Specification v1, Loop 2.1 Technical Reference v1.</p>
+
+  <p><strong>White papers (2):</strong> White Paper #1 (the generalized overview) and White Paper #2: The Bootstrap Proof (the founding argument).</p>
+
+  <p><strong>Generalized protocol seed (1):</strong> The initial extraction of coordination patterns into a domain-agnostic protocol, spun out as a standalone project.</p>
+
+  <p><strong>Historical and narrative documents (2):</strong> "The Two-Day Standard" (narrative history of the development) and this document (the comprehensive development log).</p>
+
+  <p><strong>Creative work (1):</strong> "The Professors" fiction series, six scenes across three parts, including the integrated complete document.</p>
+
+  <p><strong>Handoff documents (4+):</strong> Multiple session handoffs following the Handoff Standard's seven-section format, including the consolidation handoff merging three parallel sessions.</p>
+
+  <p><strong>Application code: zero lines.</strong> The methodology exists entirely in specification. The first production test — the Butcher Constellation — has been the designated "next step" since the core corpus was confirmed ready. Nothing blocks it.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">The Honest Count</div>
+    Roughly seventeen hours of active work across two days. One person. One AI model. Multiple parallel conversations — at peak, three to four active sessions managed simultaneously. An aging laptop. No team, no office, no institutional support. The output is approximately 60,000+ words of specification, narrative, and creative work, internally consistent, version-tracked, and dependency-managed. Zero lines of application code. The tests are next.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-number">Chapter 10</div>
+  <div class="chapter-title">What Comes Next</div>
+
+  <p>The Butcher Constellation. Phase 0. Open the Specification conversation using the template from the Conversation Prompt Templates §2. Load the documents specified in the template at their current versions per the Document Registry. Describe the application: what it does, who uses it, what problem it solves. Do not describe architecture in the opening prompt — that emerges from the conversation.</p>
+
+  <p>The corpus is ready. It has been ready for multiple sessions. The next chapter of this document will be written by whoever builds the first thing with it.</p>
+</div>
+
+
+</div><!-- /content -->
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>Development History · v1</span>
+  <span>Operator: Shea Gunther · Technical writing by Claude (Anthropic) under Shea's direction</span>
+</div>
+
+<script>
+function setSkin(id){document.body.className='skin-'+id;try{localStorage.setItem('loop-mmt-devhist-skin',id);}catch(e){}document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));}
+document.addEventListener('DOMContentLoaded',()=>{let s='og';try{s=localStorage.getItem('loop-mmt-devhist-skin')||'og';}catch(e){}setSkin(s);});
+</script>
+</body>
+</html>

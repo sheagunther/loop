@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop MMT™ — Coding Standards · v2</title>
+<style>
+  :root{--bg:#e8eef4;--panel:#e8eef4;--panel2:#edf1f5;--panel3:#dce4ec;--border:#9ab0c4;--border2:#b0c4d4;--fg:#000;--fg-dim:#507090;--accent:#6030c0;--working:#1060b0;--compute:#b06000;--vault:#006830;--filter:#006888;--signal:#c01848;--present:#7040a0;--workflow:#2868b0;--font:'Courier New','Consolas',monospace;--max-w:860px;--callout-tip-bg:#e8f4ec;--callout-warn-bg:#fef8e0;--callout-key-bg:#eef0f8;--code-bg:#dce4ec;}
+  body.skin-winamp{--bg:#1e1e1e;--panel:#252525;--panel2:#202020;--panel3:#1c1c1c;--border:#1e4c28;--border2:#163c20;--fg:#33ff44;--fg-dim:#33ff44;--accent:#33ff44;--working:#44aaff;--compute:#ffaa00;--vault:#33ff44;--filter:#00ddff;--signal:#ff4488;--present:#cc88ff;--workflow:#44aaff;--callout-tip-bg:#0c1e10;--callout-warn-bg:#1e1000;--callout-key-bg:#0a1020;--code-bg:#0a1a0c;}
+  body.skin-sunrise{--bg:#fff8ec;--panel:#fff;--panel2:#fffcf5;--panel3:#fff4e0;--border:#e8b030;--border2:#d8a020;--fg:#000;--fg-dim:#705030;--accent:#5828b0;--working:#0060c0;--compute:#c06000;--vault:#007030;--filter:#007898;--signal:#b01040;--present:#6030a0;--workflow:#1858a0;--callout-tip-bg:#e8f8ec;--callout-warn-bg:#fff4dc;--callout-key-bg:#f0eeff;--code-bg:#fff0cc;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .page-header{background:var(--panel);border-bottom:2px solid var(--border);padding:28px 48px 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+  .logo{font-family:var(--font);letter-spacing:6px;font-size:20px;font-weight:bold;}
+  .logo-sub{font-family:var(--font);font-size:10px;letter-spacing:3px;color:var(--fg-dim);margin-top:4px;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .doc-title{text-align:right;}
+  .doc-title .title-main{font-family:var(--font);font-size:11px;letter-spacing:3px;color:var(--fg-dim);text-transform:uppercase;}
+  .doc-title .build-tag{font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);margin-top:3px;}
+  .skin-group{display:flex;align-items:center;gap:5px;}
+  .skin-btn{font-family:var(--font);font-size:10px;letter-spacing:1px;padding:3px 9px;background:transparent;border:1px solid var(--border2);color:var(--fg-dim);cursor:pointer;text-transform:uppercase;transition:border-color .1s,color .1s,background .1s;}
+  .skin-btn:hover{border-color:var(--fg);color:var(--fg);}
+  .skin-btn.active{border-color:var(--fg);color:var(--fg);background:var(--panel2);}
+  .content{max-width:var(--max-w);margin:0 auto;padding:48px 48px 96px;}
+  .chapter{margin-bottom:56px;}
+  .chapter-number{font-family:var(--font);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .chapter-title{font-family:var(--font);font-size:22px;font-weight:bold;letter-spacing:2px;border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:16px;}
+  .section{margin:28px 0;}
+  .section-title{font-family:var(--font);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:12px;}
+  p{margin-bottom:14px;}strong{font-weight:600;}em{font-style:italic;}
+  ul,ol{margin:0 0 14px 24px;}li{margin-bottom:6px;}
+  code{background:var(--code-bg);padding:1px 5px;font-family:var(--font);font-size:14px;color:var(--compute);border-radius:2px;}
+  pre{background:var(--code-bg);padding:14px 16px;font-family:var(--font);font-size:13px;line-height:1.6;overflow-x:auto;margin:16px 0;border-left:3px solid var(--border2);}
+  .callout{border-left:4px solid var(--border);padding:12px 16px;background:var(--panel);margin:20px 0;font-size:16px;line-height:1.6;}
+  .callout.tip{background:var(--callout-tip-bg);border-left-color:var(--vault);}
+  .callout.warn{background:var(--callout-warn-bg);border-left-color:var(--compute);}
+  .callout.key{background:var(--callout-key-bg);border-left-color:var(--working);}
+  .callout-label{font-family:var(--font);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:6px;}
+  .callout.tip .callout-label{color:var(--vault);}
+  .callout.warn .callout-label{color:var(--compute);}
+  .callout.key .callout-label{color:var(--working);}
+  .ref-table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0;line-height:1.5;}
+  .ref-table th{font-family:var(--font);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--panel);}
+  .ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);vertical-align:top;}
+  .ref-table tr:last-child td{border-bottom:none;}
+  .ref-table td:first-child{font-family:var(--font);font-size:13px;color:var(--fg-dim);white-space:nowrap;}
+  .abstract-box{background:var(--panel2);border:1px solid var(--border);padding:24px 28px;margin-bottom:48px;line-height:1.7;}
+  .abstract-label{font-family:var(--font);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-dim);margin-bottom:12px;}
+  hr{border:none;border-top:1px solid var(--border2);margin:40px 0;}
+  .page-footer{max-width:var(--max-w);margin:0 auto;padding:20px 48px 48px;font-family:var(--font);font-size:10px;letter-spacing:1px;color:var(--fg-dim);display:flex;justify-content:space-between;}
+  @media(max-width:700px){.content{padding:32px 24px 64px;}.page-header{padding:20px 24px 16px;}}
+</style>
+</head>
+<body class="skin-og">
+<div class="page-header">
+  <div><div class="logo">LOOP MMT™</div><div class="logo-sub">Multi-Module Theory</div></div>
+  <div class="header-right">
+    <div class="skin-group">
+      <span style="font-family:var(--font);font-size:9px;letter-spacing:2px;color:var(--fg-dim);text-transform:uppercase;margin-right:4px;">Skin</span>
+      <button class="skin-btn active" onclick="setSkin('og')">OG</button>
+      <button class="skin-btn" onclick="setSkin('winamp')">Winamp</button>
+      <button class="skin-btn" onclick="setSkin('sunrise')">Sunrise</button>
+    </div>
+    <div class="doc-title"><div class="title-main">Coding Standards</div><div class="build-tag">v2 · 30 March 2026</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="abstract-box">
+  <div class="abstract-label">About This Document</div>
+  <p style="margin-bottom:8px;">This document defines how code is written in Loop MMT™ constellation development. It is loaded into every conversation that produces code — no exceptions. Its first principle is that human readability is the primary goal of all code — above performance, above cleverness, above brevity. It covers naming, structure, error handling, bus API usage, and the delivery checklist. Code produced by any conversation in any phase should look like it was written by one developer.</p>
+  <p style="margin-bottom:0;">This is a universal document. It applies to every Loop MMT project. It does not replace the L21 Coding Standards (which govern the Loop 2.1 simulator); it is the Loop MMT equivalent for constellation builds.</p>
+</div>
+
+
+<!-- ══ 1: READABILITY FIRST ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 1</div>
+  <div class="chapter-title">Readability is the Primary Goal</div>
+
+  <p>Code is read far more often than it is written. Every line of code in a Loop MMT constellation will be read by future AI sessions that have never seen it before, by the Integrator verifying it against the spec, by the Operator debugging a production issue at 2am, and potentially by developers (human or AI) maintaining the system years after the original conversations are gone. The code must serve all of these readers. Performance matters. Correctness matters more. But readability matters most — because unreadable code cannot be verified for correctness and cannot be safely optimized for performance.</p>
+
+  <p>This is not an abstract preference. It is a structural requirement of the Loop MMT methodology. Each module conversation sees only its own loading pack. The Integrator sees the full spec but reads every module's code to verify it. A future bug-fix session will load this code cold and need to understand it immediately. If the code cannot be understood by a reader with no context beyond the section header and the contracts, the code is not done — regardless of whether it runs correctly.</p>
+
+  <div class="callout key">
+    <div class="callout-label">The Standard</div>
+    If you put this code in front of a person who is not a programmer, they should be able to read through it and have some idea of what it does. Not every implementation detail — but the shape of it. "This function takes an order, checks if the customer exists, calculates a price, and saves it." That level. If a non-programmer cannot extract that from reading the code, the code is too clever.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Code is Written for People First, Machines Second</div>
+
+    <p>Robert C. Martin's <em>Clean Code</em> established the principle that code should be written for human readers first and for the machine second. This principle is absolute in Loop MMT. The machine will execute whatever you give it. The human (or the next AI session) must be able to understand what you gave it and why.</p>
+
+    <p>This means: choose clarity over brevity every time. A variable named <code>v_remainingRetryAttempts</code> is better than <code>v_retries</code>. A function named <code>f_calculateTieredDiscountForLoyaltyCustomer</code> is better than <code>f_calcDisc</code>. Yes, the longer names take more characters. Characters are free. Comprehension is expensive.</p>
+
+    <p>This also means: do not optimize for performance until you have measured a problem. Readable code that runs in 5ms is better than clever code that runs in 2ms. The 3ms you saved will cost hours when someone needs to understand the clever version. Optimize only when profiling shows a specific bottleneck, and when you do optimize, leave a comment explaining why the readable version was replaced and what the performance constraint was.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Meaningful Names</div>
+
+    <p>Names are the primary mechanism by which code communicates intent. A well-chosen name eliminates the need for a comment. A poorly chosen name creates a need for a comment and then fails to satisfy it.</p>
+
+    <p><strong>Use intention-revealing names.</strong> The name should answer: why does this exist, what does it do, and how is it used. <code>v_elapsedTimeInDays</code> communicates. <code>v_d</code> does not. <code>f_validateOrderHasRequiredFields</code> communicates. <code>f_check</code> does not. The reader should never have to look at the implementation to understand what the function does — the name should tell them.</p>
+
+    <p><strong>Avoid disinformation.</strong> Do not call a collection <code>v_orderList</code> if it is not a list (it might be a Set or a Map). Do not call a variable <code>v_accountGroup</code> if it is a single account. Names that imply the wrong data structure or cardinality mislead the reader into wrong assumptions.</p>
+
+    <p><strong>Make meaningful distinctions.</strong> If you have two variables in the same scope, their names must make it clear why both exist. <code>v_order</code> and <code>v_orderData</code> — what is the difference? <code>v_orderFromDatabase</code> and <code>v_orderForPacket</code> — now I know. If you cannot name two things distinctly, they may not need to be two things.</p>
+
+    <p><strong>Use pronounceable names.</strong> Code is discussed verbally — in the talk phase, in handoffs, in bug reports. <code>v_genymdhms</code> cannot be spoken in conversation. <code>v_generationTimestamp</code> can. If you cannot say the name out loud in a sentence, the name is wrong.</p>
+
+    <p><strong>Use searchable names.</strong> Single-letter variables and short generic names are impossible to search for in a codebase. <code>MAX_RETRY_ATTEMPTS</code> can be found instantly. <code>3</code> buried in a conditional cannot. This matters because the Integrator searches across modules to verify consistency.</p>
+
+    <p><strong>Pick one word per concept and stick with it.</strong> If Vault Loops use <code>fetch</code> for read operations, all Vault Loops use <code>fetch</code>. Not <code>get</code> in one and <code>retrieve</code> in another and <code>load</code> in a third. If packet types use <code>_CREATED</code> for post-write echoes, they all do. Not <code>_MADE</code> or <code>_ADDED</code>. Consistency across the codebase is more important than the specific word chosen.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Small Functions That Do One Thing</div>
+
+    <p>Functions should be small. How small? Small enough that they do exactly one thing and you can describe that thing in a single sentence without using the word "and." If the description requires "and," the function is doing two things and should be split.</p>
+
+    <p><strong>The stepdown rule.</strong> Code should read like a narrative, top to bottom, where each function is followed by the functions at the next level of abstraction. The top-level handler reads like prose: "validate the order, hydrate the customer data, calculate the price, persist the record, emit the echo." Each of those steps is a function. Each of those functions contains its own lower-level steps. The reader can stop at whatever level of detail they need.</p>
+
+<pre>// ── Top level reads like prose ──
+async function h_processOrder(packet) {
+  const v_validationResult = f_validateOrderFields(packet.payload);
+  if (!v_validationResult.valid) {
+    f_emitValidationRejection(v_validationResult.errors);
+    return;
+  }
+
+  const v_customer = await f_hydrateCustomer(packet.payload.customerId);
+  if (!v_customer) {
+    f_emitCustomerNotFound(packet.payload.customerId);
+    return;
+  }
+
+  const v_pricedOrder = f_calculateOrderPrice(packet.payload, v_customer);
+  await f_persistOrder(v_pricedOrder);
+  f_emitOrderCreated(v_pricedOrder);
+}
+
+// Each called function handles one concern at the next level down.
+// The reader understands the flow without reading any of them.</pre>
+
+    <p><strong>One level of abstraction per function.</strong> Do not mix high-level business logic with low-level implementation details in the same function. If a function calls <code>f_calculateDiscount</code> (high-level) and also does <code>Math.round(price * 100) / 100</code> (low-level rounding detail), the rounding belongs in a helper: <code>f_roundToTwoDecimals</code>. The reader should not have to mentally switch between abstraction levels while reading a single function.</p>
+
+    <p><strong>Functions should have no side effects.</strong> A function named <code>f_validateOrderFields</code> should validate and return a result. It should not also log to the audit trail, modify the packet, or emit a bus event. If it does those things, the name is a lie — the reader expects validation only and gets surprised by hidden behavior. Side effects belong in the calling function where they are visible and explicit.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Comments as a Last Resort</div>
+
+    <p>The best comment is code that doesn't need one. A function named <code>f_rejectOrderIfCustomerIsArchived</code> does not need a comment explaining what it does. A variable named <code>v_maximumAllowedWeightInPounds</code> does not need a comment explaining what it holds.</p>
+
+    <p>When you feel the need to write a comment, first ask: can I rename the function or variable to make the comment unnecessary? Can I extract a block of code into a well-named function? Can I restructure the logic to be more obvious?</p>
+
+    <p>When comments are necessary, they explain <em>why</em>, not <em>what</em>. "Why" comments survive code changes; "what" comments become lies the moment the code is modified and the comment is not updated. Good comments explain: business rules that are not obvious from the code, why a particular approach was chosen over a simpler alternative, what would break if this code were changed, and edge cases that are not apparent from reading the happy path.</p>
+
+<pre>// GOOD: explains WHY — the business rule behind the code
+// Orders under $10 get free shipping because the processing cost
+// exceeds the shipping fee at that price point
+if (v_orderTotal < 1000) {
+  v_shippingCost = 0;
+}
+
+// BAD: explains WHAT — restates the code, adds no information
+// Check if order total is less than 1000
+if (v_orderTotal < 1000) {
+  v_shippingCost = 0;
+}</pre>
+
+    <p>Loop MMT requires a comment above every function (see Section 8). This is the one place where the "last resort" rule is overridden — the function comment serves as a quick-reference entry point for readers scanning the file. But even this comment should explain why the function exists, not what it does line by line.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Formatting as Communication</div>
+
+    <p>Code formatting is not cosmetic. It communicates structure. Related code should be close together. Unrelated code should be separated by whitespace. The vertical distance between two pieces of code should reflect their conceptual distance.</p>
+
+    <p><strong>Vertical ordering.</strong> High-level functions at the top, lower-level helpers below. The reader enters at the top and drills down as needed. This is the newspaper metaphor from <em>Clean Code</em>: the headline is at the top, the details are below, and you stop reading when you have enough information.</p>
+
+    <p><strong>Horizontal density.</strong> Keep lines short enough to read without scrolling. Long lines force the reader to track two dimensions (down and across). If a function call has six arguments and doesn't fit on one line, it may need restructuring — not line-wrapping.</p>
+
+    <p><strong>Consistent formatting across the entire codebase.</strong> Every loop factory follows the same internal structure (Section 9). Every handler has the same error-handling shape. Every packet emission has the same field order (type, marker, payload, source). Consistency lets the reader's pattern recognition do the work — they learn the shape once and recognize it everywhere.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Boy Scout Rule</div>
+
+    <p>Leave the code cleaner than you found it. If a bug-fix session touches a function with a misleading name, rename it. If a module conversation notices a magic number while working nearby, extract it to a named constant. Small, continuous improvements prevent the gradual accumulation of unreadable code.</p>
+
+    <p>This rule has a boundary in Loop MMT: do not refactor outside your scope without flagging it to the Operator. The improvement must be within the module you are working on. Cross-module cleanups go through the Coordinator and the Integrator.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Readability Test</div>
+
+    <p>Before delivering code, apply this test: could a new AI session, loaded only with this module's loading pack and these coding standards, read this code and understand what it does, why it does it, and how it connects to the rest of the constellation? If the answer is no, the code is not done. The tests may pass. The contracts may match. But if the next reader cannot understand it, it will eventually be changed incorrectly, and the tests and contracts will stop protecting it.</p>
+
+    <p>A second test, more demanding: could a person who does not write code — but who understands the business domain — read the top-level handler functions and recognize the business process? "It validates the order, looks up the customer, calculates the price, saves it, and sends a confirmation." If the code is clean enough, a business-literate non-programmer can follow that narrative in the code itself, not just in a comment above it.</p>
+
+    <div class="callout tip">
+      <div class="callout-label">The Clean Code Principles Applied to Loop MMT</div>
+      <strong>Meaningful names</strong> → the prefix taxonomy and full-word naming convention. <strong>Small functions</strong> → the stepdown rule within every handler. <strong>Single Responsibility</strong> → one loop type per concern, enforced by the closure wall. <strong>No side effects</strong> → <code>f_</code> functions are pure; side effects are explicit bus emissions in handlers. <strong>Don't Repeat Yourself</strong> → patterns are named and reusable; config tables drive behavior generically. <strong>Comments explain why</strong> → every function gets a why-comment, not a what-comment. <strong>Consistent formatting</strong> → every factory follows the same six-part internal structure. These aren't aspirations. They are requirements. Code that violates them is not ready for delivery.
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+<!-- ══ 2: THE RULE ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 2</div>
+  <div class="chapter-title">The Rule</div>
+
+  <p>Full words, no abbreviations. camelCase for variables and functions. UPPER_SNAKE_CASE for constants. Every function has a comment above it explaining why it exists. Error case before happy path. Magic numbers become named constants. No unrequested features. Build exactly what was discussed in the talk phase.</p>
+
+  <div class="callout key">
+    <div class="callout-label">Consistency Over Cleverness</div>
+    If a pattern for what you're building already exists in the codebase, follow it exactly. If no pattern exists, establish one consistent with existing patterns. The goal is that code written in five separate conversations by five different AI sessions looks like it was written by one person. The naming conventions, structure patterns, and error handling below exist to make this possible.
+  </div>
+</div>
+
+
+<!-- ══ 2: PREFIX TAXONOMY ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 3</div>
+  <div class="chapter-title">Prefix Taxonomy</div>
+
+  <p>Every variable, function, constant, and factory uses a prefix that identifies its role at a glance. This is not optional.</p>
+
+  <table class="ref-table">
+    <tr><th>Prefix</th><th>Meaning</th><th>Examples</th><th>Notes</th></tr>
+    <tr><td><code>bus_</code></td><td>Bus instance</td><td><code>bus_data</code>, <code>bus_vault</code>, <code>bus_signal</code></td><td>The bus objects passed to loop factories.</td></tr>
+    <tr><td><code>loop_</code></td><td>Loop factory function</td><td><code>loop_vaultOrders</code>, <code>loop_computePricing</code></td><td>Never used for instances — only the factory.</td></tr>
+    <tr><td><code>pkt_</code></td><td>Packet type constant</td><td><code>pkt_ORDER_CREATED</code>, <code>pkt_FETCH_CUSTOMER</code></td><td>UPPER_SNAKE after prefix. Matches contract registry.</td></tr>
+    <tr><td><code>wf_</code></td><td>Workflow pipeline spec</td><td><code>wf_cancelOrder</code>, <code>wf_batchNotify</code></td><td>The pipeline spec object, not a function.</td></tr>
+    <tr><td><code>gate_</code></td><td>Dependency gate instance</td><td><code>gate_supabase</code>, <code>gate_stripe</code></td><td>One per adopted dependency.</td></tr>
+    <tr><td><code>v_</code></td><td>State variable</td><td><code>v_retryCount</code>, <code>v_connected</code>, <code>v_buffer</code></td><td>Any mutable state within a loop. Scratch state uses this prefix.</td></tr>
+    <tr><td><code>f_</code></td><td>Pure function / helper</td><td><code>f_calculatePrice</code>, <code>f_validateSchema</code></td><td>Takes inputs, returns output. No side effects. No bus access.</td></tr>
+    <tr><td><code>e_</code></td><td>DOM element reference</td><td><code>e_intakeForm</code>, <code>e_statusDisplay</code></td><td>Presentation Loop only. Cached at init, not queried per render.</td></tr>
+    <tr><td><code>h_</code></td><td>Event handler</td><td><code>h_onSubmitOrder</code>, <code>h_onStatusClick</code></td><td>Presentation Loop only. Bound to UI events.</td></tr>
+    <tr><td><code>c_</code></td><td>Contract definition</td><td><code>c_orderCreated</code>, <code>c_fetchCustomer</code></td><td>The contract object in the registry.</td></tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-label">When in Doubt</div>
+    Is it a value that changes? <code>v_</code>. Is it a function with no side effects? <code>f_</code>. Does it respond to a UI event? <code>h_</code>. Does it talk to the bus? It's a handler inside a subscription, not a standalone function — it doesn't get a prefix, it lives inside the <code>bus.on()</code> callback or is named as a handler within the factory.
+  </div>
+</div>
+
+
+<!-- ══ 3: THE LOOP FACTORY ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 4</div>
+  <div class="chapter-title">The Loop Factory</div>
+
+  <p>Every loop is a factory function that receives its capabilities as a destructured argument and sets up bus subscriptions. The factory does not return the subscriptions — it sets them up as side effects of being called. The closure scope is the boundary.</p>
+
+  <div class="section">
+    <div class="section-title">Factory Structure</div>
+
+<pre>// ── Vault Loop: Orders ──────────────────────────────────────
+// Type: Vault | Capabilities: bus, db
+// Emits: ORDER_CREATED, ORDER_UPDATED, ORDER_ARCHIVED
+// Listens: CREATE_ORDER, UPDATE_ORDER, ARCHIVE_ORDER, FETCH_ORDER
+// Patterns: Echo, Marker, Outbox
+
+function createVaultOrders({ bus, db }) {
+
+  // ── Subscriptions ──
+  bus.vault.on('CREATE_ORDER', h_createOrder);
+  bus.vault.on('UPDATE_ORDER', h_updateOrder);
+  bus.vault.on('ARCHIVE_ORDER', h_archiveOrder);
+  bus.vault.on('FETCH_ORDER', h_fetchOrder);
+
+  // ── Handlers ──
+
+  // Persist a new order and emit the echo
+  async function h_createOrder(packet) {
+    try {
+      const { data, error } = await db
+        .from('orders')
+        .insert(packet.payload)
+        .select()
+        .single();
+      if (error) throw error;
+
+      bus.vault.emit({
+        type: 'ORDER_CREATED',
+        marker: 'live',
+        payload: data,
+        source: 'vault:orders',
+      });
+    } catch (err) {
+      bus.data.emit({
+        type: 'LOOP_ERROR',
+        payload: {
+          loop: 'vault:orders',
+          operation: 'CREATE_ORDER',
+          error: err.message,
+        },
+        source: 'vault:orders',
+      });
+    }
+  }
+
+  // ... additional handlers follow the same structure
+}</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Section Header</div>
+    <p>Every loop factory starts with a section header comment block. This is not decorative — it's the quick-reference card that tells a reader (human or AI) what this loop does without reading the code.</p>
+
+<pre>// ── Filter Loop: Order Validation ───────────────────────────
+// Type: Filter | Capabilities: bus
+// Emits: ORDER_INTAKE_VALIDATED, VALIDATION_REJECTED
+// Listens: ORDER_INTAKE_RAW
+// Patterns: Cascade (step 1 of intake cascade)</pre>
+
+    <p>The header declares: the loop type, what capabilities it receives, every packet type it emits, every packet type it listens to, and which patterns from the Patterns Reference it implements. This is a contract. If the code emits a packet type not listed in the header, the header is wrong — update it.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Capability Injection</div>
+    <p>The factory's destructured argument is the capability injection. A Working Loop receives <code>{ bus }</code>. A Vault Loop receives <code>{ bus, db }</code>. A Signal Loop receives <code>{ bus, services }</code>. A Presentation Loop receives <code>{ bus, document }</code>. No loop receives capabilities it doesn't need. The test suite verifies factory signatures against the Capability Injection Table.</p>
+
+    <table class="ref-table">
+      <tr><th>Loop Type</th><th>Capabilities</th><th>Signature</th></tr>
+      <tr><td>Working</td><td>Bus access only</td><td><code>({ bus })</code></td></tr>
+      <tr><td>Compute</td><td>Bus access only</td><td><code>({ bus })</code></td></tr>
+      <tr><td>Vault</td><td>Bus + database</td><td><code>({ bus, db })</code></td></tr>
+      <tr><td>Filter</td><td>Bus access only</td><td><code>({ bus })</code></td></tr>
+      <tr><td>Signal</td><td>Bus + external services</td><td><code>({ bus, services })</code></td></tr>
+      <tr><td>Presentation</td><td>Bus + DOM</td><td><code>({ bus, document })</code></td></tr>
+      <tr><td>Workflow</td><td>Bus access only</td><td><code>({ bus })</code></td></tr>
+    </table>
+
+    <p>If a loop needs something not in its type's capability set, the design is wrong — not the capability table. A Compute Loop that needs database access is not a Compute Loop; it's a Vault Loop or the computation should be restructured to receive its data via bus packets.</p>
+  </div>
+</div>
+
+
+<!-- ══ 4: BUS API CONVENTIONS ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 5</div>
+  <div class="chapter-title">Bus API Conventions</div>
+
+  <div class="section">
+    <div class="section-title">Emitting Packets</div>
+    <p>Every emitted packet must include: <code>type</code> (matches the contract registry exactly), <code>marker</code> (<code>'live'</code>, <code>'empty'</code>, or <code>'tombstone'</code>), <code>payload</code> (fields match the contract exactly), and <code>source</code> (the loop's address).</p>
+
+<pre>bus.vault.emit({
+  type: 'ORDER_CREATED',      // Exact match to contract registry
+  marker: 'live',             // Always explicit — never omit
+  payload: {
+    orderId: data.id,         // Field names match contract exactly
+    customerId: data.customer_id,
+    status: data.status,
+    totalPrice: data.total_price,
+  },
+  source: 'vault:orders',     // Loop address: type:name
+});</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Subscribing</div>
+    <p>Subscribe to specific packet types. The callback receives the packet object.</p>
+
+<pre>// Push subscription — receive events
+bus.vault.on('ORDER_CREATED', (packet) => {
+  // packet.type, packet.marker, packet.payload, packet.source
+});
+
+// Pull request — request-response
+const response = await bus.vault.pull({
+  type: 'FETCH_CUSTOMER',
+  payload: { customerId: '123' },
+});
+// response.marker is 'live', 'empty', or 'tombstone'</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Source Address Format</div>
+    <p>The <code>source</code> field uses the format <code>type:name</code> where type is the loop type and name identifies the specific instance. Examples: <code>vault:orders</code>, <code>compute:pricing</code>, <code>filter:orderValidation</code>, <code>signal:notifications</code>, <code>working:intake</code>, <code>presentation:orders</code>, <code>workflow:cancel</code>. System sources use <code>system:</code> prefix: <code>system:clock</code>, <code>system:inlet:gps</code>, <code>system:deadLetter</code>.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Field Name Exactness</div>
+    <p>Field names in emitted packets must match the contract registry character-for-character. <code>customerId</code> is not <code>customer_id</code>. <code>totalPrice</code> is not <code>total_price</code>. The contract registry is the source of truth. If the database column is <code>customer_id</code> and the contract field is <code>customerId</code>, the Vault Loop translates at the boundary.</p>
+
+    <div class="callout warn">
+      <div class="callout-label">The #1 Integration Error</div>
+      Field name mismatches between what a loop emits and what the contract says are the most common error caught by the Integrator. Check every field name against the contract before delivering. Exact match. Not "close enough."
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 5: ERROR HANDLING ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 6</div>
+  <div class="chapter-title">Error Handling</div>
+
+  <p>Every operation that can fail gets a try/catch. The catch follows the Loop Recovery Protocol: do not crash, alert the bus, preserve state, continue operating.</p>
+
+<pre>// ── The standard error handling pattern ──
+
+async function h_processOrder(packet) {
+  try {
+    // Error case checks first (NASA rule)
+    if (!packet.payload.orderId) {
+      bus.data.emit({
+        type: 'VALIDATION_REJECTED',
+        payload: { reason: 'missing_orderId', source: packet },
+        source: 'vault:orders',
+      });
+      return; // Early return — do not process
+    }
+
+    // Happy path
+    const result = await db.from('orders').insert(packet.payload);
+    // ... emit echo ...
+
+  } catch (err) {
+    // Alert the bus — specific error context
+    bus.data.emit({
+      type: 'LOOP_ERROR',
+      payload: {
+        loop: 'vault:orders',
+        operation: 'CREATE_ORDER',
+        error: err.message,
+        // Include enough context to diagnose without replay
+        packetType: packet.type,
+        payloadSummary: { orderId: packet.payload?.orderId },
+      },
+      source: 'vault:orders',
+    });
+    // Do not re-throw. The loop continues to operate.
+    // State was not modified (the insert failed).
+  }
+}</pre>
+
+  <p><strong>Error case before happy path.</strong> Check for invalid inputs, missing required fields, and precondition failures at the top of every handler. Return early on failure. The happy path should be the unindented code, not nested inside validation checks.</p>
+
+  <p><strong>LOOP_ERROR payload.</strong> Always include: which loop (<code>loop</code>), which operation (<code>operation</code>), the error message (<code>error</code>), and enough context to diagnose without needing to replay the exact packet. Do not include the full packet payload in the error — it may contain PII. Include identifiers only.</p>
+</div>
+
+
+<!-- ══ 6: NAMING ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 7</div>
+  <div class="chapter-title">Naming Conventions</div>
+
+  <div class="section">
+    <div class="section-title">Functions</div>
+    <p>camelCase, full English words, reads like prose. Factory functions use <code>create</code> prefix: <code>createVaultOrders</code>, <code>createFilterOrderValidation</code>, <code>createComputePricing</code>. The factory name encodes the loop type and the business domain.</p>
+    <p>Handler functions inside factories use descriptive names: <code>h_createOrder</code>, <code>h_fetchCustomer</code>, <code>h_onSubmitIntake</code>. Helper functions use <code>f_</code> prefix: <code>f_calculateDiscount</code>, <code>f_validateOrderSchema</code>, <code>f_generateId</code>.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Packet Types</div>
+    <p>UPPER_SNAKE_CASE. Verb-noun structure. The verb describes what happened or what is requested:</p>
+    <table class="ref-table">
+      <tr><th>Pattern</th><th>Examples</th><th>Used For</th></tr>
+      <tr><td><code>CREATE_*</code></td><td><code>CREATE_ORDER</code></td><td>Commands — requesting a write</td></tr>
+      <tr><td><code>*_CREATED</code></td><td><code>ORDER_CREATED</code></td><td>Echoes — confirming a write happened</td></tr>
+      <tr><td><code>FETCH_*</code></td><td><code>FETCH_CUSTOMER</code></td><td>Pull requests — requesting data</td></tr>
+      <tr><td><code>*_FETCHED</code></td><td><code>CUSTOMER_FETCHED</code></td><td>Pull responses</td></tr>
+      <tr><td><code>*_UPDATED</code></td><td><code>ORDER_UPDATED</code></td><td>Echoes for updates</td></tr>
+      <tr><td><code>*_ARCHIVED</code></td><td><code>ORDER_ARCHIVED</code></td><td>Echoes for soft deletes</td></tr>
+      <tr><td><code>*_VALIDATED</code></td><td><code>ORDER_INTAKE_VALIDATED</code></td><td>Filter pass results</td></tr>
+      <tr><td><code>*_REJECTED</code></td><td><code>VALIDATION_REJECTED</code></td><td>Filter rejection results</td></tr>
+      <tr><td><code>COMPUTE_*</code></td><td><code>COMPUTE_PRICE</code></td><td>Requesting a computation</td></tr>
+      <tr><td><code>*_CALCULATED</code></td><td><code>PRICE_CALCULATED</code></td><td>Computation results</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Loop Addresses</div>
+    <p>Format: <code>type:businessDomain</code>. The type is one of: <code>working</code>, <code>compute</code>, <code>vault</code>, <code>filter</code>, <code>signal</code>, <code>presentation</code>, <code>workflow</code>. The business domain is camelCase. Examples: <code>vault:orders</code>, <code>compute:pricing</code>, <code>filter:orderValidation</code>, <code>signal:customerNotify</code>, <code>workflow:cancel</code>.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pipeline Specs</div>
+    <p>Pipeline spec variable names use <code>wf_</code> prefix with descriptive name: <code>wf_createOrder</code>, <code>wf_cancelOrder</code>, <code>wf_batchSendNotifications</code>. The <code>name</code> field inside the spec uses snake_case: <code>name: 'create_order'</code>. Step names within the pipeline also use snake_case: <code>name: 'validate_payment'</code>.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Database Tables and Columns</div>
+    <p>snake_case for database tables and columns: <code>orders</code>, <code>customer_id</code>, <code>total_price</code>, <code>created_at</code>. camelCase for JavaScript/packet fields: <code>customerId</code>, <code>totalPrice</code>, <code>createdAt</code>. The Vault Loop translates between the two conventions at the database boundary. This translation is part of the Vault Loop's responsibility and is never done by other loop types.</p>
+  </div>
+</div>
+
+
+<!-- ══ 7: COMMENTS ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 8</div>
+  <div class="chapter-title">Comments</div>
+
+  <p>Every function gets a <code>//</code> comment on the line above it. The comment explains why the function exists, not what it does line-by-line. If the function name and signature don't make the "what" obvious, the function is named poorly — fix the name, don't compensate with comments.</p>
+
+<pre>// Translate database snake_case to packet camelCase for the order contract
+function f_mapOrderRow(row) { ... }
+
+// Reject orders with missing required fields before they enter the pipeline
+function f_validateOrderSchema(payload) { ... }
+
+// The pricing engine uses tiered rates — this prevents a single-item
+// order from paying the same base rate as a 50-item bulk order
+function f_calculateTieredDiscount(items, customerTier) { ... }</pre>
+
+  <p>Section dividers within a factory use the single-bar format:</p>
+
+<pre>// ── Subscriptions ──
+// ── Handlers ──
+// ── Helpers ──</pre>
+
+  <p>Do not write comments that restate the code. <code>// increment counter</code> above <code>count++</code> is noise. Write comments that explain <em>why</em>: decisions, business rules, edge cases, things a future reader would wonder about.</p>
+</div>
+
+
+<!-- ══ 8: CODE ORGANIZATION ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 9</div>
+  <div class="chapter-title">Code Organization Within a Loop</div>
+
+  <p>Every factory follows the same internal structure:</p>
+
+  <ol>
+    <li><strong>Section header</strong> — the quick-reference card (type, capabilities, emits, listens, patterns).</li>
+    <li><strong>State declarations</strong> — any <code>v_</code> variables the loop maintains (scratch state, bridges, counters).</li>
+    <li><strong>Subscriptions</strong> — all <code>bus.on()</code> calls grouped together at the top of the factory body.</li>
+    <li><strong>Handlers</strong> — the functions that process each subscribed packet type, in the same order as the subscriptions.</li>
+    <li><strong>Helpers</strong> — pure <code>f_</code> functions used by the handlers.</li>
+    <li><strong>Initialization</strong> — any setup that runs when the factory is called (startup sweeps, bridge creation, timer setup).</li>
+  </ol>
+
+  <p>This order makes every loop readable in the same way. A reader looking for "what does this loop do when it receives ORDER_CREATED?" goes to the subscriptions section, finds the handler name, and jumps to it.</p>
+</div>
+
+
+<!-- ══ 9: THE CONSTELLATION INITIALIZER ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 10</div>
+  <div class="chapter-title">The Constellation Initializer</div>
+
+  <p>The initializer is the last major section in the codebase. It is the entry point for understanding the system's topology. It creates all buses, wraps dependencies in gates, calls each loop factory with the correct capabilities, and runs startup self-verification.</p>
+
+<pre>// ══════════════════════════════════════════════════════════════
+// CONSTELLATION INITIALIZER
+// ══════════════════════════════════════════════════════════════
+
+function initConstellation() {
+  // ── Create buses ──
+  const bus_data   = createBus('DATA');
+  const bus_vault  = createBus('VAULT');
+  const bus_signal = createBus('SIGNAL');
+  const bus_sync   = createBus('SYNC');
+  const bus = { data: bus_data, vault: bus_vault,
+                signal: bus_signal, sync: bus_sync };
+
+  // ── Wrap dependencies ──
+  const gate_supabase = createDependencyGate('supabase', supabaseClient);
+  const db = gate_supabase.client;
+
+  // ── Create loops (order: infrastructure, then business) ──
+  createWorkingIntake({ bus });
+  createFilterOrderValidation({ bus });
+  createFilterAuthGate({ bus });
+  createVaultOrders({ bus, db });
+  createVaultCustomers({ bus, db });
+  createComputePricing({ bus });
+  createSignalNotifications({ bus, services: { sms: twilioClient } });
+  createPresentationOrders({ bus, document });
+
+  // ── Self-verification ──
+  verifyConstellation(bus, CONSTELLATION_SPEC);
+}</pre>
+
+  <p>The initializer reads like a declaration of the system's topology. Each line is one loop with its capabilities. A reader who has never seen the codebase can look at the initializer and understand: which loops exist, what each one receives, and in what order they are created. This is the wiring diagram made executable.</p>
+</div>
+
+
+<!-- ══ 10: DELIVERY CHECKLIST ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 11</div>
+  <div class="chapter-title">Delivery Checklist</div>
+
+  <p>Run through this for every deliverable. Every time.</p>
+
+  <ol>
+    <li><strong>Factory signature matches capability table.</strong> A Working Loop receives <code>{ bus }</code> and nothing else. A Vault Loop receives <code>{ bus, db }</code>. No extra capabilities.</li>
+    <li><strong>Section header is accurate.</strong> Type, capabilities, emits, listens, patterns — all match the actual code.</li>
+    <li><strong>Emitted packets match contracts.</strong> Every emitted packet type exists in the contract registry. Every required field is present. Field names are character-for-character matches.</li>
+    <li><strong>Subscriptions match routing table.</strong> Every <code>bus.on()</code> call subscribes to a type that has a routing entry with this loop as a destination.</li>
+    <li><strong>Markers are explicit.</strong> Every emitted packet includes <code>marker: 'live'</code>, <code>'empty'</code>, or <code>'tombstone'</code>. No omissions.</li>
+    <li><strong>Error handling follows recovery protocol.</strong> Every async operation has try/catch. Every catch emits <code>LOOP_ERROR</code> with loop name, operation, and error message. No re-throws. No silent catches.</li>
+    <li><strong>Naming follows taxonomy.</strong> Prefix on every variable, function, and constant. Full words. camelCase.</li>
+    <li><strong>Comments explain why.</strong> Every function has a comment. No "what" comments that restate the code.</li>
+    <li><strong>No unrequested features.</strong> The deliverable contains only what was agreed on in the talk phase.</li>
+    <li><strong>Tests pass.</strong> If this module has tests, they are green. If not, the code has been manually verified against the contracts.</li>
+  </ol>
+</div>
+
+
+<!-- ══ 11: ANTI-PATTERNS ══ -->
+<div class="chapter">
+  <div class="chapter-number">Section 12</div>
+  <div class="chapter-title">Anti-Patterns</div>
+
+  <table class="ref-table">
+    <tr><th>Anti-Pattern</th><th>Why</th><th>Instead</th></tr>
+    <tr><td>Ghost state in closure variables</td><td>Invisible to other loops, not on bus, not in Vault</td><td>State goes on the bus (emit it) or in a Vault (persist it). Only scratch state is allowed in closures, and it must be cleared per-transaction.</td></tr>
+    <tr><td>Capability leakage</td><td>A loop accesses something not in its factory signature</td><td>If you need it, it belongs in the capability injection. If it's not in the table for your loop type, your design is wrong.</td></tr>
+    <tr><td>Guessing at field names</td><td>Creates the #1 integration error</td><td>Check the contract registry. Character-for-character match. If the contract says <code>customerId</code>, do not write <code>customer_id</code>.</td></tr>
+    <tr><td>Silent error swallowing</td><td>Failures become invisible</td><td>Every catch emits <code>LOOP_ERROR</code>. No empty catch blocks. No <code>catch (e) { /* ignore */ }</code>.</td></tr>
+    <tr><td>Omitting the marker</td><td>Ambiguous responses — "no data" vs "lookup failed" becomes indistinguishable</td><td>Every emitted packet includes an explicit marker. Every pull response includes a marker.</td></tr>
+    <tr><td>Cross-loop communication outside the bus</td><td>Bypasses contracts, routing table, and observability</td><td>All inter-loop communication goes through the bus. No shared variables, no direct function calls, no events outside the bus system.</td></tr>
+    <tr><td>Database access outside Vault Loops</td><td>Violates the closure wall — only Vault Loops receive <code>db</code></td><td>Need data? Pull it from a Vault via the bus. Need to write? Emit a command to a Vault.</td></tr>
+    <tr><td>Business logic in Presentation Loops</td><td>UI should render state, not compute it</td><td>Computation goes in a Compute Loop. The Presentation Loop subscribes to the result.</td></tr>
+    <tr><td>Unrequested features</td><td>Scope creep, untested code, undiscussed design decisions</td><td>Build exactly what was discussed. If you see something useful to add, suggest it — don't implement it.</td></tr>
+    <tr><td>Verbal contracts</td><td>"I think the field was called X" introduces mismatches</td><td>Check the document. If it's not in the loading pack, ask for it.</td></tr>
+    <tr><td>Returning from factory functions</td><td>The factory sets up subscriptions; it doesn't return an API</td><td>Loops communicate through the bus, not through return values. (Exception: the bridge helper, which is internal to the loop.)</td></tr>
+    <tr><td>Happy path first</td><td>Error cases get buried, forgotten, or half-implemented</td><td>Error case before happy path. Validate inputs at the top. Return early on failure.</td></tr>
+  </table>
+</div>
+
+
+</div>
+
+<hr>
+<div class="page-footer">
+  <span>Loop MMT™ · Multi-Module Theory</span>
+  <span>Coding Standards · v2</span>
+  <span>© 2026 <a href="/cdn-cgi/l/email-protection#1a69727f7b7d6f746e727f685a7d777b737634797577" style="color:inherit;">Shea Gunther</a> · <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" style="color:inherit;">CC BY-NC 4.0</a></span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function setSkin(id){document.body.className='skin-'+id;try{localStorage.setItem('loop-mmt-cs-skin',id);}catch(e){}document.querySelectorAll('.skin-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')==="setSkin('"+id+"')"));}
+document.addEv
